@@ -6,10 +6,6 @@ void SpriteHolder::CleanUp() {
 	//This neeeds fix 
 };
 
-SpriteHolder::~SpriteHolder() {
-	CleanUp();
-};
-
 SpriteHolder::SpriteHolder(void) {};
 
 void SpriteHolder::Add(Sprite* s) {

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <MyLibraries.h>
 
-SDL_Surface* BitmapLoader::GetBitmap(string path) const {
+SDL_Surface* BitmapLoader::GetBitmap(const string path) const {
 	Bitmaps::const_iterator i = bitmaps.find(path);
 	return i != bitmaps.end() ? i->second : (SDL_Surface*) 0;
 }
@@ -13,7 +13,7 @@ SDL_Surface * BitmapLoader::LoadBitmap(const string path, SDL_PixelFormat *forma
 	SDL_Surface* optimizedSurface = NULL;
 
 	//Load image at specified path
-	SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());//Can upload PNG Files
 	if (loadedSurface == NULL)
 	{
 		cout << "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError();

@@ -16,6 +16,7 @@ int main(int argc, char *args[]) {
 		while (!quit) {
 			quit = new_window.HandleInput(event);
 		}
+		//new_window.draw(); Here should be implemented
 	}
 	new_window.close();
 	return 0;

@@ -47,20 +47,14 @@ bool Window::open(string w_name) {
 
 void Window::initialize() {
 	//Here do call the picture/sound/sprite and etc initialazation
+//	if (!LoadMedia()) {
+//		cout << "Something went really bad";
+	//}
 	menu = new Menu();
-
 	menu->initialize(gScreenSurface);
-	SDL_Rect fullscreen;
-	fullscreen.w = SCREEN_WIDTH;
-	fullscreen.h = SCREEN_HEIGHT;
-	fullscreen.x = 0;
-	fullscreen.y = 0;
-
-	SDL_BlitScaled(menu->getBackground(), NULL, gScreenSurface, &fullscreen);
-
-	//Update the surface
+	menu->DrawMenu(gScreenSurface);
+	//This also should not be here 
 	SDL_UpdateWindowSurface(window);
-
 }
 
 void Window::close() {
@@ -76,3 +70,9 @@ void Window::close() {
 	IMG_Quit();
 	SDL_Quit();
 }
+/*
+bool Window::LoadMedia() {
+	//AnimationFilmHolder::Get()->Load("media/menu.png",);
+	return true;
+}
+*/

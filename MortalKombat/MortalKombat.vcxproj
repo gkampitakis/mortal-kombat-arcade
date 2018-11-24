@@ -131,6 +131,7 @@
     <ClCompile Include="MusicPlayer.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteHolder.cpp" />
+    <ClCompile Include="TImer.cpp" />
     <ClCompile Include="WIndow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="MyLibraries.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteHolder.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

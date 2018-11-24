@@ -1,3 +1,7 @@
+#ifndef AnimationFilm_HEADER
+#define AnimationFilm_HEADER
+
+
 #include <MyLibraries.h>
 #include <vector>
 
@@ -16,3 +20,5 @@ public:
 	Rect GetFrameBox(byte) const;
 	void DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo)const;
 };
+
+#endif
