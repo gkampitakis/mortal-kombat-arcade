@@ -21,7 +21,7 @@ SDL_Surface * BitmapLoader::LoadBitmap(const string path, SDL_PixelFormat *forma
 	}
 	else {
 		//Convert surface to screen format
-		//SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));//Remove Background with certain color fix here
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 255, 255, 255));//Remove White Background
 		optimizedSurface = SDL_ConvertSurface(loadedSurface,format, NULL);
 		if (optimizedSurface == NULL)
 		{

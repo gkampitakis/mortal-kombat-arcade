@@ -61,9 +61,27 @@ Uint32 Timer::getTicks() {
 bool Timer::isStarted()
 {
 	return Started;
-}
+};
 
 bool Timer::isPaused()
 {
 	return Paused && Started;
-}
+};
+
+string Timer::ReverseTimer(int t) {
+	t = t + 1;
+	if ((t - (getTicks() / 1000)) == 0) {
+		stop();
+		return std::to_string(t);
+	}
+	else {
+		std::cout << ((t - (getTicks() / 1000)) / 10);
+
+		if (((t - (getTicks() / 1000) - 1) / 10) == 0) {
+			return "0" + std::to_string((t - (getTicks() / 1000)) - 1);
+		}
+		else {
+			return std::to_string(t - (getTicks() / 1000) - 1);
+		}
+	}
+};

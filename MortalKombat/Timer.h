@@ -12,9 +12,9 @@ public:
 	
 	bool isStarted();
 	bool isPaused();
+	string ReverseTimer(int t);
 private:
 	Uint32 StartTicks;
-
 	Uint32 PausedTicks;
 
 	bool Paused;
