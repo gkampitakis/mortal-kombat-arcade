@@ -3,9 +3,9 @@
 Window::Window(const int width, const int height) {
 	this->width = width;
 	this->height = height;
-}
+};
 
-Window::~Window() {}
+Window::~Window() {};
 
 bool Window::HandleInput(SDL_Event& event) {
 	bool quit = false;
@@ -15,7 +15,7 @@ bool Window::HandleInput(SDL_Event& event) {
 		}
 	}
 	return quit;
-}
+};
 
 bool Window::open(string w_name) {
 
@@ -42,7 +42,7 @@ bool Window::open(string w_name) {
 		return false;
 	}
 	return true;
-}
+};
 
 
 void Window::initialize() {
@@ -52,10 +52,9 @@ void Window::initialize() {
 	//}
 	menu = new Menu();
 	menu->initialize(gScreenSurface);
-	menu->DrawMenu(gScreenSurface);
-	//This also should not be here 
-	SDL_UpdateWindowSurface(window);
-}
+	state = state::MENU;
+	loadMedia();//This needs fix
+};
 
 void Window::close() {
 	//For starting
@@ -69,10 +68,20 @@ void Window::close() {
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
-}
-/*
-bool Window::LoadMedia() {
-	//AnimationFilmHolder::Get()->Load("media/menu.png",);
+};
+
+
+bool Window::loadMedia() {//Needs fix
+	//SpriteHolder::
+//	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface);//the first pic is up
 	return true;
 }
-*/
+
+
+void Window::drawWindow() {
+	if (state == state::MENU) {
+		menu->DrawMenu(*gScreenSurface);
+	}
+	//This also should not be here 
+	SDL_UpdateWindowSurface(window);
+};

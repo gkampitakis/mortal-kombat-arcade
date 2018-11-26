@@ -1,5 +1,4 @@
 #include <Window.h>
-//#include <MyLibraries.h>
 
 int main(int argc, char *args[]) {
 	bool quit = false;
@@ -15,8 +14,8 @@ int main(int argc, char *args[]) {
 		new_window.initialize();
 		while (!quit) {
 			quit = new_window.HandleInput(event);
+			new_window.drawWindow();
 		}
-		//new_window.draw(); Here should be implemented
 	}
 	new_window.close();
 	return 0;

@@ -1,3 +1,6 @@
+#ifndef Sprite_H
+#define Sprite_H
+
 #include <MyLibraries.h>
 #include <AnimationFilm.h>
 
@@ -21,6 +24,10 @@ public:
 	bool IsVisible(void) const;
 	bool CollisionCheck(Sprite* s);
 	void Move(Point x);
-	void Display(SDL_Surface &dest,Rect& da);
+	void Display(SDL_Surface &dest);
+	void DisplayUnique(SDL_Surface &dest, int w,int h);
 	unsigned GetType(void) const;
+	AnimationFilm* getFilm(void);
 };
+
+#endif

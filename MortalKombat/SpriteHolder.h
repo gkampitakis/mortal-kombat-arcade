@@ -1,18 +1,20 @@
 #include <Sprite.h>
 
+typedef list<Sprite*> SpriteList;
+
 class SpriteHolder {
 private:
-	typedef list<Sprite*> SpriteList;
+	static SpriteHolder* holder;
 protected:
 	typedef map<unsigned, SpriteList> SpritesByType;
 	SpritesByType sprites;
 public:
-	SpriteHolder(void);
+	SpriteHolder(void) {};
 	~SpriteHolder() { CleanUp(); };
 
-	static SpriteHolder& Get(void);
+	static SpriteHolder* Get(void);
 	void Add(Sprite* s);
 	void Remove(Sprite* s);
-	void GetSprites(unsigned type, SpriteList* result)const;
+	SpriteList GetSprites(unsigned type)const;
 	void CleanUp();
 };

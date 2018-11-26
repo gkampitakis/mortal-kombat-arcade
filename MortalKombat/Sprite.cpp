@@ -29,11 +29,19 @@ void Sprite::Move(Point x) {
 	this->position = x;
 };
 
-void Sprite::Display(SDL_Surface &dest, Rect& da) {
+void Sprite::Display(SDL_Surface &dest) {
 	if (visible) {
 		currFilm->DisplayFrame(dest,position,frameNo);//this might need fix 
 	}
 };
+
+void Sprite::DisplayUnique(SDL_Surface &dest,int width,int height) {
+	if (visible) {
+		Rect display = { position.x,position.y,width,height };
+		currFilm->DisplayFrame(dest, display);//this might need fix 
+	}
+};
+
 
 Sprite::Sprite(Point position, AnimationFilm* film,unsigned type) {
 	this->position = position;
@@ -48,4 +56,8 @@ Sprite::~Sprite() {};
 
 unsigned Sprite::GetType(void) const {
 	return type;
+}
+
+AnimationFilm* Sprite::getFilm(void) {
+	return currFilm;
 }

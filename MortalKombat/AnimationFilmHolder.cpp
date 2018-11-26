@@ -9,8 +9,6 @@ void AnimationFilmHolder::CleanUp(void) {
 }
 
 AnimationFilmHolder* AnimationFilmHolder::Get(void) {
-	
-
 	return holder;
 };
 

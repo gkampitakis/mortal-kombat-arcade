@@ -1,12 +1,10 @@
 #include <SpriteHolder.h>
 
-void SpriteHolder::CleanUp() {
-	//for (SpriteList::const_iterator i = sprites.begin(); i != films.end(); i++) delete(i->second);
-	//films.clear();
-	//This neeeds fix 
-};
+SpriteHolder* SpriteHolder::holder = new SpriteHolder();//singleton
 
-SpriteHolder::SpriteHolder(void) {};
+SpriteHolder* SpriteHolder::Get(void) {
+	return holder;
+};
 
 void SpriteHolder::Add(Sprite* s) {
 	sprites[s->GetType()].push_back(s);//This also
@@ -16,8 +14,13 @@ void SpriteHolder::Remove(Sprite* s) {
 	sprites[s->GetType()].remove(s);
 };
 
-void SpriteHolder::GetSprites(unsigned type, SpriteList* result) const {
+SpriteList SpriteHolder::GetSprites(unsigned type) const {
 	SpritesByType::const_iterator i = sprites.find(type);
-	if (i != sprites.end()) *result = i->second;
-	//This also Might needs fix
+	return i != sprites.end() ? i->second : (SpriteList)NULL;
+};
+
+void SpriteHolder::CleanUp() {
+	//for (SpriteList::const_iterator i = sprites.begin(); i != films.end(); i++) delete(i->second);
+	//films.clear();
+	//This neeeds fix 
 };

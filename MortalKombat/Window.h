@@ -2,6 +2,7 @@
 #include <Menu.h>
 
 using namespace std;
+enum state { MENU, INGAME, FINISH, SCOREBOARD, OPTIONS };//This states might change or add new states
 
 class Window {
 public:
@@ -12,8 +13,11 @@ public:
 	void close();
 
 	void initialize();
+	void drawWindow();
+	bool loadMedia();
 
 private:
+	int state=-1;
 	int width;
 	int height;
 	SDL_Window* window = NULL;
