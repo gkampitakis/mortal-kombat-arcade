@@ -13,6 +13,11 @@ bool Window::HandleInput(SDL_Event& event) {
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
+		else {
+			if (state == state::MENU) {//This will be changed
+				menu->HandleInput(event);
+			}
+		}
 	}
 	return quit;
 };
@@ -21,7 +26,7 @@ bool Window::open(string w_name) {
 
 	//here do a controller check maybe
 	//For starting these
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
 		cout << "SDL could not initialize! SDL Error: %s\n", SDL_GetError();
 		return false;
 	}
@@ -41,6 +46,13 @@ bool Window::open(string w_name) {
 		cout << "Renderer could not be created! SDL Error: %s\n", SDL_GetError();
 		return false;
 	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+		return false;
+	}
+
 	return true;
 };
 
@@ -57,8 +69,6 @@ void Window::initialize() {
 };
 
 void Window::close() {
-	//For starting
-
 	//Destroy window
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(window);
@@ -66,14 +76,14 @@ void Window::close() {
 	gRenderer = NULL;
 
 	//Quit SDL subsystems
+	Mix_Quit();
 	IMG_Quit();
 	SDL_Quit();
 };
 
 
 bool Window::loadMedia() {//Needs fix
-	//SpriteHolder::
-//	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface);//the first pic is up
+	//Here load the font 
 	return true;
 }
 

@@ -23,5 +23,6 @@ private:
 	SDL_Window* window = NULL;
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Surface* gScreenSurface = NULL;
+	//FONT add here 
 	Menu* menu = NULL;
 };

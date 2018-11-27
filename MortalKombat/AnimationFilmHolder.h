@@ -14,7 +14,7 @@ private:
 public:
 	static AnimationFilmHolder* Get(void);
 	//another GET exists at documentation
-	void Load(const string &path, int framesNo, string id, SDL_Surface *screen);
+	void Load(const string &path, int framesNo, string id, SDL_Surface *screen,bool backgroundFlag);
 	void CleanUp(void);
 	AnimationFilm* GetFilm(const string) const;
 };
