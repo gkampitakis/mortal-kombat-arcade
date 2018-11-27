@@ -12,8 +12,8 @@ AnimationFilmHolder* AnimationFilmHolder::Get(void) {
 	return holder;
 };
 
-void AnimationFilmHolder::Load(const string &path, int framesNo, string id, SDL_Surface *screen) {
-	SDL_Surface* bitmap = bitmaps.Load(path,screen->format);
+void AnimationFilmHolder::Load(const string &path, int framesNo, string id, SDL_Surface *screen,bool backgroundFlag) {
+	SDL_Surface* bitmap = bitmaps.Load(path,screen->format, backgroundFlag);
 	assert(!GetFilm(id));
 	vector<Rect> test ;//HOLDER PLACEEEEEEEEE
 	films[id] = new AnimationFilm(bitmap,test ,id);//FIXME:Here minimal boxes

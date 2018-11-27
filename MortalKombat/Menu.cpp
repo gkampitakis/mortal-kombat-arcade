@@ -7,12 +7,12 @@ Menu::Menu() {
 }
 
 bool Menu::initialize(SDL_Surface* gScreenSurface) {
-	AnimationFilmHolder::Get()->Load("media/menu.png", 1, "background", gScreenSurface);//the first pic is up
+	AnimationFilmHolder::Get()->Load("media/menu.png", 1, "background", gScreenSurface,true);//the first pic is up
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 	//upload press start this needs testing about sprites and etc etc
 
-	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface);//the first pic is up
+	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface,false);//the first pic is up
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");
 
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 100 }, tmp, SpriteTypes::MenuSprite));//zero is the type
@@ -20,7 +20,7 @@ bool Menu::initialize(SDL_Surface* gScreenSurface) {
 	//the sound now needs the same thing  but ll see
 
 	/* ADD SOUNDS HERE*/
-	MusicPlayer::Get()->LoadEffect("media/test.wav","test");
+	//MusicPlayer::Get()->LoadEffect("media/test.wav","test"); Testing Load It works but too loud
 
 	return true;
 }
@@ -44,8 +44,8 @@ void Menu::DrawMenu(SDL_Surface& gScreenSurface) {
 		show = !show;
 	}
 	if (show) {
-		Mix_Chunk* tmp= MusicPlayer::Get()->RetrieveEffect("test");//Here Working state
-		MusicPlayer::Get()->PlayEffect(tmp,1);//Here Working state
+		//Mix_Chunk* tmp= MusicPlayer::Get()->RetrieveEffect("test");//Here Working state
+		//MusicPlayer::Get()->PlayEffect(tmp,1);//Here Working state
 
 		SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::MenuSprite);
 		list<Sprite*>::iterator it;
@@ -55,3 +55,24 @@ void Menu::DrawMenu(SDL_Surface& gScreenSurface) {
 		};
 	}
 };
+
+void Menu::HandleInput(SDL_Event& event) {//A basic handle input for menu
+	if (event.type == SDL_KEYDOWN) {
+		switch (event.key.keysym.sym)
+		{
+		case SDLK_0:
+			cout << "0";
+			break;
+		case SDLK_1:
+			cout << "1";
+			break;
+		case SDLK_2:
+			cout << "2";
+			break;
+		default:
+			cout << "Unknow event";
+			break;
+		}
+	}
+	//cout <<&event <<"caught a event";
+}

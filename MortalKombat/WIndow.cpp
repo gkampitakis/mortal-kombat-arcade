@@ -13,6 +13,11 @@ bool Window::HandleInput(SDL_Event& event) {
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
+		else {
+			if (state == state::MENU) {//This will be changed
+				menu->HandleInput(event);
+			}
+		}
 	}
 	return quit;
 };
@@ -78,8 +83,7 @@ void Window::close() {
 
 
 bool Window::loadMedia() {//Needs fix
-	//SpriteHolder::
-//	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface);//the first pic is up
+	//Here load the font 
 	return true;
 }
 
