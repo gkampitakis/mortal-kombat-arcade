@@ -1,5 +1,6 @@
 #include <Menu.h>
 #include "AnimationFilm.h"
+#include "MusicPlayer.h"
 
 Menu::Menu() {
 	time = 0;
@@ -17,6 +18,10 @@ bool Menu::initialize(SDL_Surface* gScreenSurface) {
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 100 }, tmp, SpriteTypes::MenuSprite));//zero is the type
 	//also upload all the sprites for the main menu here 
 	//the sound now needs the same thing  but ll see
+
+	/* ADD SOUNDS HERE*/
+	MusicPlayer::Get()->LoadEffect("media/test.wav","test");
+
 	return true;
 }
 
@@ -39,6 +44,9 @@ void Menu::DrawMenu(SDL_Surface& gScreenSurface) {
 		show = !show;
 	}
 	if (show) {
+		Mix_Chunk* tmp= MusicPlayer::Get()->RetrieveEffect("test");//Here Working state
+		MusicPlayer::Get()->PlayEffect(tmp,1);//Here Working state
+
 		SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::MenuSprite);
 		list<Sprite*>::iterator it;
 		for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {
