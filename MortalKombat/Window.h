@@ -24,5 +24,8 @@ private:
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Surface* gScreenSurface = NULL;
 	//FONT add here 
+	TTF_Font *font = NULL;
 	Menu* menu = NULL;
 };
+
+// SDL_Color textColor 

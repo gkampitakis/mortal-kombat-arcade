@@ -15,14 +15,20 @@ MusicPlayer* MusicPlayer::Get(void) {
 	return musicplayer;
 };
 
-void MusicPlayer::LoadMusic(const string &path,string id) {
+void MusicPlayer::LoadMusic(const string &path, string id) {
 	Mix_Music* tmp = Mix_LoadMUS(path.c_str());
-	playlist[id] = tmp;
+	if (tmp == NULL) {
+		cout << "Error Sound: " << path.c_str() << " could not be loaded";
+	}
+	else 	playlist[id] = tmp;
 };
-	
+
 void MusicPlayer::LoadEffect(const string &path, string id) {
 	Mix_Chunk* tmp = Mix_LoadWAV(path.c_str());
-	soundeffects[id] = tmp;
+	if (tmp == NULL) {
+		cout << "Error Effect: " << path.c_str() << " could not be loaded";
+	}
+	else soundeffects[id] = tmp;
 };
 
 Mix_Chunk* MusicPlayer::RetrieveEffect(string id) const {
@@ -45,7 +51,7 @@ void MusicPlayer::PlayMusic(Mix_Music *music) {
 };
 
 void MusicPlayer::PlayEffect(Mix_Chunk* effect, int loops) {
-	Mix_PlayChannel(-1, effect,loops);
+	Mix_PlayChannel(-1, effect, loops);
 };
 
 void MusicPlayer::PauseMusic(void) {

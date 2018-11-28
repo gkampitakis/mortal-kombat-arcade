@@ -20,7 +20,7 @@ bool Menu::initialize(SDL_Surface* gScreenSurface) {
 	//the sound now needs the same thing  but ll see
 
 	/* ADD SOUNDS HERE*/
-	//MusicPlayer::Get()->LoadEffect("media/test.wav","test"); Testing Load It works but too loud
+	//MusicPlayer::Get()->LoadEffect("media/test2.wav","test"); //Testing Load It works but too loud
 
 	return true;
 }

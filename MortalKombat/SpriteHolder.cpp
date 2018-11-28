@@ -7,7 +7,7 @@ SpriteHolder* SpriteHolder::Get(void) {
 };
 
 void SpriteHolder::Add(Sprite* s) {
-	sprites[s->GetType()].push_back(s);//This also
+	sprites[s->GetType()].push_back(s);
 };
 
 void SpriteHolder::Remove(Sprite* s) {
@@ -20,7 +20,6 @@ SpriteList SpriteHolder::GetSprites(unsigned type) const {
 };
 
 void SpriteHolder::CleanUp() {
-	//for (SpriteList::const_iterator i = sprites.begin(); i != films.end(); i++) delete(i->second);
-	//films.clear();
-	//This neeeds fix 
+	for (SpritesByType::const_iterator i = sprites.begin(); i != sprites.end(); i++) delete &i;
+	sprites.clear();
 };

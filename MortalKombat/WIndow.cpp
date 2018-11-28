@@ -53,27 +53,36 @@ bool Window::open(string w_name) {
 		return false;
 	}
 
+	if (TTF_Init() == -1)
+	{
+		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+		return  false;
+	}
+
 	return true;
 };
 
 
 void Window::initialize() {
 	//Here do call the picture/sound/sprite and etc initialazation
-//	if (!LoadMedia()) {
-//		cout << "Something went really bad";
-	//}
+	if (!loadMedia()) {
+		cout << "Something went really bad\n";
+	}
 	menu = new Menu();
 	menu->initialize(gScreenSurface);
 	state = state::MENU;
-	loadMedia();//This needs fix
 };
 
 void Window::close() {
-	//Destroy window
+
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(window);
+	TTF_CloseFont(font);
+
 	window = NULL;
 	gRenderer = NULL;
+	gScreenSurface = NULL;
+
 
 	//Quit SDL subsystems
 	Mix_Quit();
@@ -82,8 +91,14 @@ void Window::close() {
 };
 
 
-bool Window::loadMedia() {//Needs fix
+bool Window::loadMedia() {
 	//Here load the font 
+	font = TTF_OpenFont("media/font.ttf", 28);//The 28 here is the font size
+	if (font == NULL)
+	{
+		cout<<"Failed to load lazy font! SDL_ttf Error: %s\n"<< TTF_GetError();
+		return false;
+	}
 	return true;
 }
 
