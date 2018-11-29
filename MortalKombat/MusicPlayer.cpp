@@ -57,4 +57,3 @@ void MusicPlayer::PauseMusic(void) {
 void MusicPlayer::StopMusic(void) {
 	Mix_HaltMusic();
 };
-
