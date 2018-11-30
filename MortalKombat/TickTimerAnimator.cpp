@@ -1,6 +1,6 @@
 #include "TickTimerAnimator.h"
 
-TickTimerAnimator::TickTimerAnimator() {
+TickTimerAnimator::TickTimerAnimator(TickTimerAnimation *tick) {
 
 };
 

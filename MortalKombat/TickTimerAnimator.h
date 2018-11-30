@@ -1,11 +1,11 @@
 #include "Animator.h"
-//#include "TickTimerAnimation.h"
+#include "TickTimerAnimation.h"
 
 class TickTimerAnimator :public Animator {
-	//TickTimerAnimation *anim;
+	TickTimerAnimation *anim;
 public:
-	void Start();
+	void Start();//Sprite Prolly time and the animation
 	void Progress(timestamp_t currTime);
-	TickTimerAnimator();
+	TickTimerAnimator(TickTimerAnimation *tick);
 	~TickTimerAnimator() {};
 };
