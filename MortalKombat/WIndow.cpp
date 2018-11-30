@@ -1,4 +1,4 @@
-#include <Window.h>
+#include "Window.h"
 
 Window::Window(const int width, const int height) {
 	this->width = width;

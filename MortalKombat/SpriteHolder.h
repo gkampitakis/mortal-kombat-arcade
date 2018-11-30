@@ -1,4 +1,4 @@
-#include <Sprite.h>
+#include "Sprite.h"
 
 typedef list<Sprite*> SpriteList;
 

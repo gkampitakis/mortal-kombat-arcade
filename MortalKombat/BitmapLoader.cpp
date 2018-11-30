@@ -1,6 +1,6 @@
-#include <BitmapLoader.h>
+#include "BitmapLoader.h"
+#include "MyLibraries.h"
 #include <assert.h>
-#include <MyLibraries.h>
 
 SDL_Surface* BitmapLoader::GetBitmap(const string path) const {
 	Bitmaps::const_iterator i = bitmaps.find(path);

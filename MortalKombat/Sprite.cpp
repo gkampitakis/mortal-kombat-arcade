@@ -1,4 +1,4 @@
-#include <Sprite.h>
+#include "Sprite.h"
 #include <assert.h>
 
 void Sprite::SetVisibility(bool v) {

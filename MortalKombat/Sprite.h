@@ -1,8 +1,8 @@
 #ifndef Sprite_H
 #define Sprite_H
 
-#include <MyLibraries.h>
-#include <AnimationFilm.h>
+#include "MyLibraries.h"
+#include "AnimationFilm.h"
 
 class Sprite {
 private:

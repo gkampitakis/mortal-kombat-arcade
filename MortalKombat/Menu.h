@@ -1,7 +1,7 @@
-#include <MyLibraries.h>
-#include <Sprite.h>
-#include <AnimationFilmHolder.h>
-#include <SpriteHolder.h>
+#include "MyLibraries.h"
+#include "Sprite.h"
+#include "AnimationFilmHolder.h"
+#include "SpriteHolder.h"
 #include "TickTimerAnimator.h"
 
 class Menu {

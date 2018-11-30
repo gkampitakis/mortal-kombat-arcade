@@ -1,4 +1,4 @@
-#include <Animator.h>
+#include "Animator.h"
 
 void Animator::Stop(void) {
 	if (!HasFinished()) {
