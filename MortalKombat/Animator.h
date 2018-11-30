@@ -1,3 +1,6 @@
+#ifndef Animator_H
+#define Animator_H
+
 #include <MyLibraries.h>
 
 class Animator {
@@ -22,3 +25,5 @@ public:
 	Animator(void);
 	virtual ~Animator() {};
 };
+
+#endif 

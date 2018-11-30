@@ -25,8 +25,15 @@ public:
 	static void Progress(timestamp_t currTime) {
 		timestamp_t tmpTime = SDL_GetTicks();
 
-		for (list<Animator*>::iterator it = running.begin(); it != running.end(); ++it) {
-			(ProgressFunctor(tmpTime)(*(it)));//check if this works 
+		auto tmp = running;//if i call mark suspended throws error if i touch the iterating loop
+		for (list<Animator*>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
+			if ((*it)->GetState() == ANIMATOR_RUNNING) {
+				(ProgressFunctor(tmpTime)(*(it)));//check if this works 
+			}
+			else {
+				MarkAsSuspended(*it);
+			}
+
 		}
 	};
 };

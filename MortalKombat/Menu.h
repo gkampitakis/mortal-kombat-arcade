@@ -2,6 +2,7 @@
 #include <Sprite.h>
 #include <AnimationFilmHolder.h>
 #include <SpriteHolder.h>
+#include "TickTimerAnimator.h"
 
 class Menu {
 public:
@@ -15,4 +16,5 @@ private:
 	unsigned int time;
 	bool show = true;
 	SDL_Surface* background = NULL;
+	TickTimerAnimator *timeAnimator;
 };

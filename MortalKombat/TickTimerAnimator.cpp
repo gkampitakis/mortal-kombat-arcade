@@ -1,14 +1,25 @@
 #include "TickTimerAnimator.h"
 
-TickTimerAnimator::TickTimerAnimator(TickTimerAnimation *tick) {
-
-};
+TickTimerAnimator::TickTimerAnimator() {};
 
 void TickTimerAnimator::Progress(timestamp_t currTime) {
-	//Presentation 10 page 28
+	while (currTime > lastTime && currTime - lastTime >= anim->GetDelay()) {
+		anim->Run();
+		lastTime += anim->GetDelay();
+
+		if (anim->GetReps() != 0 && anim->GetReps() == 1) {
+			state = ANIMATOR_FINISHED;
+			NotifyStopped();
+		}
+		else {
+			
+			anim->SetReps(anim->GetReps() - 1);
+		}
+	}
 };
 
-void TickTimerAnimator::Start() {
-	//More to add here 
+void TickTimerAnimator::Start(TickTimerAnimation* anim, timestamp_t time) {
+	TickTimerAnimator::anim = anim;
+	lastTime = time;
 	state = ANIMATOR_RUNNING;
 };

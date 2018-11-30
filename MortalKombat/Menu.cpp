@@ -1,6 +1,8 @@
 #include <Menu.h>
 #include "AnimationFilm.h"
 #include "MusicPlayer.h"
+#include "TickTimerAnimation.h"
+#include "AnimatorHolder.h"
 
 Menu::Menu() {
 	time = 0;
@@ -11,6 +13,12 @@ bool Menu::initialize(SDL_Surface* gScreenSurface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 	//upload press start this needs testing about sprites and etc etc
+
+	TickTimerAnimation* tmp2 = new TickTimerAnimation(5);
+
+	timeAnimator = new TickTimerAnimator();
+	timeAnimator->Start(tmp2, SDL_GetTicks());
+	AnimatorHolder::MarkAsRunning(timeAnimator);
 
 	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface,false);//the first pic is up
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");

@@ -1,3 +1,6 @@
+#ifndef Animation_H
+#define Animation_H
+
 #include <MyLibraries.h>
 
 class Animation {
@@ -8,3 +11,5 @@ public:
 	Animation(animid_t _id) :id(_id) { }
 	virtual ~Animation() {}
 };
+
+#endif 
