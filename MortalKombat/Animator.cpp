@@ -1,8 +1,10 @@
 #include <Animator.h>
 
 void Animator::Stop(void) {
-	state = ANIMATOR_STOPPED;
-	NotifyStopped();
+	if (!HasFinished()) {
+		state = ANIMATOR_STOPPED;
+		NotifyStopped();
+	}
 };
 
 bool Animator::HasFinished(void) const {
