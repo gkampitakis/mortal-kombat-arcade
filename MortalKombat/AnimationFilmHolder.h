@@ -1,6 +1,6 @@
-#include <MyLibraries.h>
-#include <AnimationFilm.h>
-#include <BitmapLoader.h>
+#include "MyLibraries.h"
+#include "AnimationFilm.h"
+#include "BitmapLoader.h"
 
 class AnimationFilmHolder {
 private:

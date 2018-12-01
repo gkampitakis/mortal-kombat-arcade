@@ -1,4 +1,7 @@
-#include <MyLibraries.h>
+#ifndef Animator_H
+#define Animator_H
+
+#include "MyLibraries.h"
 
 class Animator {
 public:
@@ -11,6 +14,7 @@ protected:
 	void NotifyStopped(void);
 public:
 	void Stop(void);
+	animatorstate_t GetState(void)const;
 	bool HasFinished(void) const;
 	virtual void TimeShift(timestamp_t offset);
 	virtual void Progress(timestamp_t currTime) = 0;
@@ -21,3 +25,5 @@ public:
 	Animator(void);
 	virtual ~Animator() {};
 };
+
+#endif 

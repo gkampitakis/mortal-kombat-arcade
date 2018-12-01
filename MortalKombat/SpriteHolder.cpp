@@ -1,4 +1,4 @@
-#include <SpriteHolder.h>
+#include "SpriteHolder.h"
 
 SpriteHolder* SpriteHolder::holder = new SpriteHolder();//singleton
 

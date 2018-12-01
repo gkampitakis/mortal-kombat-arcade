@@ -1,5 +1,5 @@
-#include <MyLibraries.h>
-#include <Menu.h>
+#include "MyLibraries.h"
+#include "Menu.h"
 
 using namespace std;
 enum state { MENU, INGAME, FINISH, SCOREBOARD, OPTIONS };//This states might change or add new states
