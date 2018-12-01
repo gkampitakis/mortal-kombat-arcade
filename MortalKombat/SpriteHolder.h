@@ -15,6 +15,6 @@ public:
 	static SpriteHolder* Get(void);
 	void Add(Sprite* s);
 	void Remove(Sprite* s);
-	SpriteList GetSprites(unsigned type)const;
+	SpriteList GetSprites(unsigned type) const;
 	void CleanUp();
 };

@@ -12,8 +12,8 @@ bool Animator::HasFinished(void) const {
 };
 
 void Animator::NotifyStopped(void) {
-	if (onFinish) (*onFinish)(this, finishClosure);
-};
+	if (onFinish) (*onFinish)(this, finishClosure);//Also this one what it does ???? 
+};//the suspended animators delete them
 
 void Animator::TimeShift(timestamp_t offset) {
 	lastTime += offset;

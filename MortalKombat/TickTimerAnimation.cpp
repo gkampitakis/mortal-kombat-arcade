@@ -5,16 +5,23 @@ delay_t TickTimerAnimation::GetDelay(void) const {
 };
 
 void TickTimerAnimation::Run(void) {
-	cout << "Hello World\n";//Place Holder for the callback function
+	if(action) action();
 };
 
 byte TickTimerAnimation::GetReps(void) const {
 	return repetitions;
 };
 
-void TickTimerAnimation::SetReps(byte reps) {
+TickTimerAnimation& TickTimerAnimation::SetReps(byte reps) {
 	repetitions = reps;
+	return *this;
 }
+
+TickTimerAnimation& TickTimerAnimation::SetDelay(delay_t d) {
+	delay = d;
+	return *this;
+};
+
 /*
 	Here Fix the chained methods
 */

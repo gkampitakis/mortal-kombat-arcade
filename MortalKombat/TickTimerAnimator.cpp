@@ -1,6 +1,6 @@
 #include "TickTimerAnimator.h"
 
-TickTimerAnimator::TickTimerAnimator() {};
+TickTimerAnimator::TickTimerAnimator(TickTimerAnimation* anim) {};
 
 void TickTimerAnimator::Progress(timestamp_t currTime) {
 	while (currTime > lastTime && currTime - lastTime >= anim->GetDelay()) {
@@ -9,16 +9,15 @@ void TickTimerAnimator::Progress(timestamp_t currTime) {
 
 		if (anim->GetReps() != 0 && anim->GetReps() == 1) {
 			state = ANIMATOR_FINISHED;
-			NotifyStopped();
+			NotifyStopped();//This one here fix 
 		}
 		else {
-			
 			anim->SetReps(anim->GetReps() - 1);
 		}
 	}
 };
 
-void TickTimerAnimator::Start(TickTimerAnimation* anim, timestamp_t time) {
+void TickTimerAnimator::Start(timestamp_t time) {
 	TickTimerAnimator::anim = anim;
 	lastTime = time;
 	state = ANIMATOR_RUNNING;

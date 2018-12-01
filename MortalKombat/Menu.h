@@ -12,9 +12,8 @@ public:
 	SDL_Surface* getBackground();
 	void DrawMenu(SDL_Surface& gScreenSurface);
 	void HandleInput(SDL_Event& event);
+	void StartButton(SDL_Surface& gScreenSurface);
 private:
-	unsigned int time;
-	bool show = true;
 	SDL_Surface* background = NULL;
 	TickTimerAnimator *timeAnimator;
 };
