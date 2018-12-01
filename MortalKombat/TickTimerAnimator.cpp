@@ -1,6 +1,8 @@
 #include "TickTimerAnimator.h"
 
-TickTimerAnimator::TickTimerAnimator(TickTimerAnimation* anim) {};
+TickTimerAnimator::TickTimerAnimator(TickTimerAnimation* anim) {
+	TickTimerAnimator::anim = anim;
+};
 
 void TickTimerAnimator::Progress(timestamp_t currTime) {
 	while (currTime > lastTime && currTime - lastTime >= anim->GetDelay()) {
@@ -18,7 +20,6 @@ void TickTimerAnimator::Progress(timestamp_t currTime) {
 };
 
 void TickTimerAnimator::Start(timestamp_t time) {
-	TickTimerAnimator::anim = anim;
 	lastTime = time;
 	state = ANIMATOR_RUNNING;
 };
