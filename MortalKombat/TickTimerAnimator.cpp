@@ -9,9 +9,9 @@ void TickTimerAnimator::Progress(timestamp_t currTime) {
 		anim->Run();
 		lastTime += anim->GetDelay();
 
-		if (anim->GetReps() != 0 && anim->GetReps() == 1) {
+		if (anim->GetReps() != 0 && anim->GetReps() == 1) {//The lest rep is the 1
 			state = ANIMATOR_FINISHED;
-			NotifyStopped();//This one here fix 
+			NotifyStopped();
 		}
 		else {
 			anim->SetReps(anim->GetReps() - 1);

@@ -21,7 +21,3 @@ TickTimerAnimation& TickTimerAnimation::SetDelay(delay_t d) {
 	delay = d;
 	return *this;
 };
-
-/*
-	Here Fix the chained methods
-*/

@@ -2,25 +2,25 @@
 #define Animator_H
 
 #include "MyLibraries.h"
+#include <functional>
 
 class Animator {
-public:
-	typedef void(*FinishCallback)(Animator*, void*);
 protected:
 	timestamp_t lastTime;
 	animatorstate_t state;
-	FinishCallback onFinish;
+	std::function<void()> onFinish;//Lambda Function
 	void* finishClosure;
 	void NotifyStopped(void);
 public:
 	void Stop(void);
 	animatorstate_t GetState(void)const;
 	bool HasFinished(void) const;
-	virtual void TimeShift(timestamp_t offset);
+	virtual void TimeShift(timestamp_t offset);//Might Not be usefull
 	virtual void Progress(timestamp_t currTime) = 0;
-	void SetOnFinish(FinishCallback f, void *c = (void*)0) {
+
+	void SetOnFinish(const std::function<void()>& f, void *c = (void*)0) {
 		onFinish = f;
-		finishClosure = c;
+		finishClosure = c;//also this needs fix
 	};
 	Animator(void);
 	virtual ~Animator() {};

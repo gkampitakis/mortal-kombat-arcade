@@ -20,6 +20,5 @@ SpriteList SpriteHolder::GetSprites(unsigned type) const {
 };
 
 void SpriteHolder::CleanUp() {
-	for (SpritesByType::const_iterator i = sprites.begin(); i != sprites.end(); i++) delete &i;
 	sprites.clear();
 };

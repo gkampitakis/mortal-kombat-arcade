@@ -9,21 +9,17 @@ class TickTimerAnimation : public Animation {
 private:
 	delay_t delay;
 	byte repetitions;
-	std::function<void()/* type of your lamdba::operator()*/> action;
+	std::function<void()> action;
 	void* closure;
 public:
 	TickTimerAnimation(animid_t id) :
 		Animation(id),
 		delay(3000),
 		repetitions(10),
-		action((const std::function<void()/* type of your lamdba::operator()*/>)0), closure((void*)0) {
+		action((const std::function<void()>)0), closure((void*)0) {
 	}
 
-	TickTimerAnimation *Clone(animid_t newId) const {
-		return new TickTimerAnimation(newId);
-	};
-
-	TickTimerAnimation& setOnTick(const std::function<void()/* type of your lamdba::operator()*/>& f, void *c = (void *)0) {//This needs evaluation and the closure also 
+	TickTimerAnimation& setOnTick(const std::function<void()>& f, void *c = (void *)0) {
 		action = f, closure = c;
 		return *this;
 	};

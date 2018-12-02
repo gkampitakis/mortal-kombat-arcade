@@ -12,7 +12,7 @@ bool Animator::HasFinished(void) const {
 };
 
 void Animator::NotifyStopped(void) {
-	if (onFinish) (*onFinish)(this, finishClosure);//Also this one what it does ???? 
+	if (onFinish) onFinish();
 };//the suspended animators delete them
 
 void Animator::TimeShift(timestamp_t offset) {
@@ -20,7 +20,7 @@ void Animator::TimeShift(timestamp_t offset) {
 };
 
 Animator::Animator(void) :lastTime(0), state(ANIMATOR_FINISHED),
-onFinish((FinishCallback)0), finishClosure((void*)0) {};
+onFinish((const std::function<void()>)0), finishClosure((void*)0) {};
 
 animatorstate_t Animator::GetState(void) const {
 	return state;

@@ -17,4 +17,5 @@ public:
 	static void MarkAsRunning(Animator* a);
 	static void MarkAsSuspended(Animator* a);
 	static void Progress(timestamp_t currTime);
+	static void CleanUp(void);
 };

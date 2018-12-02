@@ -76,9 +76,12 @@ void Menu::StartButton(SDL_Surface& gScreenSurface) {
 		for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {//This here might change or just have one item here future evaluation
 			(*it)->SetVisibility(!(*it)->IsVisible());//Here can we find the specific sprite and not do an iteration
 		};
-	}).SetDelay(500).SetReps(0);
-
+	}).SetDelay(500).SetReps(5);//This is for testing 
+	//.SetDelay(500).SetReps(0);
 	timeAnimator = new TickTimerAnimator(tmp2);
+	timeAnimator->SetOnFinish([&]() {
+		AnimatorHolder::MarkAsSuspended(timeAnimator);
+	});
 	timeAnimator->Start(SDL_GetTicks());
 	AnimatorHolder::MarkAsRunning(timeAnimator);
 }

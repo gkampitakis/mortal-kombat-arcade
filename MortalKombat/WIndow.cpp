@@ -1,4 +1,6 @@
 #include "Window.h"
+#include "AnimatorHolder.h"
+#include "MusicPlayer.h"
 
 Window::Window(const int width, const int height) {
 	this->width = width;
@@ -14,7 +16,7 @@ bool Window::HandleInput(SDL_Event& event) {
 			quit = true;
 		}
 		else {
-			if (state == state::MENU) {//This will be changed
+			if (state == Game_State::MENU) {//This will be changed
 				menu->HandleInput(event);
 			}
 		}
@@ -70,7 +72,7 @@ void Window::initialize() {
 	}
 	menu = new Menu();
 	menu->initialize(gScreenSurface);
-	state = state::MENU;
+	state = Game_State::MENU;
 };
 
 void Window::close() {
@@ -83,6 +85,11 @@ void Window::close() {
 	gRenderer = NULL;
 	gScreenSurface = NULL;
 
+	//Call the Holder's CleanUp Functions
+	SpriteHolder::Get()->CleanUp();
+	AnimatorHolder::CleanUp();
+	AnimationFilmHolder::Get()->CleanUp();
+	MusicPlayer::Get()->CleanUp();
 
 	//Quit SDL subsystems
 	Mix_Quit();
@@ -104,9 +111,9 @@ bool Window::loadMedia() {
 
 
 void Window::drawWindow() {
-	if (state == state::MENU) {
+	if (state == Game_State::MENU) {
 		menu->DrawMenu(*gScreenSurface);
 	}
-	//This also should not be here 
+	
 	SDL_UpdateWindowSurface(window);
 };

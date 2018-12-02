@@ -23,9 +23,8 @@ typedef unsigned short delay_t;
 typedef unsigned short animid_t;
 typedef unsigned long timestamp_t;
 
-//maybe add the sdl_surface as bitmap but we ll see
-#define SCREEN_WIDTH 960//might need fix
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 1280//might need fix
+#define SCREEN_HEIGHT 920
 
 enum SpriteTypes { MenuSprite };//Here ill add more 
 

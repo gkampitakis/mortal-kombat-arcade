@@ -2,7 +2,7 @@
 #include "Menu.h"
 
 using namespace std;
-enum state { MENU, INGAME, FINISH, SCOREBOARD, OPTIONS };//This states might change or add new states
+enum Game_State { MENU, INGAME, FINISH, SCOREBOARD, OPTIONS };//This states might change or add new states
 
 class Window {
 public:
@@ -23,7 +23,6 @@ private:
 	SDL_Window* window = NULL;
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Surface* gScreenSurface = NULL;
-	//FONT add here 
 	TTF_Font *font = NULL;
 	Menu* menu = NULL;
 };
