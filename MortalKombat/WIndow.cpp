@@ -21,7 +21,7 @@ bool Window::HandleInput(SDL_Event& event) {
 				int tmpstate = intro->HandleInput(event);
 				state = tmpstate == -1 ? state : tmpstate;
 			}
-		}
+		}//Handle Input For Menu
 	}
 	return quit;
 };
@@ -74,6 +74,7 @@ void Window::initialize() {
 	}
 	intro = new Intro();
 	intro->initialize(gScreenSurface);
+	//Initialize Menu
 	state = INTRO;
 };
 
@@ -118,6 +119,8 @@ void Window::drawWindow() {
 	}
 	else if (state == MENU) {
 		SDL_FillRect(gScreenSurface, NULL, 0x000000);//For starters just wipes the screen
+		//MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("transition"), 0);
+		//DrawMenu
 	}//when changing the state kill the intro animator
 	SDL_UpdateWindowSurface(window);
 };

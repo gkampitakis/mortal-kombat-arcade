@@ -21,7 +21,8 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 	*/
 	MusicPlayer::Get()->LoadEffect("media/intro.wav","intro");
 	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("intro"),0);
-	
+
+	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 	StartButton(*gScreenSurface);
 
 	return true;
@@ -51,26 +52,9 @@ void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
 int Intro::HandleInput(SDL_Event& event) {//A basic handle input for menu DUMMY FOR STARTER
 	int state = -1;
 	if (event.type == SDL_KEYDOWN) {
-		switch (event.key.keysym.sym)
-		{
-		case SDLK_0:
+		if (event.key.keysym.sym) {
 			state = MENU;
 			CleanUp();
-			cout << "pressed";
-			break;
-		case SDLK_1:
-			cout << "1";
-			CleanUp();
-			state = MENU;
-			break;
-		case SDLK_2:
-			cout << "2";
-			CleanUp();
-			state = MENU;
-			break;
-		default:
-			cout << "Unknow event";
-			break;
 		}
 	}
 	return state;
@@ -85,7 +69,6 @@ void Intro::StartButton(SDL_Surface& gScreenSurface) {
 
 		for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {//This here might change or just have one item here future evaluation
 			(*it)->SetVisibility(!(*it)->IsVisible());//Here can we find the specific sprite and not do an iteration
-			cout << "Animator still running\n";
 		};
 	}).SetDelay(500).SetReps(0);
 	timeAnimator = new TickTimerAnimator(tmp2);
