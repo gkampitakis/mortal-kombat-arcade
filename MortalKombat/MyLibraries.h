@@ -26,12 +26,22 @@ typedef unsigned long timestamp_t;
 #define SCREEN_WIDTH 1280//might need fix
 #define SCREEN_HEIGHT 920
 
-enum SpriteTypes { MenuSprite };//Here ill add more 
+enum SpriteTypes { INTRO_SPRITE };//Here ill add more 
 
 enum animatorstate_t {
 	ANIMATOR_FINISHED = 0,
 	ANIMATOR_RUNNING = 1,
 	ANIMATOR_STOPPED = 2
 };
+
+enum Game_State { 
+	INTRO,
+	MENU, 
+	INGAME, 
+	FINISH, 
+	SCOREBOARD, 
+	OPTIONS 
+};//This states might change or add new states
+
 
 #endif

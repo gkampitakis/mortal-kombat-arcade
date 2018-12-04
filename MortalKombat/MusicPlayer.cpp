@@ -63,3 +63,7 @@ void MusicPlayer::PauseMusic(void) {
 void MusicPlayer::StopMusic(void) {
 	Mix_HaltMusic();
 };
+
+void MusicPlayer::StopEffect(void) {
+	Mix_HaltChannel(-1);//Check this if stops all sounds forever and needs re "opening"
+}

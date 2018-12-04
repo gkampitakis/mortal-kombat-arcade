@@ -4,15 +4,17 @@
 #include "SpriteHolder.h"
 #include "TickTimerAnimator.h"
 
-class Menu {
+class Intro {
 public:
-	Menu();
-	~Menu() {};
+	Intro();
+	~Intro() {};
 	bool initialize(SDL_Surface* gScreenSurface);
 	SDL_Surface* getBackground();
-	void DrawMenu(SDL_Surface& gScreenSurface);
-	void HandleInput(SDL_Event& event);
+	void DrawIntro(SDL_Surface& gScreenSurface);
+	int HandleInput(SDL_Event& event);
 	void StartButton(SDL_Surface& gScreenSurface);
+
+	void CleanUp(void);
 private:
 	SDL_Surface* background = NULL;
 	TickTimerAnimator *timeAnimator;

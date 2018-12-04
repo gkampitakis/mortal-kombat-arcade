@@ -1,8 +1,7 @@
 #include "MyLibraries.h"
-#include "Menu.h"
+#include "Intro.h"
 
 using namespace std;
-enum Game_State { MENU, INGAME, FINISH, SCOREBOARD, OPTIONS };//This states might change or add new states
 
 class Window {
 public:
@@ -24,7 +23,7 @@ private:
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Surface* gScreenSurface = NULL;
 	TTF_Font *font = NULL;
-	Menu* menu = NULL;
+	Intro* intro = NULL;
 };
 
 // SDL_Color textColor 

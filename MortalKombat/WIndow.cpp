@@ -16,8 +16,10 @@ bool Window::HandleInput(SDL_Event& event) {
 			quit = true;
 		}
 		else {
-			if (state == Game_State::MENU) {//This will be changed
-				menu->HandleInput(event);
+			//if here for the sound to handle "globaly"
+			if (state == INTRO) {
+				int tmpstate = intro->HandleInput(event);
+				state = tmpstate == -1 ? state : tmpstate;
 			}
 		}
 	}
@@ -70,9 +72,9 @@ void Window::initialize() {
 	if (!loadMedia()) {
 		cout << "Something went really bad\n";
 	}
-	menu = new Menu();
-	menu->initialize(gScreenSurface);
-	state = Game_State::MENU;
+	intro = new Intro();
+	intro->initialize(gScreenSurface);
+	state = INTRO;
 };
 
 void Window::close() {
@@ -103,7 +105,7 @@ bool Window::loadMedia() {
 	font = TTF_OpenFont("media/font.ttf", 28);//The 28 here is the font size
 	if (font == NULL)
 	{
-		cout<<"Failed to load lazy font! SDL_ttf Error: %s\n"<< TTF_GetError();
+		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
 		return false;
 	}
 	return true;
@@ -111,9 +113,13 @@ bool Window::loadMedia() {
 
 
 void Window::drawWindow() {
-	if (state == Game_State::MENU) {
-		menu->DrawMenu(*gScreenSurface);
+	if (state == INTRO) {//add Sound
+		intro->DrawIntro(*gScreenSurface);
 	}
-	
+	else if (state == MENU) {
+		SDL_FillRect(gScreenSurface, NULL, 0x000000);//For starters just wipes the screen
+	}//when changing the state kill the intro animator
 	SDL_UpdateWindowSurface(window);
 };
+
+//Mix volume ad 

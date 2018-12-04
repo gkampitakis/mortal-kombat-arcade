@@ -1,34 +1,37 @@
-#include "Menu.h"
+#include "Intro.h"
 #include "AnimationFilm.h"
 #include "MusicPlayer.h"
 #include "TickTimerAnimation.h"
 #include "AnimatorHolder.h"
 
-Menu::Menu() {}
+Intro::Intro() {}
 
-bool Menu::initialize(SDL_Surface* gScreenSurface) {
-	AnimationFilmHolder::Get()->Load("media/menu.png", 1, "background", gScreenSurface,true);//the first pic is up
+bool Intro::initialize(SDL_Surface* gScreenSurface) {
+	AnimationFilmHolder::Get()->Load("media/menu.png", 1, "background", gScreenSurface, true);
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 
-	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface,false);//the first pic is up
+	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface, false);
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");
 
-	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 100 }, tmp, SpriteTypes::MenuSprite));
-	//also upload all the sprites for the main menu here 
-	//the sound now needs the same thing  but ll see
+	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 120 }, tmp, SpriteTypes::INTRO_SPRITE));
 
-	/* ADD SOUNDS HERE*/
-	//MusicPlayer::Get()->LoadEffect("media/test2.wav","test"); //Testing Load It works but too loud
+	/*
+	*		SOUND LOADING HERE
+	*/
+	MusicPlayer::Get()->LoadEffect("media/intro.wav","intro");
+	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("intro"),0);
+	
 	StartButton(*gScreenSurface);
+
 	return true;
 }
 
-SDL_Surface* Menu::getBackground() {
+SDL_Surface* Intro::getBackground() {
 	return background;
 };
 
-void Menu::DrawMenu(SDL_Surface& gScreenSurface) {
+void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
 	//here also call a renderer for the sprites
 
 	Rect fullscreen;
@@ -37,47 +40,54 @@ void Menu::DrawMenu(SDL_Surface& gScreenSurface) {
 	fullscreen.x = 0;
 	fullscreen.y = 0;
 	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
-	
-	SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::MenuSprite);
+
+	SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::INTRO_SPRITE);
 	list<Sprite*>::iterator it;
 	for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {
 		(*it)->DisplayUnique(gScreenSurface, 140, 50);
 	};
 };
 
-void Menu::HandleInput(SDL_Event& event) {//A basic handle input for menu
+int Intro::HandleInput(SDL_Event& event) {//A basic handle input for menu DUMMY FOR STARTER
+	int state = -1;
 	if (event.type == SDL_KEYDOWN) {
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_0:
-			cout << "0";
+			state = MENU;
+			CleanUp();
+			cout << "pressed";
 			break;
 		case SDLK_1:
 			cout << "1";
+			CleanUp();
+			state = MENU;
 			break;
 		case SDLK_2:
 			cout << "2";
+			CleanUp();
+			state = MENU;
 			break;
 		default:
 			cout << "Unknow event";
 			break;
 		}
 	}
-	//cout <<&event <<"caught a event";
+	return state;
 }
 
-void Menu::StartButton(SDL_Surface& gScreenSurface) {
-	
+void Intro::StartButton(SDL_Surface& gScreenSurface) {
+
 	TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
 	tmp2->setOnTick([&](void) {
-		SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::MenuSprite);
+		SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::INTRO_SPRITE);
 		list<Sprite*>::iterator it;
 
 		for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {//This here might change or just have one item here future evaluation
 			(*it)->SetVisibility(!(*it)->IsVisible());//Here can we find the specific sprite and not do an iteration
+			cout << "Animator still running\n";
 		};
-	}).SetDelay(500).SetReps(5);//This is for testing 
-	//.SetDelay(500).SetReps(0);
+	}).SetDelay(500).SetReps(0);
 	timeAnimator = new TickTimerAnimator(tmp2);
 	timeAnimator->SetOnFinish([&]() {
 		AnimatorHolder::MarkAsSuspended(timeAnimator);
@@ -87,3 +97,8 @@ void Menu::StartButton(SDL_Surface& gScreenSurface) {
 }
 
 
+void Intro::CleanUp(void) {
+	//Cleaning the animators called here 
+	AnimatorHolder::CleanUp();
+	MusicPlayer::Get()->StopEffect();
+}

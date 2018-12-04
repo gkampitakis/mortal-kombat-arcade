@@ -24,6 +24,7 @@ public:
 	void PlayEffect(Mix_Chunk* effect, int loops);
 	void PauseMusic(void);//If called twice resumes the music
 	void StopMusic(void);
+	void StopEffect(void);
 
 	void CleanUp();
 };
