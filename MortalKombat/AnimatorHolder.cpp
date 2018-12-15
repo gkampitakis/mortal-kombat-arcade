@@ -40,7 +40,7 @@ void AnimatorHolder::CleanUp(void) {
 	running.clear();
 
 	for (auto&& it : suspended) {
-		delete it;
+		delete it;//Something here crashes
 	}
 	suspended.clear();
 };

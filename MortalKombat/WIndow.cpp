@@ -109,19 +109,53 @@ bool Window::loadMedia() {
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
 		return false;
 	}
+	AnimationFilmHolder::Get()->Load("media/disclaimer.png", 1, "disclaimer", gScreenSurface, true);
 	return true;
 }
 
 
+void drawDisclaimer(SDL_Surface& gScreenSurface) {
+	SDL_Surface* background = NULL;
+	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
+	background = tmp->GetBitmap();
+
+	Rect fullscreen;
+	fullscreen.w = SCREEN_WIDTH;
+	fullscreen.h = SCREEN_HEIGHT;
+	fullscreen.x = 0;
+	fullscreen.y = 0;
+	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
+};
+
+
+
 void Window::drawWindow() {
-	if (state == INTRO) {//add Sound
+	if (state == INTRO) {
 		intro->DrawIntro(*gScreenSurface);
 	}
-	else if (state == MENU) {
-		SDL_FillRect(gScreenSurface, NULL, 0x000000);//For starters just wipes the screen
-		//MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("transition"), 0);
-		//DrawMenu
-	}//when changing the state kill the intro animator
+	else if (state == DISCLAIMER) {
+		static bool initiate;
+		drawDisclaimer(*gScreenSurface);
+		if (!initiate) {//Call this code only once :) 
+			initiate = true;
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(10000).SetReps(1);
+
+			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
+			timeAnimator->SetOnFinish([&]() {
+				//AnimatorHolder::MarkAsSuspended(timeAnimator);
+				state = INGAME;
+				AnimatorHolder::CleanUp();
+			});
+			timeAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(timeAnimator);
+		}
+	}
+	else if (state == INGAME) {
+		SDL_FillRect(gScreenSurface, NULL, 0x000000);
+	}
 	SDL_UpdateWindowSurface(window);
 };
 

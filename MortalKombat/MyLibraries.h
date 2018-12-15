@@ -36,7 +36,7 @@ enum animatorstate_t {
 
 enum Game_State { 
 	INTRO,
-	MENU, 
+	DISCLAIMER, 
 	INGAME, 
 	FINISH, 
 	SCOREBOARD, 

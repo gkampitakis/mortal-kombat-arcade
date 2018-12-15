@@ -19,8 +19,8 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 	/*
 	*		SOUND LOADING HERE
 	*/
-	MusicPlayer::Get()->LoadEffect("media/intro.wav","intro");
-	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("intro"),0);
+	MusicPlayer::Get()->LoadMusic("media/intro.wav","intro");
+	MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));
 
 	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 	StartButton(*gScreenSurface);
@@ -53,8 +53,9 @@ int Intro::HandleInput(SDL_Event& event) {//A basic handle input for menu DUMMY 
 	int state = -1;
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym) {
-			state = MENU;
+			state = DISCLAIMER;
 			CleanUp();
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("transition"), 0);
 		}
 	}
 	return state;
@@ -73,7 +74,7 @@ void Intro::StartButton(SDL_Surface& gScreenSurface) {
 	}).SetDelay(500).SetReps(0);
 	timeAnimator = new TickTimerAnimator(tmp2);
 	timeAnimator->SetOnFinish([&]() {
-		AnimatorHolder::MarkAsSuspended(timeAnimator);
+		//AnimatorHolder::MarkAsSuspended(timeAnimator);
 	});
 	timeAnimator->Start(SDL_GetTicks());
 	AnimatorHolder::MarkAsRunning(timeAnimator);
@@ -83,5 +84,5 @@ void Intro::StartButton(SDL_Surface& gScreenSurface) {
 void Intro::CleanUp(void) {
 	//Cleaning the animators called here 
 	AnimatorHolder::CleanUp();
-	MusicPlayer::Get()->StopEffect();
+	MusicPlayer::Get()->StopMusic();
 }
