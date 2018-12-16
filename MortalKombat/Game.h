@@ -2,6 +2,7 @@
 #include "TickTimerAnimator.h"
 #include "TImer.h"
 #include "Fighter.h"
+#include "AnimationFilmHolder.h"
 
 class Game {
 public:
@@ -16,4 +17,5 @@ private:
 	Fighter* scorpion=NULL;
 	TickTimerAnimator *timeAnimator;
 	Timer* gameTimer;
+	SDL_Surface* background = NULL;
 };

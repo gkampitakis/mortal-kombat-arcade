@@ -27,6 +27,9 @@ typedef unsigned long timestamp_t;
 #define SCREEN_WIDTH 1280//might need fix
 #define SCREEN_HEIGHT 920 
 
+#define STAGE_WIDTH 2008
+#define STAGE_HEIGHT 920
+
 enum SpriteTypes { INTRO_SPRITE };//Here ill add more 
 
 enum animatorstate_t {
