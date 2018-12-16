@@ -35,11 +35,7 @@ SDL_Surface* Intro::getBackground() {
 void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
 	//here also call a renderer for the sprites
 
-	Rect fullscreen;
-	fullscreen.w = SCREEN_WIDTH;
-	fullscreen.h = SCREEN_HEIGHT;
-	fullscreen.x = 0;
-	fullscreen.y = 0;
+	Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
 
 	SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::INTRO_SPRITE);

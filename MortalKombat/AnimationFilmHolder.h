@@ -1,3 +1,6 @@
+#ifndef AnimationFilmHolder_HEADER
+#define AnimationFilmHolder_HEADER
+
 #include "MyLibraries.h"
 #include "AnimationFilm.h"
 #include "BitmapLoader.h"
@@ -18,3 +21,5 @@ public:
 	void CleanUp(void);
 	AnimationFilm* GetFilm(const string) const;
 };
+
+#endif

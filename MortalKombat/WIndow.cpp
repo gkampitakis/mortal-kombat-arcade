@@ -113,6 +113,7 @@ bool Window::loadMedia() {
 		return false;
 	}
 	AnimationFilmHolder::Get()->Load("media/disclaimer.png", 1, "disclaimer", gScreenSurface, true);
+	AnimationFilmHolder::Get()->Load("media/stage.png", 1, "stage", gScreenSurface, true);
 	return true;
 }
 
@@ -122,17 +123,14 @@ void drawDisclaimer(SDL_Surface& gScreenSurface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
 	background = tmp->GetBitmap();
 
-	Rect fullscreen;
-	fullscreen.w = SCREEN_WIDTH;
-	fullscreen.h = SCREEN_HEIGHT;
-	fullscreen.x = 0;
-	fullscreen.y = 0;
+	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
 };
 
 
 
 void Window::drawWindow() {
+
 	if (state == INTRO) {
 		intro->DrawIntro(*gScreenSurface);
 	}
@@ -149,6 +147,7 @@ void Window::drawWindow() {
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
 				//AnimatorHolder::MarkAsSuspended(timeAnimator);
+				cout << "change State";
 				state = INGAME;
 				AnimatorHolder::CleanUp();
 			});
@@ -159,6 +158,7 @@ void Window::drawWindow() {
 	else if (state == INGAME) {
 		game->DrawGame(*gScreenSurface);
 	}
+
 	SDL_UpdateWindowSurface(window);
 };
 

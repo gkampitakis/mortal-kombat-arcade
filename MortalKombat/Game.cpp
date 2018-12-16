@@ -5,13 +5,18 @@ Game::Game() {};
 Game::~Game() {};
 
 bool Game::initialize(SDL_Surface* gScreenSurface) {
+	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("stage");
+	background = tmp->GetBitmap();
 	//Here is called from window.cpp 80 line 
 	return true;//this ll change
 };
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
-	SDL_FillRect(&gScreenSurface, NULL, 0x000000);
+	Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
+	//The camera might need moving or interaction with the players 
 };
 
 void Game::CleanUp() {

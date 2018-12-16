@@ -1,7 +1,6 @@
 #ifndef MyLibrary_H
 #define MyLibrary_H
 
-
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
@@ -26,6 +25,9 @@ typedef unsigned long timestamp_t;
 
 #define SCREEN_WIDTH 1280//might need fix
 #define SCREEN_HEIGHT 920 
+
+#define STAGE_WIDTH 2008
+#define STAGE_HEIGHT 920
 
 enum SpriteTypes { INTRO_SPRITE };//Here ill add more 
 
