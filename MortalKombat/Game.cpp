@@ -13,8 +13,8 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
-	Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//The camera might need moving or interaction with the players 
 };
