@@ -1,5 +1,6 @@
 #include "MyLibraries.h"
 #include "Intro.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ private:
 	SDL_Surface* gScreenSurface = NULL;
 	TTF_Font *font = NULL;
 	Intro* intro = NULL;
+	Game* game = NULL;
 };
 
 // SDL_Color textColor 

@@ -1,3 +1,6 @@
+#ifndef TickTimerAnimator_HEADER
+#define TickTimerAnimator_HEADER
+
 #include "Animator.h"
 #include "TickTimerAnimation.h"
 
@@ -9,3 +12,5 @@ public:
 	TickTimerAnimator(TickTimerAnimation* anim);
 	~TickTimerAnimator() {};
 };
+
+#endif

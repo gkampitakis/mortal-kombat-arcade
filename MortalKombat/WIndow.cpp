@@ -76,6 +76,9 @@ void Window::initialize() {
 	intro->initialize(gScreenSurface);
 	//Initialize Menu
 	state = INTRO;
+
+	game = new Game();
+	game->initialize(gScreenSurface);
 };
 
 void Window::close() {
@@ -154,7 +157,7 @@ void Window::drawWindow() {
 		}
 	}
 	else if (state == INGAME) {
-		SDL_FillRect(gScreenSurface, NULL, 0x000000);
+		game->DrawGame(*gScreenSurface);
 	}
 	SDL_UpdateWindowSurface(window);
 };

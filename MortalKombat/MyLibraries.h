@@ -11,6 +11,7 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include <set>
 
 using namespace std;
 
@@ -42,6 +43,8 @@ enum Game_State {
 	SCOREBOARD, 
 	OPTIONS 
 };//This states might change or add new states
+
+//#define	FIGHTER_ACTION_DELAY_MSECS	150
 
 
 #endif
