@@ -70,18 +70,19 @@ bool Window::open(string w_name) {
 };
 
 
-void Window::initialize() {
+bool Window::initialize() {
 	//Here do call the picture/sound/sprite and etc initialazation
 	if (!loadMedia()) {
 		cout << "Something went really bad\n";
 	}
 	intro = new Intro();
-	intro->initialize(gScreenSurface);
+	if (!intro->initialize(gScreenSurface)) return false;
 	//Initialize Menu
 	state = INTRO;
 
 	game = new Game();
-	game->initialize(gScreenSurface);
+	if (!game->initialize(gScreenSurface)) return false;
+	return true;
 };
 
 void Window::close() {
@@ -150,7 +151,6 @@ void Window::drawWindow() {
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
 				//AnimatorHolder::MarkAsSuspended(timeAnimator);
-				cout << "change State";
 				state = INGAME;
 				AnimatorHolder::CleanUp();
 			});

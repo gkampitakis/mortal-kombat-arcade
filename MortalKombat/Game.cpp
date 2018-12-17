@@ -11,9 +11,8 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 	subzero = new Fighter("subzero");
 	scorpion = new Fighter("scorpion");
-	subzero->initialize();
-	scorpion->initialize();
-
+	if (!subzero->initialize("config/subzero_controller.json")) return false;
+	if (!scorpion->initialize("config/scorpion_controller.json")) return false;
 	//Here is called from window.cpp 80 line 
 	return true;//this ll change
 };

@@ -12,7 +12,7 @@ public:
 	bool open(string w_name);
 	void close();
 
-	void initialize();
+	bool initialize();
 	void drawWindow();
 	bool loadMedia();
 

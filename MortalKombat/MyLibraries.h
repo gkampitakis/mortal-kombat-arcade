@@ -11,8 +11,11 @@
 #include <map>
 #include <list>
 #include <set>
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 using namespace std;
+using json = nlohmann::json;
 
 typedef unsigned char byte;
 typedef SDL_Rect Rect;

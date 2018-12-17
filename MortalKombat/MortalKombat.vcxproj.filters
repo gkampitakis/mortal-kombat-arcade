@@ -129,4 +129,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config\subzero_controller.json">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="config\scorpion_controller.json">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
