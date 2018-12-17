@@ -1,0 +1,20 @@
+{
+  "combinations": [
+    {
+      "action": "UP",
+      "key_strokes": [ 82 ]
+    },
+    {
+      "action": "LEFT",
+      "key_strokes": [ 80 ]
+    },
+    {
+      "action": "RIGHT",
+      "key_strokes": [ 79 ]
+    },
+    {
+      "action": "DOWN",
+      "key_strokes": [ 81 ]
+    }
+  ]
+}

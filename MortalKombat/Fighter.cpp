@@ -1,18 +1,33 @@
 #include "Fighter.h"
-using Input = std::set<std::string>;
 
 Fighter::Fighter(string Name) {
 	name = Name;
 };
 
-bool Fighter::initialize() {
-	input::key_combination test = { SDL_SCANCODE_W };
-	//Here prolly a json file
-	Fighter::inputController.AddAction(test, "UP");
-	Fighter::stateTransitions.SetState("Ready");
-	//Working for starters 
-	//Now must see how the logical works and the state
-	return true;
+bool Fighter::initialize(const string& path) {
+	try {
+		json config;
+		std::ifstream config_file(path, std::ifstream::binary);
+		config_file >> config;
+		//cout << config;
+		input::key_combination keycodes;
+		for (json::iterator it = config["combinations"].begin(); it != config["combinations"].end(); it++) {
+			keycodes.clear();
+			int i = 0;
+			json tmp = *it;
+			string action = tmp["action"];
+			for (json::iterator i = tmp["key_strokes"].begin(); i != tmp["key_strokes"].end(); i++) {
+				keycodes.push_back(*i);
+			}
+			Fighter::inputController.AddAction(keycodes, action);
+		}
+		return true;//true or false catch here
+	}
+	catch (const std::exception& e) {
+		cerr << e.what();
+		return false;
+
+	}
 };
 
 void Fighter::Draw(void) {

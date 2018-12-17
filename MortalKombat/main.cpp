@@ -11,7 +11,10 @@ int main(int argc, char *args[]) {
 		cout << "Failed to initialize window";
 	}
 	else {
-		new_window.initialize();
+		if (!new_window.initialize()) {
+			cerr << "Error with game initialazation\n";
+			return 0;
+		}
 		while (!quit) {
 			quit = new_window.HandleInput(event);
 			new_window.drawWindow();

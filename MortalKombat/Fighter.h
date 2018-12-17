@@ -23,5 +23,5 @@ public:
 		return inputController;
 	}
 	void Draw();//test function
-	bool initialize();//give json as argument
+	bool initialize(const string& path);//give json as argument
 };
