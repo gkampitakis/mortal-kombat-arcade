@@ -21,6 +21,9 @@ bool Window::HandleInput(SDL_Event& event) {
 				int tmpstate = intro->HandleInput(event);
 				state = tmpstate == -1 ? state : tmpstate;
 			}
+			else if (state == INGAME) {
+				game->HandleInput();
+			}
 		}//Handle Input For Menu
 	}
 	return quit;
@@ -142,8 +145,8 @@ void Window::drawWindow() {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
 			tmp2->setOnTick([] {
 				//Nothing to do here
-			}).SetDelay(10000).SetReps(1);
-
+			}).SetDelay(100).SetReps(1);
+			//10000 set delay for not waiting left 100
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
 				//AnimatorHolder::MarkAsSuspended(timeAnimator);

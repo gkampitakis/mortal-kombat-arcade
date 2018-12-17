@@ -2,9 +2,9 @@
 
 namespace input {
 
-	using key_combination = std::list<std::string>;
+	using key_combination = std::list<int>;
 
-	extern bool test_key(const std::string& keyCode);
+	extern bool test_key(const int keyCode);
 
 	inline bool test_keys(const key_combination& keys) {
 		for (auto& key : keys)
@@ -31,8 +31,9 @@ namespace input {
 		void Handle(void) {
 			logical.clear();
 			for (auto& i : actions)
-				if (input::test_keys(i.first))
-					SetLogical(i.second);
+				if (input::test_keys(i.first)) {
+					SetLogical(i.second);//How to handle ambiguity
+				}	
 		}
 		const Logical& GetLogical(void) const
 		{

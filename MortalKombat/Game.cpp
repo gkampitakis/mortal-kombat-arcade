@@ -7,6 +7,13 @@ Game::~Game() {};
 bool Game::initialize(SDL_Surface* gScreenSurface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("stage");
 	background = tmp->GetBitmap();
+	//call the initialization of players
+
+	subzero = new Fighter("subzero");
+	scorpion = new Fighter("scorpion");
+	subzero->initialize();
+	scorpion->initialize();
+
 	//Here is called from window.cpp 80 line 
 	return true;//this ll change
 };
@@ -17,13 +24,20 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//The camera might need moving or interaction with the players 
+	subzero->Draw();//test functions
+	scorpion->Draw();
 };
 
 void Game::CleanUp() {
 
 };
 
-void Game::HandleInput(SDL_Event& event) {
+void Game::HandleInput() {
+	//	inputController.Handle();
+	subzero->getInputController().Handle();
+	//nomizo edo oti to handle input mas prolabainei ka ipianei 2 events maybe needs fix 
+	scorpion->getInputController().Handle();
+
 	//Here might we are going to have each fighters handling input controller
 };
 
