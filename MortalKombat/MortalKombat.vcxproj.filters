@@ -137,5 +137,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="config\subzero_boxes.json" />
+    <None Include="config\scorpion_boxes.json" />
   </ItemGroup>
 </Project>

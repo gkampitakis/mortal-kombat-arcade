@@ -74,6 +74,7 @@ bool Window::initialize() {
 	//Here do call the picture/sound/sprite and etc initialazation
 	if (!loadMedia()) {
 		cout << "Something went really bad\n";
+		return false;
 	}
 	intro = new Intro();
 	if (!intro->initialize(gScreenSurface)) return false;
@@ -119,6 +120,8 @@ bool Window::loadMedia() {
 	AnimationFilmHolder::Get()->Load("media/disclaimer.png", "", 0, "disclaimer", gScreenSurface, true);
 	AnimationFilmHolder::Get()->Load("media/stage.png", "", 0, "stage", gScreenSurface, true);
 	AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.stance", gScreenSurface, false);//the ,stance shows the field we must search for
+	AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.stance", gScreenSurface, false);//the ,stance shows the field we must search for
+	
 	return true;
 }
 

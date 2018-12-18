@@ -31,13 +31,15 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface) {
+void Fighter::Draw(SDL_Surface& gScreenSurface,string test,Rect t) {
 	/*
 	* TEMP CODE HERE
 	*/
-	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("subzero.stance");
+	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm(test);
 	//{0 , 0 } coordinates
-	tmp->DisplayFrame(gScreenSurface, { 0,0 }, 4, 200, 200);//100 x100 is the size of the player
+
+	//tmp->DisplayFrame(gScreenSurface, { 500,500 }, 4, 200, 450);//100 x100 is the size of the player
+	tmp->DisplayFrame(gScreenSurface, { t.x,t.y }, 4, t.w, t.h);//100 x100 is the size of the player
 
 
 //Not working
