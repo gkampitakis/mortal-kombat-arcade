@@ -12,14 +12,48 @@ AnimationFilmHolder* AnimationFilmHolder::Get(void) {
 	return holder;
 };
 
-void AnimationFilmHolder::Load(const string &path, int framesNo, string id, SDL_Surface *screen,bool backgroundFlag) {
-	SDL_Surface* bitmap = bitmaps.Load(path,screen->format, backgroundFlag);
+//FrameNo starts from Zero keep that inmind when calling Load for a film
+void AnimationFilmHolder::Load(const string &path, const string &jsonpath, int framesNo, string id, SDL_Surface *screen, bool backgroundFlag) {
+	SDL_Surface* bitmap = bitmaps.Load(path, screen->format, backgroundFlag);
+	vector<Rect> boxes;
 	assert(!GetFilm(id));
-	vector<Rect> test ;//HOLDER PLACEEEEEEEEE
-	films[id] = new AnimationFilm(bitmap,test ,id);//FIXME:Here minimal boxes
+	if (jsonpath.empty()) {
+		Rect tmp = { 0,0,bitmap->w,bitmap->h };
+		boxes.push_back(tmp);
+		films[id] = new AnimationFilm(bitmap, boxes, id);
+	}
+	else {
+		try {
+			json config;
+			std::ifstream config_file(jsonpath, std::ifstream::binary);
+			config_file >> config;
+			/*
+			* STRING MANIPULATION FOR THE DOT
+			*/
+			std::stringstream ss(id);
+			const char delim = '.';
+			std::vector<std::string> token;
+			std::string s;
+			while (std::getline(ss, s, delim)) {
+				token.push_back(s);
+			}
+
+			string field = token[1];
+			for (json::iterator i = config[field].begin(); i != config[field].end(); i++) {
+				json tmpjson = *i;
+				Rect tmp = { tmpjson["x"],tmpjson["y"],tmpjson["w"], tmpjson["h"] };
+				boxes.push_back(tmp);
+			}
+			films[id] = new AnimationFilm(bitmap, boxes, id);
+		}
+		catch (const std::exception& e) {
+			cerr << e.what();
+		}
+	}
+
 }
 
- AnimationFilm* AnimationFilmHolder::GetFilm(string id) const {
+AnimationFilm* AnimationFilmHolder::GetFilm(string id) const {
 	Films::const_iterator i = films.find(id);
 	return i != films.end() ? i->second : (AnimationFilm*)0;
 }

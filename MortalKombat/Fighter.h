@@ -22,6 +22,6 @@ public:
 	input::InputController getInputController(void) const {
 		return inputController;
 	}
-	void Draw();//test function
+	void Draw(SDL_Surface& gScreenSurface);//test function
 	bool initialize(const string& path);//give json as argument
 };

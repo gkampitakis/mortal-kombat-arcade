@@ -20,8 +20,8 @@ string AnimationFilm::GetId(void) const {
 };
 
 Rect AnimationFilm::GetFrameBox(byte frameNo) const {
-	assert(boxes.size() > frameNo-1);//Check if this is working properly
-	return boxes[frameNo-1];
+	assert(boxes.size() >= frameNo);//Check if this is working properly
+	return boxes[frameNo];
 };
 
 void AnimationFilm::DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo, int w, int h) const {

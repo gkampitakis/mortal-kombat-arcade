@@ -23,8 +23,8 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//The camera might need moving or interaction with the players 
-	subzero->Draw();//test functions
-	scorpion->Draw();
+	subzero->Draw(gScreenSurface);//test functions
+	scorpion->Draw(gScreenSurface);
 };
 
 void Game::CleanUp() {

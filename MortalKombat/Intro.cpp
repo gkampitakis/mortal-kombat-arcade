@@ -7,11 +7,11 @@
 Intro::Intro() {}
 
 bool Intro::initialize(SDL_Surface* gScreenSurface) {
-	AnimationFilmHolder::Get()->Load("media/menu.png", 1, "background", gScreenSurface, true);
+	AnimationFilmHolder::Get()->Load("media/menu.png", "", 0, "background", gScreenSurface, true);
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 
-	AnimationFilmHolder::Get()->Load("media/pressstart.png", 1, "presssstart", gScreenSurface, false);
+	AnimationFilmHolder::Get()->Load("media/pressstart.png", "", 0, "presssstart", gScreenSurface, false);
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");
 
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 120 }, tmp, SpriteTypes::INTRO_SPRITE));
@@ -19,8 +19,8 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 	/*
 	*		SOUND LOADING HERE
 	*/
-	MusicPlayer::Get()->LoadMusic("media/intro.wav","intro");
-	MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));
+	MusicPlayer::Get()->LoadMusic("media/intro.wav", "intro");
+	//MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));//Commented for working with heaphones
 
 	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 	StartButton(*gScreenSurface);

@@ -7,7 +7,7 @@
 
 class AnimationFilmHolder {
 private:
-	AnimationFilmHolder(void){};
+	AnimationFilmHolder(void) {};
 	~AnimationFilmHolder() { CleanUp(); };
 
 	typedef map<string, AnimationFilm*> Films;
@@ -17,7 +17,7 @@ private:
 public:
 	static AnimationFilmHolder* Get(void);
 	//another GET exists at documentation
-	void Load(const string &path, int framesNo, string id, SDL_Surface *screen,bool backgroundFlag);
+	void Load(const string &path, const string &jsonpath, int framesNo, string id, SDL_Surface *screen, bool backgroundFlag);
 	void CleanUp(void);
 	AnimationFilm* GetFilm(const string) const;
 };

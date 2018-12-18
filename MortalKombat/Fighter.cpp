@@ -1,4 +1,5 @@
 #include "Fighter.h"
+#include "AnimationFilmHolder.h"
 
 Fighter::Fighter(string Name) {
 	name = Name;
@@ -30,7 +31,15 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(void) {
-	//Not working
-	//Fighter::stateTransitions.SetTransition(Fighter::stateTransitions.GetState(), Fighter::inputController.GetLogical(), []() {cout << "DAB"; });
+void Fighter::Draw(SDL_Surface& gScreenSurface) {
+	/*
+	* TEMP CODE HERE
+	*/
+	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("subzero.stance");
+	//{0 , 0 } coordinates
+	tmp->DisplayFrame(gScreenSurface, { 0,0 }, 4, 200, 200);//100 x100 is the size of the player
+
+
+//Not working
+//Fighter::stateTransitions.SetTransition(Fighter::stateTransitions.GetState(), Fighter::inputController.GetLogical(), []() {cout << "DAB"; });
 }
