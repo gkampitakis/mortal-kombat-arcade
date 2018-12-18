@@ -17,7 +17,7 @@ public:
 	SDL_Surface* GetBitmap(void) const;
 	string GetId(void) const;
 	Rect GetFrameBox(byte) const;
-	void DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo)const;
+	void DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo,int w,int h)const;
 	void DisplayFrame(SDL_Surface &d, Rect rect) const;
 };
 

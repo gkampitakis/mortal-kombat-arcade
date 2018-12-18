@@ -2,7 +2,7 @@
   "combinations": [
     {
       "action": "UP",
-      "key_strokes": [ 92 ]
+      "key_strokes": [ 26 ]
     },
     {
       "action": "LEFT",

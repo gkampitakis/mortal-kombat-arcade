@@ -21,7 +21,7 @@ bool Sprite::IsVisible(void) const {
 };
 
 bool Sprite::CollisionCheck(Sprite* s) {
-	//might needs fix 
+	//For sure need fix :P
 	return true;
 };
 
@@ -29,16 +29,16 @@ void Sprite::Move(Point x) {
 	this->position = x;
 };
 
-void Sprite::Display(SDL_Surface &dest) {
+void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	if (visible) {
-		currFilm->DisplayFrame(dest,position,frameNo);//this might need fix 
+		currFilm->DisplayFrame(dest,position,frameNo, width,height);
 	}
 };
 
 void Sprite::DisplayUnique(SDL_Surface &dest,int width,int height) {
 	if (visible) {
 		Rect display = { position.x,position.y,width,height };
-		currFilm->DisplayFrame(dest, display);//this might need fix 
+		currFilm->DisplayFrame(dest, display); 
 	}
 };
 

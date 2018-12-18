@@ -8,7 +8,7 @@ AnimationFilm::AnimationFilm(SDL_Surface* bitmap, const vector<Rect> boxes, stri
 };
 
 byte AnimationFilm::GetTotalFrames(void) const {
-	return (byte) boxes.size();
+	return (byte)boxes.size();
 };
 
 SDL_Surface* AnimationFilm::GetBitmap(void) const {
@@ -20,19 +20,17 @@ string AnimationFilm::GetId(void) const {
 };
 
 Rect AnimationFilm::GetFrameBox(byte frameNo) const {
-	assert(boxes.size() > frameNo);// and this 
-	return boxes[frameNo];
+	assert(boxes.size() > frameNo-1);//Check if this is working properly
+	return boxes[frameNo-1];
 };
 
-void AnimationFilm::DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo) const {
-	//maybe well need some othe functions like these too
-	Rect rect = { at.x,at.y,100,100};
-	//if(frameNo==0) SDL_BlitScaled(bitmap, 0, &d, &rect);//fix this
-	//else 
+void AnimationFilm::DisplayFrame(SDL_Surface &d, const Point &at, byte frameNo, int w, int h) const {
+	Rect rect = { at.x,at.y,w,h };
 	SDL_BlitScaled(bitmap, &GetFrameBox(frameNo), &d, &rect);
 };
 
 
 void AnimationFilm::DisplayFrame(SDL_Surface &d, Rect rect) const {
+	//The rectangle were we are going to display the sprite size and coordinates
 	SDL_BlitScaled(bitmap, 0, &d, &rect);
 };
