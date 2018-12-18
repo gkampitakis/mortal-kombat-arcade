@@ -129,10 +129,8 @@ bool Window::loadMedia() {
 void drawDisclaimer(SDL_Surface& gScreenSurface) {
 	SDL_Surface* background = NULL;
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
-	background = tmp->GetBitmap();
-
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
+	tmp->DisplayFrame(gScreenSurface, fullscreen);
 };
 
 
@@ -150,7 +148,7 @@ void Window::drawWindow() {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
 			tmp2->setOnTick([] {
 				//Nothing to do here
-			}).SetDelay(100).SetReps(1);
+			}).SetDelay(1000).SetReps(1);
 			//10000 set delay for not waiting left 100
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
