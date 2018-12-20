@@ -10,7 +10,7 @@ private:
 	Sprite*			sprite;
 	string					nextAction;
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
-	TickTimerAnimation*		tickAnim;
+	TickTimerAnimation		tickAnim;
 	string					name;
 	input::InputController		inputController;
 	logic::StateTransitions		stateTransitions;
