@@ -48,22 +48,21 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, Rect t) {
 	//tmp->DisplayFrame(gScreenSurface, { 500,500 }, 4, 200, 450);//100 x100 is the size of the player
 	tmp->DisplayFrame(gScreenSurface, { t.x,t.y }, 4, t.w, t.h);//100 x100 is the size of the player
 	using Input = logic::StateTransitions::Input;
-	//cout<<inputController.GetLogical().size();
-/*
-if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
-		TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
-		tmp2->setOnTick([] {
-			//Nothing to do here
-		}).SetDelay(1000).SetReps(1);
-		tickAnimator = new TickTimerAnimator(tmp2);
-		tickAnimator->SetOnFinish([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			inputController.GetLogical();
-		});
-			tickAnimator->Start(SDL_GetTicks());
-		AnimatorHolder::MarkAsRunning(tickAnimator);
-	}
-*/
+	/*
+	if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(1000).SetReps(1);
+			tickAnimator = new TickTimerAnimator(tmp2);
+			tickAnimator->SetOnFinish([&]() {
+				AnimatorHolder::Remove(tickAnimator);
+				inputController.GetLogical();
+			});
+				tickAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(tickAnimator);
+		}
+	*/
 	Input test5;
 	test5.insert(Make_key(inputController.GetLogical()));
 
@@ -73,22 +72,71 @@ if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
 void Fighter::setStateMachine() {
 	using Input = logic::StateTransitions::Input;
 	stateTransitions.
+		/*
+		*  PUNCHES-> LOW/HIGH AND PUNCH
+		*/
 		SetTransition("READY", Input{ ".PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Punch\n";
 		});
 	})
+		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Low Punch\n";
+		});
+
+	})
+		.SetTransition("READY", Input{ ".DOWN.PUNCH" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Low PunchV2\n";
+		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
+	})
+		.SetTransition("UP", Input{ ".UP.PUNCH" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "High Punch\n";
+		});
+
+	})
+		.SetTransition("READY", Input{ ".UP.PUNCH" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "High PunchV2\n";
+		});
+	})
+		/*
+		* KICKS-> LOW/HIGH AND KICK
+		*/
 		.SetTransition("READY", Input{ ".KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Kick\n";
 		});
 	})
+		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Low KICK\n";
+		});
+
+	})
+		.SetTransition("READY", Input{ ".DOWN.KICK" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Low KICKV2\n";
+		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
+	})
+		/*
+		* MOVES-> UP/BACK/FORWARD/DOWN
+		*/
 		.SetTransition("READY", Input{ ".UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Up\n";
+			stateTransitions.SetState("UP");
 		});
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
@@ -103,12 +151,6 @@ void Fighter::setStateMachine() {
 			cout << "Forward\n";
 		});
 	})
-		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block\n";
-		});
-	})
 		.SetTransition("READY", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
@@ -116,56 +158,64 @@ void Fighter::setStateMachine() {
 			stateTransitions.SetState("DOWN");
 		});
 	})
-		.SetTransition("READY", Input{}, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Ready waiting\n";
-		});
-	})//TEST UP TO HERE <______________________
-		.SetTransition("DOWN", Input{ ".PUNCH" }, [&](void) {
-
-		cout << "Low Punch1\n";
-
-	})
-		.SetTransition("DOWN", Input{ ".PUNCH.DOWN" }, [&](void) {
-
-		cout << "Low Punch4\n";
-
-	})
-		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
-
-
-		cout << "Low Punch5\n";//<----------
-
-	})
-		.SetTransition("READY", Input{ ".PUNCH.DOWN" }, [](void) {
-		cout << "Low punch2\n";
-	})
-		.SetTransition("READY", Input{ ".DOWN.PUNCH" }, [](void) {
-		cout << "Low punch3\n";//<----------
-	})
-
-
-		//TESTING__________________________________
-		.SetTransition("DOWN", Input{ ".DOWN.BLOCK" }, [&](void) {
-		cout << "down block\n";// this doesnt work
-	}).SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
-		cout << "block down\n";
-	})
-
 		.SetTransition("DOWN", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "still ducking\n";
 		});
 	})
+		.SetTransition("UP", Input{ ".UP" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "still UP\n";
+		});
+	})
+		/*
+		* BLOCKS->BLOCK/BLOCK DOWN
+		*/
+		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Block\n";
+		});
+	})
+		.SetTransition("READY", Input{ ".BLOCK.DOWN" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Block Down\n";
+		});
+	})
+		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Block DownV2\n";
+		});
+	})
+		/*
+		* DEFAULT TRANSITIONS
+		*/
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Getting Up\n";
 			stateTransitions.SetState("READY");
 		});
+	})
+		.SetTransition("UP", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Falling Down\n";
+			stateTransitions.SetState("READY");
+		});
+	})
+		.SetTransition("READY", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "Ready waiting\n";
+		});
 	});
+
+
 }
 
 void Fighter::Handler() {
