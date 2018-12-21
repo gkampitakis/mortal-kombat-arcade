@@ -19,9 +19,8 @@ public:
 	// TODO: 
 	Fighter(string Name);
 	~Fighter() {};
-	input::InputController getInputController(void) const {
-		return inputController;
-	}
+	void setStateMachine();
+	void Handler();
 	void Draw(SDL_Surface& gScreenSurface,string name,Rect t);//test function
 	bool initialize(const string& path);//give json as argument
 };

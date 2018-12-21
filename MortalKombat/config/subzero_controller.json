@@ -2,19 +2,19 @@
   "combinations": [
     {
       "action": "UP",
-      "key_strokes": [ 12 ]
+      "key_strokes": [ 26 ]
     },
     {
-      "action": "LEFT",
-      "key_strokes": [ 13 ]
+      "action": "BCK",
+      "key_strokes": [ 4 ]
     },
     {
-      "action": "RIGHT",
-      "key_strokes": [ 15 ]
+      "action": "FWD",
+      "key_strokes": [ 7 ]
     },
     {
       "action": "DOWN",
-      "key_strokes": [ 14 ]
+      "key_strokes": [ 22 ]
     }
   ]
 }

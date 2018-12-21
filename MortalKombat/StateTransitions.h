@@ -89,7 +89,7 @@ namespace logic {
 						fired.insert(key);
 				}
 
-			if (fired.empty())
+			if (fired.empty() || input.empty())
 				PerformDefaultTransition();
 			else
 				FireTransitions(fired);

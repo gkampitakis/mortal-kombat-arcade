@@ -22,6 +22,10 @@ bool Fighter::initialize(const string& path) {
 			}
 			Fighter::inputController.AddAction(keycodes, action);
 		}
+
+		stateTransitions.SetState("READY");
+		setStateMachine();
+
 		return true;//true or false catch here
 	}
 	catch (const std::exception& e) {
@@ -31,7 +35,8 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface,string test,Rect t) {
+void Fighter::Draw(SDL_Surface& gScreenSurface, string test, Rect t) {
+
 	/*
 	* TEMP CODE HERE
 	*/
@@ -40,8 +45,48 @@ void Fighter::Draw(SDL_Surface& gScreenSurface,string test,Rect t) {
 
 	//tmp->DisplayFrame(gScreenSurface, { 500,500 }, 4, 200, 450);//100 x100 is the size of the player
 	tmp->DisplayFrame(gScreenSurface, { t.x,t.y }, 4, t.w, t.h);//100 x100 is the size of the player
-
-
-//Not working
-//Fighter::stateTransitions.SetTransition(Fighter::stateTransitions.GetState(), Fighter::inputController.GetLogical(), []() {cout << "DAB"; });
+	using Input = logic::StateTransitions::Input;
+	Fighter::stateTransitions.PerformTransitions(inputController.GetLogical(), false);//Investigate this flag how works
 }
+
+void Fighter::setStateMachine() {
+	using Input = logic::StateTransitions::Input;
+	stateTransitions.
+		SetTransition("READY", Input{ "HPUNCH" }, [](void) {
+		cout << "HPUNC\n";
+	})
+		.
+		SetTransition("READY", Input{ "UP" }, [](void) {
+		cout << "UP\n";
+	})
+		.SetTransition("READY", Input{ "BCK" }, [](void) {
+		cout << "BACK\n";
+	})
+		.SetTransition("READY", Input{ "FWD" }, [](void) {
+		cout << "FWD\n";
+	})
+		.SetTransition("READY", Input{ "DOWN" }, [&](void) {
+		cout << "DUCKING\n";
+		stateTransitions.SetState("DOWN");
+	})
+		.SetTransition("READY", Input{ "DOWN.FWD.LPUNCH" }, [](void) {
+
+	})
+		.SetTransition("READY", Input{}, [](void) { std::cout << "waiting"; })
+
+		.SetTransition("DOWN", Input{ "DOWN.BLOCK" }, [&](void) {
+
+
+	})
+		.SetTransition("DOWN", Input{ "DOWN.HPUNCH" }, [](void) {
+
+	})
+		.SetTransition("DOWN", Input{}, [&](void) {
+		cout << "Getting Up\n";
+		stateTransitions.SetState("READY");
+	});
+}
+
+void Fighter::Handler() {
+	inputController.Handle();
+};
