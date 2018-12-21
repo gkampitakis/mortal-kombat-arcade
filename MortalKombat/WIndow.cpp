@@ -152,9 +152,8 @@ void Window::drawWindow() {
 			//10000 set delay for not waiting left 100
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
-				//AnimatorHolder::MarkAsSuspended(timeAnimator);
+				AnimatorHolder::Remove(timeAnimator);
 				state = INGAME;
-				AnimatorHolder::CleanUp();
 			});
 			timeAnimator->Start(SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(timeAnimator);
@@ -163,7 +162,7 @@ void Window::drawWindow() {
 	else if (state == INGAME) {
 		game->DrawGame(*gScreenSurface);
 	}
-
+	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);
 };
 

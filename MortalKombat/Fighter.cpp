@@ -1,8 +1,10 @@
 #include "Fighter.h"
 #include "AnimationFilmHolder.h"
+#include "AnimatorHolder.h"
 
 Fighter::Fighter(string Name) {
 	name = Name;
+	tickAnimator = new TickTimerAnimator(NULL);
 };
 
 bool Fighter::initialize(const string& path) {
@@ -55,8 +57,7 @@ void Fighter::setStateMachine() {
 		SetTransition("READY", Input{ "HPUNCH" }, [](void) {
 		cout << "HPUNC\n";
 	})
-		.
-		SetTransition("READY", Input{ "UP" }, [](void) {
+		.SetTransition("READY", Input{ "UP" }, [](void) {
 		cout << "UP\n";
 	})
 		.SetTransition("READY", Input{ "BCK" }, [](void) {
@@ -66,24 +67,79 @@ void Fighter::setStateMachine() {
 		cout << "FWD\n";
 	})
 		.SetTransition("READY", Input{ "DOWN" }, [&](void) {
-		cout << "DUCKING\n";
-		stateTransitions.SetState("DOWN");
+		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(150).SetReps(1);
+			tickAnimator = new TickTimerAnimator(tmp2);
+			tickAnimator->SetOnFinish([&]() {
+				AnimatorHolder::Remove(tickAnimator);
+				cout << "DUCKING\n";
+				stateTransitions.SetState("DOWN");
+			});
+			tickAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(tickAnimator);
+		}
 	})
 		.SetTransition("READY", Input{ "DOWN.FWD.LPUNCH" }, [](void) {
 
 	})
-		.SetTransition("READY", Input{}, [](void) { std::cout << "waiting"; })
-
-		.SetTransition("DOWN", Input{ "DOWN.BLOCK" }, [&](void) {
-
+		.SetTransition("READY", Input{}, [&](void) {
+		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(150).SetReps(1);
+			tickAnimator = new TickTimerAnimator(tmp2);
+			tickAnimator->SetOnFinish([&]() {
+				AnimatorHolder::Remove(tickAnimator);
+				cout << "waiting\n";
+			});
+			//Handle all the new created animators
+			tickAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(tickAnimator);
+		}
+	})
+		.SetTransition("DOWN", Input{ "BLOCK" }, [&](void) {
 
 	})
-		.SetTransition("DOWN", Input{ "DOWN.HPUNCH" }, [](void) {
+		.SetTransition("DOWN", Input{ "HPUNCH" }, [](void) {
 
 	})
 		.SetTransition("DOWN", Input{}, [&](void) {
-		cout << "Getting Up\n";
-		stateTransitions.SetState("READY");
+		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(150).SetReps(1);
+			tickAnimator = new TickTimerAnimator(tmp2);
+			tickAnimator->SetOnFinish([&]() {
+				AnimatorHolder::Remove(tickAnimator);
+				cout << "Getting Up\n";
+				stateTransitions.SetState("READY");
+			});
+			//Handle all the new created animators
+			tickAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(tickAnimator);
+		}
+	})
+		.SetTransition("DOWN", Input{ "DOWN" }, [&](void) {
+		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
+			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+			tmp2->setOnTick([] {
+				//Nothing to do here
+			}).SetDelay(150).SetReps(1);
+			tickAnimator = new TickTimerAnimator(tmp2);
+			tickAnimator->SetOnFinish([&]() {
+				AnimatorHolder::Remove(tickAnimator);
+				cout << "still ducking\n";
+				//stateTransitions.SetState("READY");
+			});
+			//Handle all the new created animators
+			tickAnimator->Start(SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(tickAnimator);
+		}
 	});
 }
 

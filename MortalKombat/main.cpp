@@ -18,7 +18,6 @@ int main(int argc, char *args[]) {
 		while (!quit) {
 			quit = new_window.HandleInput(event);
 			new_window.drawWindow();
-			AnimatorHolder::Progress(SDL_GetTicks());//Just for checking this ll go to draw
 		}
 	}
 	new_window.close();
