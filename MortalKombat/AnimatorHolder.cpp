@@ -25,6 +25,10 @@ void AnimatorHolder::MarkAsRunning(Animator* a) {
 	suspended.remove(a); running.push_back(a);
 };
 
+void AnimatorHolder::Remove(Animator* a) {
+	running.remove(a);
+}
+
 void AnimatorHolder::MarkAsSuspended(Animator* a) {
 	running.remove(a); suspended.push_back(a);
 	cout << "Finished\n";//Too see when tha animation is suspended at terminal

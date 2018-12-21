@@ -19,6 +19,8 @@ public:
 		action((const std::function<void()>)0), closure((void*)0) {
 	}
 
+	TickTimerAnimation() {};
+
 	TickTimerAnimation& setOnTick(const std::function<void()>& f, void *c = (void *)0) {
 		action = f, closure = c;
 		return *this;

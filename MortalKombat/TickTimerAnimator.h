@@ -10,7 +10,7 @@ public:
 	void Start(timestamp_t time);//Prolly time and the animation
 	void Progress(timestamp_t currTime);
 	TickTimerAnimator(TickTimerAnimation* anim);
-	~TickTimerAnimator() {};
+	~TickTimerAnimator() { delete anim; };
 };
 
 #endif

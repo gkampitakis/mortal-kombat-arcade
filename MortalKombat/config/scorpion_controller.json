@@ -2,19 +2,31 @@
   "combinations": [
     {
       "action": "UP",
-      "key_strokes": [ 26 ]
+      "key_strokes": [ 12 ]
     },
     {
-      "action": "LEFT",
-      "key_strokes": [ 4 ]
+      "action": "FWD",
+      "key_strokes": [ 13 ]
     },
     {
-      "action": "RIGHT",
-      "key_strokes": [ 7 ]
+      "action": "BCK",
+      "key_strokes": [ 15 ]
     },
     {
       "action": "DOWN",
-      "key_strokes": [ 22 ]
+      "key_strokes": [ 14 ]
+    },
+    {
+      "action": "BLOCK",
+      "key_strokes": [ 16 ]
+    },
+    {
+      "action": "PUNCH",
+      "key_strokes": [ 5 ]
+    },
+    {
+      "action": "KICK",
+      "key_strokes": [ 17 ]
     }
   ]
 }

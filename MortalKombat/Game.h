@@ -12,6 +12,7 @@ public:
 	void DrawGame(SDL_Surface& gScreenSurface);
 	void CleanUp();
 	void HandleInput();
+
 private:
 	Fighter* subzero=NULL;
 	Fighter* scorpion=NULL;
