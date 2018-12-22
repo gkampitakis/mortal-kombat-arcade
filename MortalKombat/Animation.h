@@ -1,3 +1,6 @@
+#ifndef Animation_HEADER
+#define Animation_HEADER
+
 #include "MyLibraries.h"
 
 class Animation {
@@ -9,3 +12,5 @@ public:
 	Animation() {};
 	virtual ~Animation() {}
 };
+
+#endif

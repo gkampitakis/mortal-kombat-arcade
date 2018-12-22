@@ -27,8 +27,9 @@ typedef signed char offset_t;
 typedef unsigned short delay_t;
 typedef unsigned short animid_t;
 typedef unsigned long timestamp_t;
+typedef unsigned char frame_t;
 
-#define SCREEN_WIDTH 1280//might need fix
+#define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 920 
 
 #define STAGE_WIDTH 2008
