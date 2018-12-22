@@ -1,11 +1,13 @@
 #include "Fighter.h"
 #include "AnimationFilmHolder.h"
 #include "AnimatorHolder.h"
+#include "SpriteHolder.h"
 
 Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
 	FighterPos = position;
+	animator = new FrameRangeAnimator();
 };
 
 bool Fighter::initialize(const string& path) {
@@ -47,7 +49,8 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm(test);
 	//{0 , 0 } coordinates
 
-	tmp->DisplayFrame(gScreenSurface, FighterPos, 4, w, h);//100 x100 is the size of the player
+	//tmp->DisplayFrame(gScreenSurface, FighterPos, 4, w, h);//100 x100 is the size of the player
+
 	using Input = logic::StateTransitions::Input;
 	/*
 	if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
@@ -64,6 +67,30 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 			AnimatorHolder::MarkAsRunning(tickAnimator);
 		}
 	*/
+	SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::SUBZERO);
+	list<Sprite*>::iterator it;
+	for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {
+		(*it)->Display(gScreenSurface, 500, 500);
+	};
+	if (animator->HasFinished()) {
+		AnimationFilm *tmp = AnimationFilmHolder::Get()->GetFilm("subzero.stance");
+		sprite = new Sprite({ 500,500 }, tmp, SpriteTypes::SUBZERO);
+		SpriteHolder::Get()->Add(sprite);
+		animator->Start(sprite,
+			new FrameRangeAnimation(
+			(unsigned char)0,
+				(unsigned char)11,
+				(signed char)0,
+				(signed char)0,
+				(unsigned short)15,
+				true,
+				(unsigned short)0
+			),
+			SDL_GetTicks());
+
+		AnimatorHolder::MarkAsRunning(animator);
+	}
+
 	if (test._Equal("subzero.stance")) {//debug
 		Input tmpInput;
 		tmpInput.insert(Make_key(inputController.GetLogical()));
