@@ -257,21 +257,37 @@ void Fighter::setStateMachine(bool debug) {
 			if (debug) cout << "FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("FlipBCK");
 		});
+
 	})
-		.SetTransition("FlipFWD", Input{}, [&](void) {
+		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			if (debug) cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
+		.SetTransition("FlipFWD", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Falling from flipFWD-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
+		});
+	})
+	.SetTransition("FlipBCK", Input{ ".FWD.BCK" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
+		});
+	})
 		.SetTransition("FlipBCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Falling from flipBCK-> State " << stateTransitions.GetState() << "\n";
+			if (debug) cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	});
+
 };
 
 void Fighter::Handler() {

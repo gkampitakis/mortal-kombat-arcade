@@ -75,8 +75,6 @@ string Timer::ReverseTimer(int t) {
 		return std::to_string(t);
 	}
 	else {
-		std::cout << ((t - (getTicks() / 1000)) / 10);
-
 		if (((t - (getTicks() / 1000) - 1) / 10) == 0) {
 			return "0" + std::to_string((t - (getTicks() / 1000)) - 1);
 		}
