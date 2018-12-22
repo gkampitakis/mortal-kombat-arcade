@@ -2,9 +2,10 @@
 #include "AnimationFilmHolder.h"
 #include "AnimatorHolder.h"
 
-Fighter::Fighter(string Name) {
+Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
+	FighterPos = position;
 };
 
 bool Fighter::initialize(const string& path) {
@@ -37,7 +38,7 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface, string test, Rect t) {
+void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 
 	/*
 	* TEMP CODE HERE
@@ -45,8 +46,7 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, Rect t) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm(test);
 	//{0 , 0 } coordinates
 
-	//tmp->DisplayFrame(gScreenSurface, { 500,500 }, 4, 200, 450);//100 x100 is the size of the player
-	tmp->DisplayFrame(gScreenSurface, { t.x,t.y }, 4, t.w, t.h);//100 x100 is the size of the player
+	tmp->DisplayFrame(gScreenSurface, FighterPos, 4, w, h);//100 x100 is the size of the player
 	using Input = logic::StateTransitions::Input;
 	/*
 	if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
@@ -63,12 +63,15 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, Rect t) {
 			AnimatorHolder::MarkAsRunning(tickAnimator);
 		}
 	*/
-	Input test5;
-	test5.insert(Make_key(inputController.GetLogical()));
 
-	Fighter::stateTransitions.PerformTransitions(test5, false);//Investigate this flag how works
+	Input tmpInput;
+	tmpInput.insert(Make_key(inputController.GetLogical()));
+	Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
 }
-
+/*
+* All the animations with V2 print might not be necessary cause start from ready state and go to another state->action
+we ll see whats suitable for us
+*/
 void Fighter::setStateMachine() {
 	using Input = logic::StateTransitions::Input;
 	stateTransitions.
@@ -94,17 +97,19 @@ void Fighter::setStateMachine() {
 			cout << "Low PunchV2\n";
 		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
 	})
-		.SetTransition("UP", Input{ ".UP.PUNCH" }, [&](void) {
+		.SetTransition("UP", Input{ ".PUNCH.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "High Punch\n";
+			//stateTransitions.SetState("READY");//do the animation and the fall down
 		});
 
 	})
-		.SetTransition("READY", Input{ ".UP.PUNCH" }, [&](void) {
+		.SetTransition("READY", Input{ ".PUNCH.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "High PunchV2\n";
+			//stateTransitions.SetState("READY");//do the animation and the fall down
 		});
 	})
 		/*
@@ -128,6 +133,21 @@ void Fighter::setStateMachine() {
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Low KICKV2\n";
 		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
+	})
+		.SetTransition("UP", Input{ ".KICK.UP" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "High Kick\n";
+			stateTransitions.SetState("READY");//do the animation and the fall down
+		});
+
+	})
+		.SetTransition("READY", Input{ ".KICK.UP" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "High KickV2\n";
+			stateTransitions.SetState("READY");//do the animation and the fall down
+		});
 	})
 		/*
 		* MOVES-> UP/BACK/FORWARD/DOWN
@@ -164,15 +184,15 @@ void Fighter::setStateMachine() {
 			cout << "still ducking\n";
 		});
 	})
-		.SetTransition("UP", Input{ ".UP" }, [&](void) {
+		/*.SetTransition("UP", Input{ ".UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "still UP\n";
+			cout << "still UP\n";//This is for debug this transition means the character can stay at air
 		});
-	})
-		/*
-		* BLOCKS->BLOCK/BLOCK DOWN
-		*/
+	})*/
+	/*
+	* BLOCKS->BLOCK/BLOCK DOWN
+	*/
 		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
@@ -182,13 +202,13 @@ void Fighter::setStateMachine() {
 		.SetTransition("READY", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block Down\n";
+			cout << "Block DownV2\n";
 		});
 	})
 		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block DownV2\n";
+			cout << "Block Down\n";
 		});
 	})
 		/*
@@ -214,9 +234,7 @@ void Fighter::setStateMachine() {
 			cout << "Ready waiting\n";
 		});
 	});
-
-
-}
+};
 
 void Fighter::Handler() {
 	inputController.Handle();
@@ -228,7 +246,7 @@ void Fighter::SetActionWithAnimator(const std::function<void()>& f) {
 		TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
 		tmp2->setOnTick([] {
 			//Nothing to do here
-		}).SetDelay(1000).SetReps(1);//<-----------------FOR DEBUGGING
+		}).SetDelay(FIGHTER_ACTION_DELAY_MSECS).SetReps(1);
 		tickAnimator = new TickTimerAnimator(tmp2);
 		tickAnimator->SetOnFinish(f);
 		tickAnimator->Start(SDL_GetTicks());

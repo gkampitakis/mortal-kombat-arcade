@@ -20,6 +20,9 @@ public:
 	}
 
 	TickTimerAnimation() {};
+	TickTimerAnimation *Clone(animid_t newId) const {
+		return new TickTimerAnimation(newId);
+	}
 
 	TickTimerAnimation& setOnTick(const std::function<void()>& f, void *c = (void *)0) {
 		action = f, closure = c;
