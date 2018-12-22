@@ -111,7 +111,7 @@ void Window::close() {
 
 bool Window::loadMedia() {
 	//Here load the font 
-	font = TTF_OpenFont("media/font.ttf", 28);//The 28 here is the font size
+	font = TTF_OpenFont("media/font.ttf", 70);//The 28 here is the font size
 	if (font == NULL)
 	{
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
@@ -160,7 +160,7 @@ void Window::drawWindow() {
 		}
 	}
 	else if (state == INGAME) {
-		game->DrawGame(*gScreenSurface);
+		game->DrawGame(*gScreenSurface,*font);
 	}
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);
