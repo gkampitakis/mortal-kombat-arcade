@@ -27,6 +27,10 @@
     {
       "action": "KICK",
       "key_strokes": [ 17 ]
+    },
+    {
+      "action": "SPECIAL",
+      "key_strokes": [ 24 ]
     }
   ]
 }

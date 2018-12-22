@@ -27,7 +27,8 @@ bool Fighter::initialize(const string& path) {
 		}
 
 		stateTransitions.SetState("READY");
-		setStateMachine();
+		setStateMachine(path._Equal("config/subzero_controller.json"));//for debugging
+
 
 		return true;//true or false catch here
 	}
@@ -63,16 +64,18 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 			AnimatorHolder::MarkAsRunning(tickAnimator);
 		}
 	*/
+	if (test._Equal("subzero.stance")) {//debug
+		Input tmpInput;
+		tmpInput.insert(Make_key(inputController.GetLogical()));
+		Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
+	}
 
-	Input tmpInput;
-	tmpInput.insert(Make_key(inputController.GetLogical()));
-	Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
 }
 /*
-* All the animations with V2 print might not be necessary cause start from ready state and go to another state->action
-we ll see whats suitable for us
+* Watchout in which time you want to make the transition before or after the act like 1st print and then change state ?
+or the opposite
 */
-void Fighter::setStateMachine() {
+void Fighter::setStateMachine(bool debug) {
 	using Input = logic::StateTransitions::Input;
 	stateTransitions.
 		/*
@@ -81,35 +84,36 @@ void Fighter::setStateMachine() {
 		SetTransition("READY", Input{ ".PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Punch\n";
+			if (debug) cout << "Punch-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low Punch\n";
+			if (debug) cout << "Low Punch-> State " << stateTransitions.GetState() << "\n";
 		});
 
 	})
-		.SetTransition("READY", Input{ ".DOWN.PUNCH" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low PunchV2\n";
-		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
+		/* IGNORE THIS FOR NOW
+		.SetTransition("DOWN", Input{ ".DOWN.SPECIAL" }, [&](void) {
+		//SetActionWithAnimator([&]() {
+		//	AnimatorHolder::Remove(tickAnimator);
+		if (debug) cout << "TEST------blur------> State " << stateTransitions.GetState() << "\n";
+		//});
+
 	})
+		.SetTransition("DOWN", Input{ ".DOWN.SPECIAL.BCK" }, [&](void) {
+		//SetActionWithAnimator([&]() {
+		//	AnimatorHolder::Remove(tickAnimator);
+		if (debug) cout << "TEST------blur------> State " << stateTransitions.GetState() << "\n";
+		//});
+
+	})*/
 		.SetTransition("UP", Input{ ".PUNCH.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "High Punch\n";
-			//stateTransitions.SetState("READY");//do the animation and the fall down
-		});
-
-	})
-		.SetTransition("READY", Input{ ".PUNCH.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "High PunchV2\n";
-			//stateTransitions.SetState("READY");//do the animation and the fall down
+			if (debug) cout << "High Punch-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
 		});
 	})
 		/*
@@ -118,36 +122,23 @@ void Fighter::setStateMachine() {
 		.SetTransition("READY", Input{ ".KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Kick\n";
+			if (debug) cout << "Kick-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low KICK\n";
+			if (debug) cout << "Low KICK-> State " << stateTransitions.GetState() << "\n";
 		});
 
-	})
-		.SetTransition("READY", Input{ ".DOWN.KICK" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low KICKV2\n";
-		});//This might not needed with the Ready stata cause there is no transition from Ready to down and the opposite
 	})
 		.SetTransition("UP", Input{ ".KICK.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "High Kick\n";
-			stateTransitions.SetState("READY");//do the animation and the fall down
+			if (debug) cout << "High Kick-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
 		});
 
-	})
-		.SetTransition("READY", Input{ ".KICK.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "High KickV2\n";
-			stateTransitions.SetState("READY");//do the animation and the fall down
-		});
 	})
 		/*
 		* MOVES-> UP/BACK/FORWARD/DOWN
@@ -155,60 +146,62 @@ void Fighter::setStateMachine() {
 		.SetTransition("READY", Input{ ".UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Up\n";
+			if (debug) cout << "Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("UP");
 		});
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Back\n";
+			if (debug) cout << "Back-> State " << stateTransitions.GetState() << "\n";;
 		});
 	})
 		.SetTransition("READY", Input{ ".FWD" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Forward\n";
+			if (debug) cout << "Forward-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("READY", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "DUCKING\n";
+			if (debug) cout << "DUCKING-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "still ducking\n";
+			if (debug) cout << "still ducking-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
-		/*.SetTransition("UP", Input{ ".UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "still UP\n";//This is for debug this transition means the character can stay at air
-		});
-	})*/
-	/*
-	* BLOCKS->BLOCK/BLOCK DOWN
-	*/
+		/*
+		* BLOCKS->BLOCK/BLOCK DOWN
+		*/
 		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block\n";
-		});
-	})
-		.SetTransition("READY", Input{ ".BLOCK.DOWN" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block DownV2\n";
+			if (debug) cout << "Block -> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("BLOCK");
 		});
 	})
 		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block Down\n";
+			if (debug) cout << "Block Down -> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("BLOCKDWN");
+		});
+	})
+		.SetTransition("BLOCK", Input{ ".BLOCK" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "still blocking-> State " << stateTransitions.GetState() << "\n";
+		});
+	})
+		.SetTransition("BLOCKDWN", Input{ ".BLOCK.DOWN" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "still blocking down-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		/*
@@ -217,21 +210,66 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Getting Up\n";
+			if (debug)	cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("UP", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Falling Down\n";
+			if (debug)	cout << "Falling Down-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
+		});
+	})
+		.SetTransition("BLOCK", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
+		});
+	})
+		.SetTransition("BLOCKDWN", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Unblocking DOWN-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("DOWN");
 		});
 	})
 		.SetTransition("READY", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Ready waiting\n";
+			if (debug) cout << "Ready waiting -> State " << stateTransitions.GetState() << "\n";
+		});
+	})
+		/*
+		* COMBOS
+		*/
+		.SetTransition("UP", Input{ ".FWD.UP" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "FlipFWD-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("FlipFWD");
+		});
+	})
+		.SetTransition("UP", Input{ ".BCK.UP" }, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "FlipBCK-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("FlipBCK");
+		});
+	})
+		.SetTransition("FlipFWD", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
+		});
+	})
+		.SetTransition("FlipBCK", Input{}, [&](void) {
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (debug) cout << "Falling from flipBCK-> State " << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
 		});
 	});
 };

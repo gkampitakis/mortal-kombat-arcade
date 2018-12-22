@@ -5,7 +5,7 @@
 #include "InputContoller.h"
 #include "StateTransitions.h"
 
-#define	FIGHTER_ACTION_DELAY_MSECS	1000 //<-----------------FOR DEBUGGING
+#define	FIGHTER_ACTION_DELAY_MSECS	150 //<-----------------FOR DEBUGGING
 
 class Fighter final {
 	using Input = std::set<std::string>;
@@ -26,7 +26,7 @@ public:
 	Fighter(string Name,Point position);
 	~Fighter() {};
 
-	void setStateMachine();
+	void setStateMachine(bool debug);
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, string name, int w,int h);//test function
 	bool initialize(const string& path);//give json as argument
