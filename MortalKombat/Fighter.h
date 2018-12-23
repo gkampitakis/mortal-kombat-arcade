@@ -16,6 +16,8 @@ private:
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
 	TickTimerAnimation		tickAnim;
 	string					name;
+	float					health;
+
 	input::InputController		inputController;
 	logic::StateTransitions		stateTransitions;
 
@@ -26,6 +28,15 @@ public:
 	Fighter(string Name,Point position);
 	~Fighter() {};
 
+	float getHealth(void) const {
+		return health;
+	}
+	void removeHealth(float h) {
+		if (health - h > 0) {
+			health = health - h;
+		}
+		else health = 0;
+	}
 	void setStateMachine(bool debug);
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, string name, int w,int h);//test function

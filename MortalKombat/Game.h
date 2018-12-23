@@ -9,15 +9,20 @@ public:
 	Game();
 	~Game();
 	bool initialize(SDL_Surface* gScreenSurface);
-	void DrawGame(SDL_Surface& gScreenSurface, TTF_Font& font);
+	void DrawGame(SDL_Surface& gScreenSurface);
 	void CleanUp();
 	void HandleInput();
 private:
-	Fighter* subzero=NULL;
-	Fighter* scorpion=NULL;
+	Fighter* subzero = NULL;
+	Fighter* scorpion = NULL;
 	TickTimerAnimator *timeAnimator;
 	Timer gameTimer;
 	SDL_Surface* background = NULL;
-	
-	void printMessageAt(const std::string& msg, Point position, TTF_Font *myFont, SDL_Surface *screen, SDL_Color color);
+
+	TTF_Font *Timerfont = NULL;
+	TTF_Font *Namefont = NULL;
+
+	void RenderHpBarRight(float percent, SDL_Surface& screen);
+	void RenderHpBarLeft(float percent, SDL_Surface& screen);
+	void printTimer(const std::string& msg, Point position, SDL_Surface *screen, SDL_Color color);
 };

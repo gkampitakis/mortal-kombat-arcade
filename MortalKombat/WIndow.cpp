@@ -121,7 +121,7 @@ bool Window::loadMedia() {
 	AnimationFilmHolder::Get()->Load("media/stage.png", "", 0, "stage", gScreenSurface, true);
 	AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.stance", gScreenSurface, false);//the ,stance shows the field we must search for
 	AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.stance", gScreenSurface, false);//the ,stance shows the field we must search for
-	
+
 	return true;
 }
 
@@ -160,11 +160,10 @@ void Window::drawWindow() {
 		}
 	}
 	else if (state == INGAME) {
-		game->DrawGame(*gScreenSurface,*font);
+		game->DrawGame(*gScreenSurface);
 	}
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);
-	int test = SDL_SCANCODE_B;
 };
 
 //Mix volume ad 

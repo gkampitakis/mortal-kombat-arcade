@@ -6,6 +6,7 @@ Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
 	FighterPos = position;
+	health = 1.0;
 };
 
 bool Fighter::initialize(const string& path) {
