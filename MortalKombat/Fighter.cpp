@@ -102,6 +102,14 @@ void Fighter::setStateMachine() {
 			stateTransitions.SetState("READY");
 		});
 	})
+		.SetTransition("READY", Input{ ".DOWN.KICK.SPECIAL" }, [&](void) {
+		SetActionWithAnimator([&]() {//HINT: Hit them all at once
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "SPECIAL MOVE 2" << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("DOWN");
+		});
+	})
+
 		.SetTransition("UP", Input{ ".PUNCH.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
