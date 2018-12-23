@@ -28,7 +28,7 @@ bool Fighter::initialize(const string& path) {
 		}
 
 		stateTransitions.SetState("READY");
-		setStateMachine(path._Equal("config/subzero_controller.json"));//for debugging
+		setStateMachine();
 
 
 		return true;//true or false catch here
@@ -76,7 +76,7 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 * Watchout in which time you want to make the transition before or after the act like 1st print and then change state ?
 or the opposite
 */
-void Fighter::setStateMachine(bool debug) {
+void Fighter::setStateMachine() {
 	using Input = logic::StateTransitions::Input;
 	stateTransitions.
 		/*
@@ -85,35 +85,27 @@ void Fighter::setStateMachine(bool debug) {
 		SetTransition("READY", Input{ ".PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Punch-> State " << stateTransitions.GetState() << "\n";
+			cout << "Punch-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Low Punch-> State " << stateTransitions.GetState() << "\n";
+			cout << "Low Punch-> State " << stateTransitions.GetState() << "\n";
 		});
 
 	})
-		/* IGNORE THIS FOR NOW
-		.SetTransition("DOWN", Input{ ".DOWN.SPECIAL" }, [&](void) {
-		//SetActionWithAnimator([&]() {
-		//	AnimatorHolder::Remove(tickAnimator);
-		if (debug) cout << "TEST------blur------> State " << stateTransitions.GetState() << "\n";
-		//});
-
+		.SetTransition("DOWN", Input{ ".BCK.DOWN.SPECIAL" }, [&](void) {
+		SetActionWithAnimator([&]() {//HINT: to hit it u must hold down and hit simultaneously the back and special key
+			AnimatorHolder::Remove(tickAnimator);
+			cout << "SPECIAL MOVE 1" << stateTransitions.GetState() << "\n";
+			stateTransitions.SetState("READY");
+		});
 	})
-		.SetTransition("DOWN", Input{ ".DOWN.SPECIAL.BCK" }, [&](void) {
-		//SetActionWithAnimator([&]() {
-		//	AnimatorHolder::Remove(tickAnimator);
-		if (debug) cout << "TEST------blur------> State " << stateTransitions.GetState() << "\n";
-		//});
-
-	})*/
 		.SetTransition("UP", Input{ ".PUNCH.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "High Punch-> State " << stateTransitions.GetState() << "\n";
+			cout << "High Punch-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
 		});
 	})
@@ -123,20 +115,20 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("READY", Input{ ".KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Kick-> State " << stateTransitions.GetState() << "\n";
+			cout << "Kick-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Low KICK-> State " << stateTransitions.GetState() << "\n";
+			cout << "Low KICK-> State " << stateTransitions.GetState() << "\n";
 		});
 
 	})
 		.SetTransition("UP", Input{ ".KICK.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "High Kick-> State " << stateTransitions.GetState() << "\n";
+			cout << "High Kick-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
 		});
 
@@ -147,33 +139,33 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("READY", Input{ ".UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Up-> State " << stateTransitions.GetState() << "\n";
+			cout << "Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("UP");
 		});
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Back-> State " << stateTransitions.GetState() << "\n";;
+			cout << "Back-> State " << stateTransitions.GetState() << "\n";;
 		});
 	})
 		.SetTransition("READY", Input{ ".FWD" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Forward-> State " << stateTransitions.GetState() << "\n";
+			cout << "Forward-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("READY", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "DUCKING-> State " << stateTransitions.GetState() << "\n";
+			cout << "DUCKING-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "still ducking-> State " << stateTransitions.GetState() << "\n";
+			cout << "still ducking-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		/*
@@ -182,27 +174,27 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Block -> State " << stateTransitions.GetState() << "\n";
+			cout << "Block -> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("BLOCK");
 		});
 	})
 		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Block Down -> State " << stateTransitions.GetState() << "\n";
+			cout << "Block Down -> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("BLOCKDWN");
 		});
 	})
 		.SetTransition("BLOCK", Input{ ".BLOCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "still blocking-> State " << stateTransitions.GetState() << "\n";
+			cout << "still blocking-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		.SetTransition("BLOCKDWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "still blocking down-> State " << stateTransitions.GetState() << "\n";
+			cout << "still blocking down-> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		/*
@@ -211,35 +203,35 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug)	cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
+			cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("UP", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug)	cout << "Falling Down-> State " << stateTransitions.GetState() << "\n";
+			cout << "Falling Down-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("BLOCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
+			cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("BLOCKDWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Unblocking DOWN-> State " << stateTransitions.GetState() << "\n";
+			cout << "Unblocking DOWN-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
 		});
 	})
 		.SetTransition("READY", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Ready waiting -> State " << stateTransitions.GetState() << "\n";
+			cout << "Ready waiting -> State " << stateTransitions.GetState() << "\n";
 		});
 	})
 		/*
@@ -248,14 +240,14 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("UP", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "FlipFWD-> State " << stateTransitions.GetState() << "\n";
+			cout << "FlipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("FlipFWD");
 		});
 	})
 		.SetTransition("UP", Input{ ".BCK.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "FlipBCK-> State " << stateTransitions.GetState() << "\n";
+			cout << "FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("FlipBCK");
 		});
 
@@ -263,28 +255,28 @@ void Fighter::setStateMachine(bool debug) {
 		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
+			cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipFWD", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Falling from flipFWD-> State " << stateTransitions.GetState() << "\n";
+			cout << "Falling from flipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
-	.SetTransition("FlipBCK", Input{ ".FWD.BCK" }, [&](void) {
+		.SetTransition("FlipBCK", Input{ ".FWD.BCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
+			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipBCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
-			if (debug) cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
+			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	});

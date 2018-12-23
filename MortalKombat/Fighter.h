@@ -37,7 +37,7 @@ public:
 		}
 		else health = 0;
 	}
-	void setStateMachine(bool debug);
+	void setStateMachine();
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, string name, int w,int h);//test function
 	bool initialize(const string& path);//give json as argument

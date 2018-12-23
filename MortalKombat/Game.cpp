@@ -6,6 +6,7 @@ bool Game::start = false;
 
 Game::Game() {
 	timeAnimator = new TickTimerAnimator(NULL);
+	timeAnimation = new TickTimerAnimation(111);
 	round = 1;
 };
 
@@ -51,8 +52,8 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
-
-	printTimer(gameTimer.ReverseTimer(10), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	//For debugging purposes the timer is big 
+	printTimer(gameTimer.ReverseTimer(1000), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
@@ -79,7 +80,7 @@ void Game::HandleInput(SDL_Event& event) {
 					Game::start = true;
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("fight"), 0);
 					gameTimer.start();
-				}, 1000);
+				}, 1000);//A bit more time here but for debug purposes leave it fast
 			}
 		}
 	}
@@ -167,11 +168,10 @@ void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
 
 void Game::DelayAction(const std::function<void()>& f, delay_t d) {
 	if (timeAnimator&&timeAnimator->GetState() != ANIMATOR_RUNNING) {
-		TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
-		tmp2->setOnTick([] {
+		timeAnimation->setOnTick([] {
 			//Nothing to do here
 		}).SetDelay(d).SetReps(1);
-		timeAnimator = new TickTimerAnimator(tmp2);
+		timeAnimator = new TickTimerAnimator(timeAnimation);
 		timeAnimator->SetOnFinish(f);
 		timeAnimator->Start(SDL_GetTicks());
 		AnimatorHolder::MarkAsRunning(timeAnimator);

@@ -21,6 +21,7 @@ private:
 	Fighter* subzero = NULL;
 	Fighter* scorpion = NULL;
 	TickTimerAnimator *timeAnimator;
+	TickTimerAnimation* timeAnimation;
 	Timer gameTimer;
 	SDL_Surface* background = NULL;
 
