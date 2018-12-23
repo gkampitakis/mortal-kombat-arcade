@@ -13,6 +13,9 @@ public:
 	void CleanUp();
 	void HandleInput(SDL_Event& event);
 	static bool start;
+	int GetRound(void) const {
+		return round;
+	};
 
 private:
 	Fighter* subzero = NULL;
@@ -23,8 +26,12 @@ private:
 
 	TTF_Font *Timerfont = NULL;
 	TTF_Font *Namefont = NULL;
+	TTF_Font *tmpFont = NULL;
+	int round;
 
 	void RenderHpBarRight(float percent, SDL_Surface& screen);
 	void RenderHpBarLeft(float percent, SDL_Surface& screen);
 	void printTimer(const std::string& msg, Point position, SDL_Surface *screen, SDL_Color color);
+	void DelayAction(const std::function<void()>& f, delay_t d);
+	void printMessage(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize);
 };

@@ -1,8 +1,13 @@
 #include "Game.h"
+#include "AnimatorHolder.h"
+#include "MusicPlayer.h"
 
 bool Game::start = false;
 
-Game::Game() {};
+Game::Game() {
+	timeAnimator = new TickTimerAnimator(NULL);
+	round = 1;
+};
 
 Game::~Game() {
 	CleanUp();
@@ -39,7 +44,7 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
-	if (!gameTimer.isStarted()&&start) {
+	if (!gameTimer.isStarted() && start) {
 		Game::start = false;
 		cout << "end";
 	}
@@ -48,7 +53,9 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 
 	printTimer(gameTimer.ReverseTimer(10), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
-
+	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
+		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
+	}
 	//The camera might need moving or interaction with the playerres 
 	subzero->Draw(gScreenSurface, "subzero.stance", 200, 450);//test functions
 	scorpion->Draw(gScreenSurface, "scorpion.stance", 240, 450);//test functions
@@ -67,9 +74,12 @@ void Game::HandleInput(SDL_Event& event) {
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				Game::start = true;
-				cout << "test";
-				gameTimer.start();
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);
+					Game::start = true;
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("fight"), 0);
+					gameTimer.start();
+				}, 1000);
 			}
 		}
 	}
@@ -154,3 +164,45 @@ void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
 	}
 
 };
+
+void Game::DelayAction(const std::function<void()>& f, delay_t d) {
+	if (timeAnimator&&timeAnimator->GetState() != ANIMATOR_RUNNING) {
+		TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
+		tmp2->setOnTick([] {
+			//Nothing to do here
+		}).SetDelay(d).SetReps(1);
+		timeAnimator = new TickTimerAnimator(tmp2);
+		timeAnimator->SetOnFinish(f);
+		timeAnimator->Start(SDL_GetTicks());
+		AnimatorHolder::MarkAsRunning(timeAnimator);
+	}
+};
+
+
+void Game::printMessage(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize) {
+
+	SDL_Rect dest = { position.x,position.y,0,0 };
+	tmpFont = TTF_OpenFont("media/font.ttf", fontsize);
+	if (Namefont == NULL)
+	{
+		throw
+			std::string("Failed to load lazy font! SDL_ttf Error");
+	}
+	SDL_Surface *stext = TTF_RenderText_Blended(tmpFont, msg.c_str(), color);
+
+	if (stext) {
+		SDL_BlitSurface(stext, NULL, gScreenSurface, &dest);
+		SDL_FreeSurface(stext);
+		TTF_CloseFont(tmpFont);
+	}
+	else {
+		throw
+			std::string("Couldn't allocate text surface in printMessageAt");
+		TTF_CloseFont(tmpFont);
+	}
+
+};
+
+
+
+
