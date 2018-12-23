@@ -22,7 +22,7 @@ bool Window::HandleInput(SDL_Event& event) {
 				state = tmpstate == -1 ? state : tmpstate;
 			}
 			else if (state == INGAME) {
-				game->HandleInput();
+				game->HandleInput(event);
 			}
 		}//Handle Input For Menu
 	}

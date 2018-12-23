@@ -11,7 +11,9 @@ public:
 	bool initialize(SDL_Surface* gScreenSurface);
 	void DrawGame(SDL_Surface& gScreenSurface);
 	void CleanUp();
-	void HandleInput();
+	void HandleInput(SDL_Event& event);
+	static bool start;
+
 private:
 	Fighter* subzero = NULL;
 	Fighter* scorpion = NULL;

@@ -1,8 +1,12 @@
 #include "Game.h"
 
+bool Game::start = false;
+
 Game::Game() {};
 
-Game::~Game() {};
+Game::~Game() {
+	CleanUp();
+};
 
 bool Game::initialize(SDL_Surface* gScreenSurface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("stage");
@@ -35,11 +39,15 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
+	if (!gameTimer.isStarted()&&start) {
+		Game::start = false;
+		cout << "end";
+	}
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 
-	printTimer(gameTimer.ReverseTimer(90), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(10), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 
 	//The camera might need moving or interaction with the playerres 
 	subzero->Draw(gScreenSurface, "subzero.stance", 200, 450);//test functions
@@ -51,15 +59,26 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 
 void Game::CleanUp() {
 	//Fix this 
+	//Clean fonts surfaces and all
+	//call it at winow
 };
 
-void Game::HandleInput() {
-	if (!gameTimer.isStarted()) {//testing the timer wont start from here temporary place 
-		gameTimer.start();
+void Game::HandleInput(SDL_Event& event) {
+	if (!Game::start) {
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym == SDLK_SPACE) {
+				Game::start = true;
+				cout << "test";
+				gameTimer.start();
+			}
+		}
 	}
-	subzero->Handler();
-	scorpion->Handler();
+	else {
+		subzero->Handler();
+		scorpion->Handler();
+	}
 };
+
 
 void Game::printTimer(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color) {
 	SDL_Rect dest = { position.x,position.y,0,0 };

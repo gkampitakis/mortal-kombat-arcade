@@ -20,7 +20,7 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 	*		SOUND LOADING HERE
 	*/
 	MusicPlayer::Get()->LoadMusic("media/intro.wav", "intro");
-	//MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));//Commented for working with heaphones
+	MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));//Commented for working with heaphones
 
 	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 	StartButton(*gScreenSurface);
