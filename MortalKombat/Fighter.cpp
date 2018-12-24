@@ -1,12 +1,14 @@
 #include "Fighter.h"
 #include "AnimationFilmHolder.h"
 #include "AnimatorHolder.h"
+#include "SpriteHolder.h"
 
 Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
 	health = 1.0;
-	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name+".stance") , SpriteTypes::FIGHTER);
+	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER);
+	animator = new FrameRangeAnimator();
 };
 
 bool Fighter::initialize(const string& path) {
@@ -38,7 +40,7 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface,int w,int h) {
+void Fighter::Draw(SDL_Surface& gScreenSurface, int w, int h) {
 
 	using Input = logic::StateTransitions::Input;
 	sprite->Display(gScreenSurface, w, h);
@@ -61,11 +63,12 @@ void Fighter::Draw(SDL_Surface& gScreenSurface,int w,int h) {
 			AnimatorHolder::MarkAsRunning(tickAnimator);
 		}
 	*/
-	if (Fighter::name._Equal("subzero")) {//debug
-		Input tmpInput;
-		tmpInput.insert(Make_key(inputController.GetLogical()));
-		Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
-	}
+
+	//if (Fighter::name._Equal("subzero")) {//debug
+	Input tmpInput;
+	tmpInput.insert(Make_key(inputController.GetLogical()));
+	Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
+//}
 };
 
 /*
@@ -177,6 +180,8 @@ void Fighter::setStateMachine() {
 		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
 			cout << "Block -> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("BLOCK");
 		});
@@ -233,8 +238,17 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("READY", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
+			//TEMPORARY CODE ABOUT ANIMATION SPEED
+		
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Ready waiting -> State " << stateTransitions.GetState() << "\n";
+			if (animator->HasFinished()) {
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, Fighter::name._Equal("subzero") ? 75 : 100, true, 150),
+					SDL_GetTicks());
+				//Here some how change the delay for scorpion as he is too fast or just fill his film with same frameboxes
+				AnimatorHolder::MarkAsRunning(animator);
+			}
+
 		});
 	})
 		/*

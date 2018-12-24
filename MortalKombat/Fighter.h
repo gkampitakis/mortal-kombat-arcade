@@ -4,6 +4,7 @@
 #include "TickTimerAnimation.h"
 #include "InputContoller.h"
 #include "StateTransitions.h"
+#include "FrameRangeAnimator.h"
 
 #define	FIGHTER_ACTION_DELAY_MSECS	150 //<-----------------FOR DEBUGGING
 
@@ -14,6 +15,7 @@ private:
 	string					nextAction;
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
 	TickTimerAnimation		tickAnim;
+	FrameRangeAnimator*		animator;//testing
 	string					name;
 	float					health;
 

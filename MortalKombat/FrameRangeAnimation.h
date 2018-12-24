@@ -1,3 +1,6 @@
+#ifndef FrameRangeAnimation_HEADER
+#define FrameRangeAnimation_HEADER
+
 #include "MyLibraries.h"
 #include "MovingAnimation.h"
 
@@ -14,3 +17,5 @@ public:
 		offset_t dx, offset_t dy, delay_t d, bool c, animid_t id
 	) : start(s), end(e), MovingAnimation(dx, dy, d, c, id) {}
 };
+
+#endif

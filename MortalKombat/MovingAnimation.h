@@ -1,3 +1,6 @@
+#ifndef MovingAnimation_HEADER
+#define MovingAnimation_HEADER
+
 #include "Animation.h"
 
 class MovingAnimation :public Animation {
@@ -18,3 +21,5 @@ public:
 		offset_t _dx, offset_t _dy, delay_t _delay, bool c, animid_t _id
 	) : dx(_dx), dy(_dy), delay(_delay), continuous(c), Animation(_id) {}
 };
+
+#endif

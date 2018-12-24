@@ -28,6 +28,7 @@ public:
 	unsigned GetType(void) const;
 	AnimationFilm* getFilm(void);
 	void SetNewFilm(AnimationFilm* film);
+	byte GetFrameNo(void) const;
 };
 
 #endif

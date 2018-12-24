@@ -5,9 +5,9 @@ void Sprite::SetVisibility(bool v) {
 	visible = v;
 };
 
-void Sprite::SetFrame(byte i) {
+void Sprite::SetFrame(byte i) {//HERE BUG
 	if (i != frameNo) {
-		assert(i < currFilm->GetTotalFrames());
+		assert(i <= currFilm->GetTotalFrames());
 		frameBox = currFilm->GetFrameBox(frameNo = i);
 	}
 };
@@ -26,12 +26,13 @@ bool Sprite::CollisionCheck(Sprite* s) {
 };
 
 void Sprite::Move(Point x) {
-	this->position = x;
+	this->position.x = this->position.x+x.x;
+	this->position.y = this->position.y + x.y;
 };
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	if (visible) {
-		currFilm->DisplayFrame(dest,position,frameNo-1, width,height);
+		currFilm->DisplayFrame(dest,position,frameNo, width,height);
 	}
 };
 
@@ -43,8 +44,8 @@ void Sprite::DisplayUnique(SDL_Surface &dest,int width,int height) {
 };
 
 
-Sprite::Sprite(Point position, AnimationFilm* film,unsigned type) {
-	this->position = position;
+Sprite::Sprite(Point _position, AnimationFilm* film,unsigned type) {
+	position = _position;
 	this->currFilm = film;
 	SetVisibility(true);
 	SetFrame(0);
@@ -65,4 +66,8 @@ AnimationFilm* Sprite::getFilm(void) {
 void Sprite::SetNewFilm(AnimationFilm* film) {
 	currFilm = film;
 	frameNo = film->GetTotalFrames();
-}
+};
+
+byte Sprite::GetFrameNo(void) const {
+	return  frameNo;
+};

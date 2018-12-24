@@ -8,7 +8,7 @@ AnimationFilm::AnimationFilm(SDL_Surface* bitmap, const vector<Rect> boxes, stri
 };
 
 byte AnimationFilm::GetTotalFrames(void) const {
-	return (byte)boxes.size();
+	return (byte)boxes.size()-1;
 };
 
 SDL_Surface* AnimationFilm::GetBitmap(void) const {
