@@ -10,7 +10,6 @@
 class Fighter final {
 	using Input = std::set<std::string>;
 private:
-	Point					FighterPos;
 	Sprite*					sprite;
 	string					nextAction;
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
@@ -39,6 +38,6 @@ public:
 	}
 	void setStateMachine();
 	void Handler();
-	void Draw(SDL_Surface& gScreenSurface, string name, int w,int h);//test function
+	void Draw(SDL_Surface& gScreenSurface,int w,int h);//test function
 	bool initialize(const string& path);//give json as argument
 };

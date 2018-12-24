@@ -5,8 +5,8 @@
 Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
-	FighterPos = position;
 	health = 1.0;
+	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name+".stance") , SpriteTypes::FIGHTER);
 };
 
 bool Fighter::initialize(const string& path) {
@@ -30,26 +30,22 @@ bool Fighter::initialize(const string& path) {
 		stateTransitions.SetState("READY");
 		setStateMachine();
 
-
 		return true;//true or false catch here
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();
 		return false;
-
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
+void Fighter::Draw(SDL_Surface& gScreenSurface,int w,int h) {
+
+	using Input = logic::StateTransitions::Input;
+	sprite->Display(gScreenSurface, w, h);
 
 	/*
 	* TEMP CODE HERE
 	*/
-	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm(test);
-	//{0 , 0 } coordinates
-
-	tmp->DisplayFrame(gScreenSurface, FighterPos, 4, w, h);//100 x100 is the size of the player
-	using Input = logic::StateTransitions::Input;
 	/*
 	if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
@@ -65,13 +61,13 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, string test, int w, int h) {
 			AnimatorHolder::MarkAsRunning(tickAnimator);
 		}
 	*/
-	if (test._Equal("subzero.stance")) {//debug
+	if (Fighter::name._Equal("subzero")) {//debug
 		Input tmpInput;
 		tmpInput.insert(Make_key(inputController.GetLogical()));
 		Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
 	}
+};
 
-}
 /*
 * Watchout in which time you want to make the transition before or after the act like 1st print and then change state ?
 or the opposite
@@ -139,7 +135,6 @@ void Fighter::setStateMachine() {
 			cout << "High Kick-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
 		});
-
 	})
 		/*
 		* MOVES-> UP/BACK/FORWARD/DOWN

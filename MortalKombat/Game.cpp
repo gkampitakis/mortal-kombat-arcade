@@ -19,7 +19,7 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 	background = tmp->GetBitmap();
 
 	//Init fonts
-	Timerfont = TTF_OpenFont("media/font.ttf", 70);//The 28 here is the font size
+	Timerfont = TTF_OpenFont("media/font.ttf", 70);
 	if (Timerfont == NULL)
 	{
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
@@ -27,7 +27,7 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 	}
 
 	//Fix here the color and size
-	Namefont = TTF_OpenFont("media/font.ttf", 45);//The 28 here is the font size
+	Namefont = TTF_OpenFont("media/font.ttf", 45);
 	if (Namefont == NULL)
 	{
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
@@ -58,8 +58,8 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 	//The camera might need moving or interaction with the playerres 
-	subzero->Draw(gScreenSurface, "subzero.stance", 200, 450);//test functions
-	scorpion->Draw(gScreenSurface, "scorpion.stance", 240, 450);//test functions
+	subzero->Draw(gScreenSurface,200,450);//test functions
+	scorpion->Draw(gScreenSurface,240,450);//test functions
 	//x,y, height/width changed the orientation in function
 	RenderHpBarLeft(0.91f, gScreenSurface);//debuging normally subzero->getHealth();
 	RenderHpBarRight(0.01f, gScreenSurface);//debuging normally scorpion->getHealth();

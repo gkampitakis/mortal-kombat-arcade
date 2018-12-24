@@ -27,5 +27,3 @@ private:
 	Intro* intro = NULL;
 	Game* game = NULL;
 };
-
-// SDL_Color textColor 

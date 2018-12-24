@@ -21,7 +21,7 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 	*/
 	MusicPlayer::Get()->LoadMusic("media/intro.wav", "intro");
 	//MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));//Commented for working with heaphones
-
+	//debuggin silenced the sound
 	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 	MusicPlayer::Get()->LoadEffect("media/fight.wav", "fight");
 	StartButton(*gScreenSurface);
@@ -34,7 +34,6 @@ SDL_Surface* Intro::getBackground() {
 };
 
 void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
-	//here also call a renderer for the sprites
 
 	Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
@@ -46,7 +45,7 @@ void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
 	};
 };
 
-int Intro::HandleInput(SDL_Event& event) {//A basic handle input for menu DUMMY FOR STARTER
+int Intro::HandleInput(SDL_Event& event) {//Handle input for menu
 	int state = -1;
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym) {
@@ -71,7 +70,7 @@ void Intro::StartButton(SDL_Surface& gScreenSurface) {
 	}).SetDelay(500).SetReps(0);
 	timeAnimator = new TickTimerAnimator(tmp2);
 	timeAnimator->SetOnFinish([&]() {
-		//AnimatorHolder::MarkAsSuspended(timeAnimator);
+		AnimatorHolder::Remove(timeAnimator);
 	});
 	timeAnimator->Start(SDL_GetTicks());
 	AnimatorHolder::MarkAsRunning(timeAnimator);

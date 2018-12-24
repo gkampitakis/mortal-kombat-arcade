@@ -31,8 +31,6 @@ bool Window::HandleInput(SDL_Event& event) {
 
 bool Window::open(string w_name) {
 
-	//here do a controller check maybe
-	//For starting these
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
 		cout << "SDL could not initialize! SDL Error: %s\n", SDL_GetError();
 		return false;
@@ -111,7 +109,7 @@ void Window::close() {
 
 bool Window::loadMedia() {
 	//Here load the font 
-	font = TTF_OpenFont("media/font.ttf", 70);//The 28 here is the font size
+	font = TTF_OpenFont("media/font.ttf", 70);
 	if (font == NULL)
 	{
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
@@ -132,7 +130,6 @@ void drawDisclaimer(SDL_Surface& gScreenSurface) {
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	tmp->DisplayFrame(gScreenSurface, fullscreen);
 };
-
 
 
 void Window::drawWindow() {
@@ -165,5 +162,3 @@ void Window::drawWindow() {
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);
 };
-
-//Mix volume ad 

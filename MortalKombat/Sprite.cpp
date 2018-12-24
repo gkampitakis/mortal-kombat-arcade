@@ -31,7 +31,7 @@ void Sprite::Move(Point x) {
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	if (visible) {
-		currFilm->DisplayFrame(dest,position,frameNo, width,height);
+		currFilm->DisplayFrame(dest,position,frameNo-1, width,height);
 	}
 };
 
@@ -60,4 +60,9 @@ unsigned Sprite::GetType(void) const {
 
 AnimationFilm* Sprite::getFilm(void) {
 	return currFilm;
+};
+
+void Sprite::SetNewFilm(AnimationFilm* film) {
+	currFilm = film;
+	frameNo = film->GetTotalFrames();
 }

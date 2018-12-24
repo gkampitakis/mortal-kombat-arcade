@@ -27,6 +27,7 @@ public:
 	void DisplayUnique(SDL_Surface &dest, int w,int h);
 	unsigned GetType(void) const;
 	AnimationFilm* getFilm(void);
+	void SetNewFilm(AnimationFilm* film);
 };
 
 #endif
