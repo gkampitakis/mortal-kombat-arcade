@@ -158,17 +158,27 @@ void Fighter::setStateMachine() {
 		}
 	})
 		.SetTransition("READY", Input{ ".DOWN" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "DUCKING-> State " << stateTransitions.GetState() << "\n";
+		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".down"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("DOWN");
-		});
+		}
 	})
 		.SetTransition("DOWN", Input{ ".DOWN" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "still ducking-> State " << stateTransitions.GetState() << "\n";
-		});
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".duck"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
 	})
 		/*
 		* BLOCKS->BLOCK/BLOCK DOWN
