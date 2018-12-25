@@ -50,16 +50,36 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 		cout << "end";
 	}
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
 	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
+
+	camera.x = (subzero->getPosition().x + subzero->getWidth() / 2) - SCREEN_WIDTH / 2;
+	if (camera.x < 0)
+	{
+		camera.x = 0;
+	}
+	if (camera.y < 0)
+	{
+		camera.y = 0;
+	}
+	if (camera.x > STAGE_WIDTH - camera.w)
+	{
+		camera.x = STAGE_WIDTH - camera.w;
+	}
+	if (camera.y > STAGE_WIDTH - camera.h)
+	{
+		camera.y = STAGE_WIDTH - camera.h;
+	}
+	Rect test2 = { subzero->getPosition().x - camera.x,camera.y,camera.w,camera.h };
+	SDL_BlitSurface(background, &test2, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
 	printTimer(gameTimer.ReverseTimer(90), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 	//The camera might need moving or interaction with the playerres 
-	subzero->Draw(gScreenSurface,100,330);//test functions
-	scorpion->Draw(gScreenSurface,140,330);//test functions
+	subzero->Draw(gScreenSurface, 100, 330);//test functions
+	scorpion->Draw(gScreenSurface, 140, 330);//test functions
 	//x,y, height/width changed the orientation in function
 	RenderHpBarLeft(0.91f, gScreenSurface);//debuging normally subzero->getHealth();
 	RenderHpBarRight(0.01f, gScreenSurface);//debuging normally scorpion->getHealth();

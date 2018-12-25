@@ -12,7 +12,7 @@ void Sprite::SetFrame(byte i) {//HERE BUG
 	}
 };
 
-byte Sprite::GetFrame(void) const{
+byte Sprite::GetFrame(void) const {
 	return frameNo;
 };
 
@@ -26,25 +26,32 @@ bool Sprite::CollisionCheck(Sprite* s) {
 };
 
 void Sprite::Move(Point x) {
-	this->position.x = this->position.x+x.x;
+
+	this->position.x = this->position.x + x.x;
+ 	if (this->position.x < 0 || (this->position.x + currFilm->GetFrameBox(frameNo).w > SCREEN_WIDTH ))
+	{
+		
+		this->position.x = this->position.x - x.x;
+	}
+	cout << this->position.x + currFilm->GetFrameBox(frameNo).w<<"\n";
 	this->position.y = this->position.y + x.y;
 };
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	if (visible) {
-		currFilm->DisplayFrame(dest,position,frameNo, width,height);
+		currFilm->DisplayFrame(dest, position, frameNo, width, height);
 	}
 };
 
-void Sprite::DisplayUnique(SDL_Surface &dest,int width,int height) {
+void Sprite::DisplayUnique(SDL_Surface &dest, int width, int height) {
 	if (visible) {
 		Rect display = { position.x,position.y,width,height };
-		currFilm->DisplayFrame(dest, display); 
+		currFilm->DisplayFrame(dest, display);
 	}
 };
 
 
-Sprite::Sprite(Point _position, AnimationFilm* film,unsigned type) {
+Sprite::Sprite(Point _position, AnimationFilm* film, unsigned type) {
 	position = _position;
 	this->currFilm = film;
 	SetVisibility(true);
@@ -70,4 +77,8 @@ void Sprite::SetNewFilm(AnimationFilm* film) {
 
 byte Sprite::GetFrameNo(void) const {
 	return  frameNo;
+};
+
+Point Sprite::GetPosition(void) const {
+	return position;
 };

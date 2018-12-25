@@ -310,3 +310,10 @@ const string Fighter::Make_key(const Input& input) const {
 	return result;
 }
 
+Point Fighter::getPosition(void) const {
+	return Fighter::sprite->GetPosition();
+};
+
+int Fighter::getWidth(void) const {
+	return Fighter::sprite->getFilm()->GetFrameBox(Fighter::sprite->GetFrameNo()).w;
+};

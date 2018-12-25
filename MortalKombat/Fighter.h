@@ -38,8 +38,10 @@ public:
 		}
 		else health = 0;
 	}
+	Point getPosition(void) const;
 	void setStateMachine();
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface,int w,int h);//test function
 	bool initialize(const string& path);//give json as argument
+	int getWidth(void) const;
 };
