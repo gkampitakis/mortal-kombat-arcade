@@ -115,12 +115,20 @@ bool Window::loadMedia() {
 		cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError();
 		return false;
 	}
-	AnimationFilmHolder::Get()->Load("media/disclaimer.png", "", 0, "disclaimer", gScreenSurface, true);
-	AnimationFilmHolder::Get()->Load("media/stage.png", "", 0, "stage", gScreenSurface, true);
-	AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.stance", gScreenSurface, false);//the ,stance shows the field we must search for
-	AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.stance", gScreenSurface, false);//the ,stance shows the field we must search for
-	AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.move", gScreenSurface, false);//the ,stance shows the field we must search for
-	AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.move", gScreenSurface, false);//the ,stance shows the field we must search for
+	try {
+		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "", 0, "disclaimer", gScreenSurface, true);
+		AnimationFilmHolder::Get()->Load("media/stage.png", "", 0, "stage", gScreenSurface, true);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.stance", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.stance", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 11, "subzero.move", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 8, "scorpion.move", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.up", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.up", gScreenSurface, false);
+	}
+	catch (const std::exception& e) {
+		cerr << e.what();
+		return false;
+	}
 	return true;
 }
 
