@@ -78,10 +78,16 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low Punch-> State " << stateTransitions.GetState() << "\n";
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowpunch"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+			}
 		});
-
 	})
 		.SetTransition("DOWN", Input{ ".BCK.DOWN.SPECIAL" }, [&](void) {
 		SetActionWithAnimator([&]() {//HINT: to hit it u must hold down and hit simultaneously the back and special key
@@ -129,10 +135,16 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "Low KICK-> State " << stateTransitions.GetState() << "\n";
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowkick"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+			}
 		});
-
 	})
 		.SetTransition("UP", Input{ ".KICK" }, [&](void) {
 		if (animator->HasFinished()) {
