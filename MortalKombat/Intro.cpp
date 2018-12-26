@@ -7,11 +7,11 @@
 Intro::Intro() {}
 
 bool Intro::initialize(SDL_Surface* gScreenSurface) {
-	AnimationFilmHolder::Get()->Load("media/menu.png", "", 0, "background", gScreenSurface, true);
+	AnimationFilmHolder::Get()->Load("media/menu.png", "", "background", gScreenSurface, true);
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 
-	AnimationFilmHolder::Get()->Load("media/pressstart.png", "", 0, "presssstart", gScreenSurface, false);
+	AnimationFilmHolder::Get()->Load("media/pressstart.png", "", "presssstart", gScreenSurface, false);
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");
 
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 120 }, tmp, SpriteTypes::INTRO_SPRITE));

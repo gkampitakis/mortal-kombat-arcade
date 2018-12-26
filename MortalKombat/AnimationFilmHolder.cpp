@@ -13,7 +13,7 @@ AnimationFilmHolder* AnimationFilmHolder::Get(void) {
 };
 
 //FrameNo starts from Zero keep that inmind when calling Load for a film
-void AnimationFilmHolder::Load(const string &path, const string &jsonpath, int framesNo, string id, SDL_Surface *screen, bool backgroundFlag) {
+void AnimationFilmHolder::Load(const string &path, const string &jsonpath, string id, SDL_Surface *screen, bool backgroundFlag) {
 	SDL_Surface* bitmap = bitmaps.Load(path, screen->format, backgroundFlag);
 	vector<Rect> boxes;
 	assert(!GetFilm(id));

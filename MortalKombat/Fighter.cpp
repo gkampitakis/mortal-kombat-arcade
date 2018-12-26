@@ -63,9 +63,17 @@ void Fighter::setStateMachine() {
 		*  PUNCHES-> LOW/HIGH AND PUNCH
 		*/
 		SetTransition("READY", Input{ ".PUNCH" }, [&](void) {
-		SetActionWithAnimator([&]() {
+		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Punch-> State " << stateTransitions.GetState() << "\n";
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(rand()%2+1==2? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+			}
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
@@ -124,16 +132,19 @@ void Fighter::setStateMachine() {
 		* MOVES-> UP/BACK/FORWARD/DOWN
 		*/
 		.SetTransition("READY", Input{ ".UP" }, [&](void) {
-		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-			AnimatorHolder::Remove(animator);
-			animator = new FrameRangeAnimator();
-			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
-			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -120, 180, false, 150),
-				SDL_GetTicks());
-			AnimatorHolder::MarkAsRunning(animator);
-			stateTransitions.SetState("UP");
-		}
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -120, 180, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+				stateTransitions.SetState("UP");
+			}
+		});
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
@@ -149,15 +160,18 @@ void Fighter::setStateMachine() {
 		}
 	})
 		.SetTransition("READY", Input{ ".FWD" }, [&](void) {
-		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-			AnimatorHolder::Remove(animator);
-			animator = new FrameRangeAnimator();
-			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
-			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 15 : -15, 0, 50, false, 150),
-				SDL_GetTicks());
-			AnimatorHolder::MarkAsRunning(animator);
-		}
+		SetActionWithAnimator([&]() {
+			AnimatorHolder::Remove(tickAnimator);
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 15 : -15, 0, 50, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+			}
+		});
 	})
 		.SetTransition("READY", Input{ ".DOWN" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
@@ -226,7 +240,7 @@ void Fighter::setStateMachine() {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
 			tmp2->setOnTick([&] {
 				sprite->Move({ 0,120 });
-			}).SetDelay(400).SetReps(2);
+			}).SetDelay(400).SetReps(3);
 			tickAnimator = new TickTimerAnimator(tmp2);
 			tickAnimator->SetOnFinish([&]() {
 				AnimatorHolder::Remove(tickAnimator);
