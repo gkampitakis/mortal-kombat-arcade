@@ -263,10 +263,15 @@ void Fighter::setStateMachine() {
 		}
 	})
 		.SetTransition("BLOCKDWN", Input{ ".BLOCK.DOWN" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "still blocking down-> State " << stateTransitions.GetState() << "\n";
-		});
+		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {//This might is not needed ill check it at combos
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".downblock"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
 	})
 		/*
 		* DEFAULT TRANSITIONS
