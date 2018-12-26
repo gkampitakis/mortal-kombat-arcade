@@ -68,7 +68,7 @@ void Fighter::setStateMachine() {
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
-				sprite->SetNewFilm(rand()%2+1==2? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
+				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
 					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
 					SDL_GetTicks());
@@ -109,9 +109,17 @@ void Fighter::setStateMachine() {
 		* KICKS-> LOW/HIGH AND KICK
 		*/
 		.SetTransition("READY", Input{ ".KICK" }, [&](void) {
-		SetActionWithAnimator([&]() {
+		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Kick-> State " << stateTransitions.GetState() << "\n";
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".kick1") : AnimationFilmHolder::Get()->GetFilm(name + ".kick2"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+			}
 		});
 	})
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
@@ -200,10 +208,18 @@ void Fighter::setStateMachine() {
 		* BLOCKS->BLOCK/BLOCK DOWN
 		*/
 		.SetTransition("READY", Input{ ".BLOCK" }, [&](void) {
-		SetActionWithAnimator([&]() {
+		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
-			cout << "Block -> State " << stateTransitions.GetState() << "\n";
-			stateTransitions.SetState("BLOCK");
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".block"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+				stateTransitions.SetState("BLOCK");
+			}
 		});
 	})
 		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
@@ -214,10 +230,15 @@ void Fighter::setStateMachine() {
 		});
 	})
 		.SetTransition("BLOCK", Input{ ".BLOCK" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "still blocking-> State " << stateTransitions.GetState() << "\n";
-		});
+		if (animator->HasFinished()) {//This might is not needed ill check it at combos
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".stillblock"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
 	})
 		.SetTransition("BLOCKDWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {

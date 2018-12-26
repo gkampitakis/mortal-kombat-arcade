@@ -138,6 +138,8 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick1", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.kick2", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick2", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stillblock", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stillblock", gScreenSurface, false);
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();
