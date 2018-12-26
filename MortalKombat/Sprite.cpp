@@ -71,3 +71,11 @@ void Sprite::SetNewFilm(AnimationFilm* film) {
 byte Sprite::GetFrameNo(void) const {
 	return  frameNo;
 };
+
+void Sprite::SetY(int y) {
+	position.y = y;
+};
+
+Point Sprite::GetPosition(void) const {
+	return position;
+};

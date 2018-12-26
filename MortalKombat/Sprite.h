@@ -29,6 +29,8 @@ public:
 	AnimationFilm* getFilm(void);
 	void SetNewFilm(AnimationFilm* film);
 	byte GetFrameNo(void) const;
+	void SetY(int y);
+	Point GetPosition(void) const;
 };
 
 #endif

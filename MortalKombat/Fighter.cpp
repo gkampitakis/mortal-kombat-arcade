@@ -98,12 +98,17 @@ void Fighter::setStateMachine() {
 		});
 	})
 
-		.SetTransition("UP", Input{ ".PUNCH.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "High Punch-> State " << stateTransitions.GetState() << "\n";
-			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
-		});
+		.SetTransition("UP", Input{ ".PUNCH" }, [&](void) {
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highpunch"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 60, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+			stateTransitions.SetState("UP");
+		}
 	})
 		/*
 		* KICKS-> LOW/HIGH AND KICK
@@ -129,12 +134,17 @@ void Fighter::setStateMachine() {
 		});
 
 	})
-		.SetTransition("UP", Input{ ".KICK.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "High Kick-> State " << stateTransitions.GetState() << "\n";
-			stateTransitions.SetState("READY");//do the animation and the fall down here cant stay at air forever
-		});
+		.SetTransition("UP", Input{ ".KICK" }, [&](void) {
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highkick1"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+			stateTransitions.SetState("UP");
+		}
 	})
 		/*
 		* MOVES-> UP/BACK/FORWARD/DOWN
@@ -260,10 +270,11 @@ void Fighter::setStateMachine() {
 		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
 			tmp2->setOnTick([&] {
-				sprite->Move({ 0,120 });
+				if (sprite->GetPosition().y + 120 < 500) sprite->Move({ 0,120 });
 			}).SetDelay(400).SetReps(3);
 			tickAnimator = new TickTimerAnimator(tmp2);
 			tickAnimator->SetOnFinish([&]() {
+				sprite->SetY(500);//Error Correction
 				AnimatorHolder::Remove(tickAnimator);
 				stateTransitions.SetState("READY");
 			});
