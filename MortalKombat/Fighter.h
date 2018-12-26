@@ -40,6 +40,6 @@ public:
 	}
 	void setStateMachine();
 	void Handler();
-	void Draw(SDL_Surface& gScreenSurface,int w,int h);//test function
+	void Draw(SDL_Surface& gScreenSurface);
 	bool initialize(const string& path);//give json as argument
 };

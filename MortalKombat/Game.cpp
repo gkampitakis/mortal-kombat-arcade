@@ -58,8 +58,8 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 	//The camera might need moving or interaction with the playerres 
-	subzero->Draw(gScreenSurface,100,330);//test functions
-	scorpion->Draw(gScreenSurface,140,330);//test functions
+	subzero->Draw(gScreenSurface);
+	scorpion->Draw(gScreenSurface);
 	//x,y, height/width changed the orientation in function
 	RenderHpBarLeft(0.91f, gScreenSurface);//debuging normally subzero->getHealth();
 	RenderHpBarRight(0.01f, gScreenSurface);//debuging normally scorpion->getHealth();

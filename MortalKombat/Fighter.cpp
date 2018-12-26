@@ -40,10 +40,12 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface, int w, int h) {
+void Fighter::Draw(SDL_Surface& gScreenSurface) {
 
+	int width = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).w * 2) / 6;
+	int height = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).h * 2) / 3;
 	using Input = logic::StateTransitions::Input;
-	sprite->Display(gScreenSurface, w, h);
+	sprite->Display(gScreenSurface, width, height);
 
 	Input tmpInput;
 	tmpInput.insert(Make_key(inputController.GetLogical()));

@@ -128,6 +128,16 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.down", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 1, "scorpion.duck", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 1, "subzero.duck", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.block", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.block", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.punch1", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.punch1", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.punch2", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.punch2", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.kick1", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.kick1", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", 3, "scorpion.kick2", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", 3, "subzero.kick2", gScreenSurface, false);
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();
