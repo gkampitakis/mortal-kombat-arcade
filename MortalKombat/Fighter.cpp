@@ -350,20 +350,29 @@ void Fighter::setStateMachine() {
 			AnimatorHolder::MarkAsRunning(animator);
 		}
 	})
-		.SetTransition("UP", Input{ ".FWD.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "FlipFWD-> State " << stateTransitions.GetState() << "\n";
+		.SetTransition("UP", Input{ ".FWD" }, [&](void) {
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipup"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 30 : -30, 0, 70, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("FlipFWD");
-		});
+		}
 	})
-		.SetTransition("UP", Input{ ".BCK.UP" }, [&](void) {
-		SetActionWithAnimator([&]() {
-			AnimatorHolder::Remove(tickAnimator);
-			cout << "FlipBCK-> State " << stateTransitions.GetState() << "\n";
+		.SetTransition("UP", Input{ ".BCK" }, [&](void) {
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipup"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -30 : 30, 0, 70, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("FlipBCK");
-		});
-
+		}
 	})
 		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
