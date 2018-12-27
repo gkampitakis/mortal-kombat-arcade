@@ -31,13 +31,16 @@ public:
 
 	float getHealth(void) const {
 		return health;
-	}
+	};
+	string GetName(void) {
+		return name;
+	};
 	void removeHealth(float h) {
 		if (health - h > 0) {
 			health = health - h;
 		}
 		else health = 0;
-	}
+	};
 	void setStateMachine();
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
@@ -49,4 +52,7 @@ public:
 	void SetWin(void) {
 		win++;
 	}
+	void WinAnimation();
+	void SetState(string state);
+	string GetState(void) const;
 };

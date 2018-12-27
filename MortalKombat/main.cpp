@@ -7,7 +7,7 @@ int main(int argc, char *args[]) {
 	Window new_window(SCREEN_WIDTH, SCREEN_HEIGHT);
 	SDL_Event event;
 
-	if (!new_window.open("My window")) {
+	if (!new_window.open("Mortal Kombat S")) {
 		cout << "Failed to initialize window";
 	}
 	else {

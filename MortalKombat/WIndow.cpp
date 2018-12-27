@@ -5,6 +5,7 @@
 Window::Window(const int width, const int height) {
 	this->width = width;
 	this->height = height;
+
 };
 
 Window::~Window() {};
@@ -158,6 +159,18 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.downblock", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.flipup", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipdown", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.win", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.win", gScreenSurface, false);
+		
+		/*
+		*		SOUND LOADING HERE
+		*/
+		MusicPlayer::Get()->LoadEffect("media/fight.wav", "fight");
+		MusicPlayer::Get()->LoadMusic("media/intro.wav", "intro");
+		MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));
+		MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
+		MusicPlayer::Get()->LoadEffect("media/subzerowins.wav", "subzero.wins");
+		MusicPlayer::Get()->LoadEffect("media/scorpionwins.wav", "scorpion.wins");
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();

@@ -50,11 +50,11 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	if (!gameTimer.isStarted() && start) {//timer stops
 		Game::start = false;
 		//Here function that determines who wins and prints the correct messages but for now dumb
-		// subzero->getHealth() > scorpion->getHealth()
-		rand() % 2 + 1 == 2 ? subzero->SetWin() : scorpion->SetWin();
-		round++;
+		// subzero->getHealth() > scorpion->getHealth()//
+		rand() % 2 + 1 == 2 ? subzero->SetWin() : scorpion->SetWin();//Here the timer stops
+		matchWin(*scorpion, gScreenSurface);//here if and do for both
 	}
-
+	//HERE STILL DEVELOPING
 	cameraAdjustment();
 
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -62,9 +62,13 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
 	printTimer(gameTimer.ReverseTimer(5), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
+		scorpion->SetState("READY");
+		subzero->SetState("READY");
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
+
 	//The camera might need moving or interaction with the playerres 
 	if (rand() % 2 + 1 == 2) {
 		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
@@ -89,10 +93,12 @@ void Game::CleanUp() {
 void Game::HandleInput(SDL_Event& event) {
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == SDLK_SPACE) {
+			if (event.key.keysym.sym == SDLK_SPACE) {//&& timeAnimator->GetState() != ANIMATOR_RUNNING) {//Here check for tick animator
 				DelayAction([&]() {
 					AnimatorHolder::Remove(timeAnimator);
 					Game::start = true;
+					scorpion->SetState("READY");
+					subzero->SetState("READY");
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("fight"), 0);
 					gameTimer.start();
 				}, 1000);//A bit more time here but for debug purposes leave it fast
@@ -214,7 +220,7 @@ void Game::DelayAction(const std::function<void()>& f, delay_t d) {
 };
 
 
-void Game::printMessage(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize) {
+void Game::printMessage(const string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize) {
 
 	SDL_Rect dest = { position.x,position.y,0,0 };
 	tmpFont = TTF_OpenFont("media/font.ttf", fontsize);
@@ -245,3 +251,9 @@ void Game::cameraAdjustment() {
 	if (camera.x > STAGE_WIDTH - SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
 };
 
+void Game::matchWin(Fighter& fighter, SDL_Surface& gScreenSurface) {
+
+	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(fighter.GetName() + ".wins"), 0);
+	fighter.WinAnimation();
+	round++;
+}

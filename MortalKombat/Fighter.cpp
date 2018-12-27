@@ -7,7 +7,7 @@ Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
 	health = 1.0;
-	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero")?true:false);
+	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero") ? true : false);
 	animator = new FrameRangeAnimator();
 	win = 0;
 };
@@ -40,12 +40,12 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface, Point enemy,Rect& camera) {
+void Fighter::Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera) {
 	sprite->SetEnemy(enemy);
 	int width = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).w * 2) / 6;
 	int height = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).h * 2) / 3;
 	using Input = logic::StateTransitions::Input;
-	sprite->DisplayCamera(gScreenSurface, width, height,camera);
+	sprite->DisplayCamera(gScreenSurface, width, height, camera);
 
 	Input tmpInput;
 	tmpInput.insert(Make_key(inputController.GetLogical()));
@@ -401,6 +401,10 @@ void Fighter::setStateMachine() {
 			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
+	})
+		.SetTransition("WIN", Input{ "" }, [&](void) {
+	})
+		.SetTransition("WIN", Input{}, [&](void) {
 	});
 };
 
@@ -431,4 +435,19 @@ const string Fighter::Make_key(const Input& input) const {
 
 Point Fighter::GetPosition(void) const {
 	return sprite->GetPosition();
+};
+
+void Fighter::WinAnimation() {
+	sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".win"));
+	animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 100), SDL_GetTicks());
+	stateTransitions.SetState("WIN");
+};
+
+void Fighter::SetState(string state) {
+	stateTransitions.SetState(state);
+};
+
+string Fighter::GetState(void) const {
+	return stateTransitions.GetState();
 };

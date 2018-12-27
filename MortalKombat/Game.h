@@ -33,6 +33,7 @@ private:
 	TTF_Font *tmpFont = NULL;
 	int round;
 
+	void matchWin(Fighter& fighter, SDL_Surface& gScreenSurface);
 	void cameraAdjustment(void);
 	void RenderHpBarRight(float percent, SDL_Surface& screen);
 	void RenderHpBarLeft(float percent, SDL_Surface& screen);

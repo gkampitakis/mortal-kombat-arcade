@@ -16,14 +16,6 @@ bool Intro::initialize(SDL_Surface* gScreenSurface) {
 
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 120 }, tmp, SpriteTypes::INTRO_SPRITE));
 
-	/*
-	*		SOUND LOADING HERE
-	*/
-	MusicPlayer::Get()->LoadMusic("media/intro.wav", "intro");
-	//MusicPlayer::Get()->PlayMusic(MusicPlayer::Get()->RetrieveMusic("intro"));//Commented for working with heaphones
-	//debuggin silenced the sound
-	MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
-	MusicPlayer::Get()->LoadEffect("media/fight.wav", "fight");
 	StartButton(*gScreenSurface);
 
 	return true;
