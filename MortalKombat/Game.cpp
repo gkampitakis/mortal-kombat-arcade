@@ -18,7 +18,8 @@ Game::~Game() {
 bool Game::initialize(SDL_Surface* gScreenSurface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("stage");
 	background = tmp->GetBitmap();
-
+	AnimationFilm* temp = AnimationFilmHolder::Get()->GetFilm("bckg");
+	movingBckg = temp->GetBitmap();
 	//Init fonts
 	Timerfont = TTF_OpenFont("media/font.ttf", 70);
 	if (Timerfont == NULL)
@@ -54,6 +55,7 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	cameraAdjustment();
 	
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_BlitScaled(movingBckg, 0, &gScreenSurface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
 	printTimer(gameTimer.ReverseTimer(90), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });

@@ -24,6 +24,8 @@ private:
 	TickTimerAnimation* timeAnimation;
 	Timer gameTimer;
 	SDL_Surface* background = NULL;
+	SDL_Surface* movingBckg = NULL;
+
 	SDL_Rect camera;
 
 	TTF_Font *Timerfont = NULL;
