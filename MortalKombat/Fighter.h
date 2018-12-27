@@ -26,7 +26,7 @@ private:
 	const string Make_key(const Input& input) const;
 public:
 	// TODO: 
-	Fighter(string Name,Point position);
+	Fighter(string Name, Point position);
 	~Fighter() {};
 
 	float getHealth(void) const {
@@ -40,6 +40,7 @@ public:
 	}
 	void setStateMachine();
 	void Handler();
-	void Draw(SDL_Surface& gScreenSurface);
+	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
 	bool initialize(const string& path);//give json as argument
+	Point GetPosition(void)const;
 };

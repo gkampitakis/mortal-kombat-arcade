@@ -6,17 +6,21 @@
 
 class Sprite {
 private:
+	bool side;
 	byte frameNo;
 	Rect frameBox;
 	Point position;
 	bool visible;
 	unsigned type;
 	AnimationFilm* currFilm;
-
+	Point enemyPos;
+	//Might not need the rect and use just point
 public:
-	Sprite(Point position,AnimationFilm* film, unsigned type);
+	Sprite(Point position,AnimationFilm* film, unsigned type,bool side);
+	Sprite(Point position, AnimationFilm* film, unsigned type);
 	~Sprite();
 
+	void SetEnemy(Point enemy);
 	void SetFrame(byte i);
 	byte GetFrame(void) const;
 	void SetVisibility(bool v);
@@ -31,6 +35,7 @@ public:
 	byte GetFrameNo(void) const;
 	void SetY(int y);
 	Point GetPosition(void) const;
+	void DisplayCamera(SDL_Surface &dest, int width, int height, Rect &camera);
 };
 
 #endif

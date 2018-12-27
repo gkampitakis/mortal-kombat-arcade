@@ -7,7 +7,7 @@ Fighter::Fighter(string Name, Point position) {
 	name = Name;
 	tickAnimator = new TickTimerAnimator(NULL);
 	health = 1.0;
-	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER);
+	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero")?true:false);
 	animator = new FrameRangeAnimator();
 };
 
@@ -28,7 +28,6 @@ bool Fighter::initialize(const string& path) {
 			}
 			Fighter::inputController.AddAction(keycodes, action);
 		}
-
 		stateTransitions.SetState("READY");
 		setStateMachine();
 
@@ -40,12 +39,12 @@ bool Fighter::initialize(const string& path) {
 	}
 };
 
-void Fighter::Draw(SDL_Surface& gScreenSurface) {
-
+void Fighter::Draw(SDL_Surface& gScreenSurface, Point enemy,Rect& camera) {
+	sprite->SetEnemy(enemy);
 	int width = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).w * 2) / 6;
 	int height = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).h * 2) / 3;
 	using Input = logic::StateTransitions::Input;
-	sprite->Display(gScreenSurface, width, height);
+	sprite->DisplayCamera(gScreenSurface, width, height,camera);
 
 	Input tmpInput;
 	tmpInput.insert(Make_key(inputController.GetLogical()));
@@ -184,7 +183,7 @@ void Fighter::setStateMachine() {
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -15 : 15, 0, 50, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -17 : 19, 0, 50, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -197,7 +196,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 15 : -15, 0, 50, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 19 : -17, 0, 50, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 			}
@@ -429,3 +428,6 @@ const string Fighter::Make_key(const Input& input) const {
 	return result;
 }
 
+Point Fighter::GetPosition(void) const {
+	return sprite->GetPosition();
+};

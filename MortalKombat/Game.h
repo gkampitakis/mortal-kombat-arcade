@@ -24,12 +24,14 @@ private:
 	TickTimerAnimation* timeAnimation;
 	Timer gameTimer;
 	SDL_Surface* background = NULL;
+	SDL_Rect camera;
 
 	TTF_Font *Timerfont = NULL;
 	TTF_Font *Namefont = NULL;
 	TTF_Font *tmpFont = NULL;
 	int round;
 
+	void cameraAdjustment(void);
 	void RenderHpBarRight(float percent, SDL_Surface& screen);
 	void RenderHpBarLeft(float percent, SDL_Surface& screen);
 	void printTimer(const std::string& msg, Point position, SDL_Surface *screen, SDL_Color color);

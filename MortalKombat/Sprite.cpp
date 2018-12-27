@@ -12,7 +12,7 @@ void Sprite::SetFrame(byte i) {//HERE BUG
 	}
 };
 
-byte Sprite::GetFrame(void) const{
+byte Sprite::GetFrame(void) const {
 	return frameNo;
 };
 
@@ -26,25 +26,74 @@ bool Sprite::CollisionCheck(Sprite* s) {
 };
 
 void Sprite::Move(Point x) {
-	this->position.x = this->position.x+x.x;
+	this->position.x = this->position.x + x.x;
 	this->position.y = this->position.y + x.y;
+
+	if (side) {
+		if (x.x < 0) {//1100 define max dist
+			if (enemyPos.x - position.x > 1090) {
+				this->position.x = this->position.x - x.x;
+			}
+		}
+		if (enemyPos.x - position.x < 104) {
+			this->position.x = this->position.x - x.x;
+		}
+		if (position.x - 50 < 0) {
+			this->position.x = this->position.x - x.x;
+		}
+	}
+	else {
+		if (x.x > 0) {
+			if (position.x - enemyPos.x > 1090) {
+				this->position.x = this->position.x - x.x;
+			}
+		}
+		if (position.x - enemyPos.x < 104) {
+			this->position.x = this->position.x - x.x;
+		}
+		if (position.x + 180>STAGE_WIDTH) {
+			this->position.x = this->position.x - x.x;
+		}
+	}
+
 };
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	if (visible) {
-		currFilm->DisplayFrame(dest,position,frameNo, width,height);
+		currFilm->DisplayFrame(dest, position, frameNo, width, height);
 	}
 };
 
-void Sprite::DisplayUnique(SDL_Surface &dest,int width,int height) {
+void Sprite::DisplayCamera(SDL_Surface &dest, int width, int height,Rect &camera) {
+	if (visible) {
+		Point temp = { position.x - camera.x,position.y - camera.y };
+		currFilm->DisplayFrame(dest, temp, frameNo, width, height);
+	}
+};
+
+void Sprite::DisplayUnique(SDL_Surface &dest, int width, int height) {
 	if (visible) {
 		Rect display = { position.x,position.y,width,height };
-		currFilm->DisplayFrame(dest, display); 
+		currFilm->DisplayFrame(dest, display);
 	}
 };
 
+void Sprite::SetEnemy(Point enemy) {
+	enemyPos = enemy;
+}
 
-Sprite::Sprite(Point _position, AnimationFilm* film,unsigned type) {
+Sprite::Sprite(Point _position, AnimationFilm* film, unsigned type, bool _side) {
+	side = _side;
+	position = _position;
+	this->currFilm = film;
+	SetVisibility(true);
+	SetFrame(0);
+	this->frameNo = currFilm->GetTotalFrames();
+	this->type = type;
+};
+
+Sprite::Sprite(Point _position, AnimationFilm* film, unsigned type) {
+	side = false;
 	position = _position;
 	this->currFilm = film;
 	SetVisibility(true);
@@ -78,4 +127,4 @@ void Sprite::SetY(int y) {
 
 Point Sprite::GetPosition(void) const {
 	return position;
-};
+}

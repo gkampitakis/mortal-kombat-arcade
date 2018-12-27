@@ -8,6 +8,7 @@ Game::Game() {
 	timeAnimator = new TickTimerAnimator(NULL);
 	timeAnimation = new TickTimerAnimation(111);
 	round = 1;
+	camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 };
 
 Game::~Game() {
@@ -35,8 +36,8 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 	}
 	//call the initialization of players
 
-	subzero = new Fighter("subzero", { 200,500 });
-	scorpion = new Fighter("scorpion", { 900,500 });
+	subzero = new Fighter("subzero", { 580,500 });
+	scorpion = new Fighter("scorpion", { 1280,500 });
 	if (!subzero->initialize("config/subzero_controller.json")) return false;
 	if (!scorpion->initialize("config/scorpion_controller.json")) return false;
 
@@ -49,8 +50,10 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 		Game::start = false;
 		cout << "end";
 	}
+
+	cameraAdjustment();
+	
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SDL_Rect camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
 	printTimer(gameTimer.ReverseTimer(90), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
@@ -59,12 +62,12 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	}
 	//The camera might need moving or interaction with the playerres 
 	if (rand() % 2 + 1 == 2) {
-		scorpion->Draw(gScreenSurface);
-		subzero->Draw(gScreenSurface);
+		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
+		subzero->Draw(gScreenSurface, scorpion->GetPosition(),camera);
 	}
 	else {//illusion of being at the same z-order they never must collapse
-		subzero->Draw(gScreenSurface);
-		scorpion->Draw(gScreenSurface);
+		subzero->Draw(gScreenSurface, scorpion->GetPosition(),camera);
+		scorpion->Draw(gScreenSurface, subzero->GetPosition(),camera);
 	}
 
 	//x,y, height/width changed the orientation in function
@@ -211,5 +214,10 @@ void Game::printMessage(const std::string& msg, Point position, SDL_Surface *gSc
 };
 
 
-
+void Game::cameraAdjustment() {
+	if (subzero->GetPosition().x < camera.x) camera.x = camera.x - 10;
+	if (scorpion->GetPosition().x + 194 > camera.x + SCREEN_WIDTH) camera.x = camera.x + 10;
+	if (camera.x<0) camera.x = 0;
+	if (camera.x > STAGE_WIDTH- SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
+};
 
