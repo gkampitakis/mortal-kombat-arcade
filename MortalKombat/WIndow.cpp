@@ -116,9 +116,10 @@ bool Window::loadMedia() {
 		return false;
 	}
 	try {
-		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "", "disclaimer", gScreenSurface, true);
-		AnimationFilmHolder::Get()->Load("media/stage.png", "", "stage", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/bckg.png", "", "bckg", gScreenSurface, true);
+		AnimationFilmHolder::Get()->Load("media/win.png", "win", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "disclaimer", gScreenSurface, true);
+		AnimationFilmHolder::Get()->Load("media/stage.png", "stage", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/bckg.png", "bckg", gScreenSurface, true);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stance", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stance", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.move", gScreenSurface, false);

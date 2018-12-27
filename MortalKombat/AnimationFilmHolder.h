@@ -18,6 +18,7 @@ public:
 	static AnimationFilmHolder* Get(void);
 	//another GET exists at documentation
 	void Load(const string &path, const string &jsonpath, string id, SDL_Surface *screen, bool backgroundFlag);
+	void Load(const string &path, string id, SDL_Surface *screen, bool backgroundFlag);
 	void CleanUp(void);
 	AnimationFilm* GetFilm(const string) const;
 };

@@ -9,6 +9,7 @@ Fighter::Fighter(string Name, Point position) {
 	health = 1.0;
 	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero")?true:false);
 	animator = new FrameRangeAnimator();
+	win = 0;
 };
 
 bool Fighter::initialize(const string& path) {

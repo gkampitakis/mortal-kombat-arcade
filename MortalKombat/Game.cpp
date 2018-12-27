@@ -47,29 +47,32 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
-	if (!gameTimer.isStarted() && start) {
+	if (!gameTimer.isStarted() && start) {//timer stops
 		Game::start = false;
-		cout << "end";
+		//Here function that determines who wins and prints the correct messages but for now dumb
+		// subzero->getHealth() > scorpion->getHealth()
+		rand() % 2 + 1 == 2 ? subzero->SetWin() : scorpion->SetWin();
+		round++;
 	}
 
 	cameraAdjustment();
-	
+
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(movingBckg, 0, &gScreenSurface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(90), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(5), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 	//The camera might need moving or interaction with the playerres 
 	if (rand() % 2 + 1 == 2) {
 		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
-		subzero->Draw(gScreenSurface, scorpion->GetPosition(),camera);
+		subzero->Draw(gScreenSurface, scorpion->GetPosition(), camera);
 	}
 	else {//illusion of being at the same z-order they never must collapse
-		subzero->Draw(gScreenSurface, scorpion->GetPosition(),camera);
-		scorpion->Draw(gScreenSurface, subzero->GetPosition(),camera);
+		subzero->Draw(gScreenSurface, scorpion->GetPosition(), camera);
+		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
 	}
 
 	//x,y, height/width changed the orientation in function
@@ -145,7 +148,17 @@ void Game::RenderHpBarRight(float healt, SDL_Surface& gScreenSurface) {
 		throw
 			std::string("Couldn't allocate text surface in printMessageAt");
 	}
+	tmp = AnimationFilmHolder::Get()->GetFilm("win")->GetBitmap();
 
+	Rect displayWin = { 1210,110,50,50 };
+	if (scorpion->GetWin() == 1) {
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+	}
+	else if (scorpion->GetWin() == 2) {
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		displayWin.x = displayWin.x - 50;
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+	}
 };
 
 void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
@@ -175,7 +188,17 @@ void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
 		throw
 			std::string("Couldn't allocate text surface in printMessageAt");
 	}
+	tmp = AnimationFilmHolder::Get()->GetFilm("win")->GetBitmap();
 
+	Rect displayWin = { 555,110,50,50 };
+	if (subzero->GetWin() == 1) {
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+	}
+	else if (subzero->GetWin() == 2) {
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		displayWin.x = displayWin.x - 50;
+		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+	}
 };
 
 void Game::DelayAction(const std::function<void()>& f, delay_t d) {
@@ -212,14 +235,13 @@ void Game::printMessage(const std::string& msg, Point position, SDL_Surface *gSc
 			std::string("Couldn't allocate text surface in printMessageAt");
 		TTF_CloseFont(tmpFont);
 	}
-
 };
 
 
 void Game::cameraAdjustment() {
 	if (subzero->GetPosition().x < camera.x) camera.x = camera.x - 10;
 	if (scorpion->GetPosition().x + 194 > camera.x + SCREEN_WIDTH) camera.x = camera.x + 10;
-	if (camera.x<0) camera.x = 0;
-	if (camera.x > STAGE_WIDTH- SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
+	if (camera.x < 0) camera.x = 0;
+	if (camera.x > STAGE_WIDTH - SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
 };
 

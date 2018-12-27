@@ -15,13 +15,13 @@ private:
 	string					nextAction;
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
 	TickTimerAnimation		tickAnim;
-	FrameRangeAnimator*		animator;//testing
+	FrameRangeAnimator*		animator;
 	string					name;
 	float					health;
-
+	int						win;
 	input::InputController		inputController;
 	logic::StateTransitions		stateTransitions;
-
+	
 	void SetActionWithAnimator(const std::function<void()>& f);
 	const string Make_key(const Input& input) const;
 public:
@@ -43,4 +43,10 @@ public:
 	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
 	bool initialize(const string& path);//give json as argument
 	Point GetPosition(void)const;
+	int GetWin(void) const {
+		return win;
+	};
+	void SetWin(void) {
+		win++;
+	}
 };
