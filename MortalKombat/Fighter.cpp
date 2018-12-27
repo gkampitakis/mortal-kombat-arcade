@@ -5,16 +5,15 @@
 
 Fighter::Fighter(string Name, Point position) {
 	name = Name;
-	tickAnimator = new TickTimerAnimator(NULL);
 	health = 1.0;
+	win = 0;
 	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero") ? true : false);
 	animator = new FrameRangeAnimator();
-	win = 0;
+	tickAnimator = new TickTimerAnimator(NULL);
 };
 
 bool Fighter::initialize(const string& path) {
 	try {
-
 		json config;
 		std::ifstream config_file(path, std::ifstream::binary);
 		input::key_combination keycodes;
@@ -49,13 +48,9 @@ void Fighter::Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera) {
 
 	Input tmpInput;
 	tmpInput.insert(Make_key(inputController.GetLogical()));
-	Fighter::stateTransitions.PerformTransitions(tmpInput, false);//Investigate this flag how works
+	Fighter::stateTransitions.PerformTransitions(tmpInput, false);
 };
 
-/*
-* Watchout in which time you want to make the transition before or after the act like 1st print and then change state ?
-or the opposite
-*/
 void Fighter::setStateMachine() {
 	using Input = logic::StateTransitions::Input;
 	stateTransitions.
@@ -327,7 +322,6 @@ void Fighter::setStateMachine() {
 		/*
 		* COMBOS
 		*/
-
 		.SetTransition("DOWN", Input{ ".DOWN.FWD" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
 			AnimatorHolder::Remove(animator);
@@ -412,7 +406,6 @@ void Fighter::Handler() {
 	inputController.Handle();
 };
 
-
 void Fighter::SetActionWithAnimator(const std::function<void()>& f) {
 	if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
 		TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
@@ -451,3 +444,26 @@ void Fighter::SetState(string state) {
 string Fighter::GetState(void) const {
 	return stateTransitions.GetState();
 };
+
+string Fighter::GetName(void) {
+	return name;
+}
+
+void  Fighter::removeHealth(float h) {
+	if (health - h > 0) {
+		health = health - h;
+	}
+	else health = 0;
+};
+
+float Fighter::getHealth(void) const {
+	return health;
+};
+
+int Fighter::GetWin(void) const {
+	return win;
+};
+
+void Fighter::SetWin(void) {
+	win++;
+}

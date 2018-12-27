@@ -7,10 +7,10 @@
 class TickTimerAnimation : public Animation {
 
 private:
-	delay_t delay;
-	byte repetitions;
+	delay_t				delay;
+	byte				repetitions;
 	std::function<void()> action;
-	void* closure;
+	void*				closure;
 public:
 	TickTimerAnimation(animid_t id) :
 		Animation(id),

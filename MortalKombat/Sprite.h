@@ -6,15 +6,14 @@
 
 class Sprite {
 private:
-	bool side;
-	byte frameNo;
-	Rect frameBox;
-	Point position;
-	bool visible;
-	unsigned type;
-	AnimationFilm* currFilm;
-	Point enemyPos;
-	//Might not need the rect and use just point
+	bool				side;
+	byte				frameNo;
+	Rect				frameBox;
+	Point				position;
+	bool				visible;
+	unsigned			type;
+	AnimationFilm*		currFilm;
+	Point				enemyPos;
 public:
 	Sprite(Point position,AnimationFilm* film, unsigned type,bool side);
 	Sprite(Point position, AnimationFilm* film, unsigned type);

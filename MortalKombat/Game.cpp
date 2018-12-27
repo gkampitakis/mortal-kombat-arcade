@@ -256,4 +256,8 @@ void Game::matchWin(Fighter& fighter, SDL_Surface& gScreenSurface) {
 	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(fighter.GetName() + ".wins"), 0);
 	fighter.WinAnimation();
 	round++;
-}
+};
+
+int Game::GetRound(void) const {
+	return round;
+};

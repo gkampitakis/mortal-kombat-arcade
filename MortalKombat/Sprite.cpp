@@ -5,7 +5,7 @@ void Sprite::SetVisibility(bool v) {
 	visible = v;
 };
 
-void Sprite::SetFrame(byte i) {//HERE BUG
+void Sprite::SetFrame(byte i) {
 	if (i != frameNo) {
 		assert(i <= currFilm->GetTotalFrames());
 		frameBox = currFilm->GetFrameBox(frameNo = i);
@@ -55,7 +55,6 @@ void Sprite::Move(Point x) {
 			this->position.x = this->position.x - x.x;
 		}
 	}
-
 };
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {

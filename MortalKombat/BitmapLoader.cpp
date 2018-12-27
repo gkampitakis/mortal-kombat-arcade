@@ -30,8 +30,6 @@ SDL_Surface * BitmapLoader::LoadBitmap(const string path, SDL_PixelFormat *forma
 	return optimizedSurface;
 }
 
-
-
 SDL_Surface* BitmapLoader::Load(const string& path, SDL_PixelFormat *format, bool backgroundFlag) {
 	SDL_Surface *b = GetBitmap(path);
 	if (!b) {

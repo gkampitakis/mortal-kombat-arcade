@@ -20,7 +20,7 @@ string AnimationFilm::GetId(void) const {
 };
 
 Rect AnimationFilm::GetFrameBox(byte frameNo) const {
-	assert(boxes.size() >= frameNo);//Check if this is working properly
+	assert(boxes.size() >= frameNo);
 	return boxes[frameNo];
 };
 

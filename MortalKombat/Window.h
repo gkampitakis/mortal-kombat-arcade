@@ -17,13 +17,13 @@ public:
 	bool loadMedia();
 
 private:
-	int state=-1;
-	int width;
-	int height;
-	SDL_Window* window = NULL;
-	SDL_Renderer* gRenderer = NULL;
-	SDL_Surface* gScreenSurface = NULL;
-	TTF_Font *font = NULL;
-	Intro* intro = NULL;
-	Game* game = NULL;
+	int				state = -1;
+	int				width;
+	int				height;
+	SDL_Window*		window = NULL;
+	SDL_Renderer*	gRenderer = NULL;
+	SDL_Surface*	gScreenSurface = NULL;
+	TTF_Font*		font = NULL;
+	Intro*			intro = NULL;
+	Game*			game = NULL;
 };

@@ -6,7 +6,7 @@
 #include "StateTransitions.h"
 #include "FrameRangeAnimator.h"
 
-#define	FIGHTER_ACTION_DELAY_MSECS	150 //<-----------------FOR DEBUGGING
+#define	FIGHTER_ACTION_DELAY_MSECS	150
 
 class Fighter final {
 	using Input = std::set<std::string>;
@@ -21,7 +21,7 @@ private:
 	int						win;
 	input::InputController		inputController;
 	logic::StateTransitions		stateTransitions;
-	
+
 	void SetActionWithAnimator(const std::function<void()>& f);
 	const string Make_key(const Input& input) const;
 public:
@@ -29,29 +29,16 @@ public:
 	Fighter(string Name, Point position);
 	~Fighter() {};
 
-	float getHealth(void) const {
-		return health;
-	};
-	string GetName(void) {
-		return name;
-	};
-	void removeHealth(float h) {
-		if (health - h > 0) {
-			health = health - h;
-		}
-		else health = 0;
-	};
+	float getHealth(void) const;
+	string GetName(void);
+	void removeHealth(float h);
 	void setStateMachine();
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
 	bool initialize(const string& path);//give json as argument
 	Point GetPosition(void)const;
-	int GetWin(void) const {
-		return win;
-	};
-	void SetWin(void) {
-		win++;
-	}
+	int GetWin(void) const;;
+	void SetWin(void);
 	void WinAnimation();
 	void SetState(string state);
 	string GetState(void) const;

@@ -6,10 +6,10 @@
 
 class Animator {
 protected:
-	timestamp_t lastTime;
-	animatorstate_t state;
-	std::function<void()> onFinish;//Lambda Function
-	void* finishClosure;
+	timestamp_t				lastTime;
+	animatorstate_t			state;
+	std::function<void()>	onFinish;//Lambda Function
+	void*					finishClosure;
 	void NotifyStopped(void);
 public:
 	void Stop(void);

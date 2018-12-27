@@ -25,7 +25,6 @@ public:
 	void PauseMusic(void);//If called twice resumes the music
 	void StopMusic(void);
 	void StopEffect(void);
-	//test1
 	void CleanUp();
 };
 	

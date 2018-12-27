@@ -33,7 +33,6 @@ namespace input {
 			for (auto& i : actions)
 				if (input::test_keys(i.first)) {
 					SetLogical(i.second);//How to handle ambiguity
-				//	cout << i.second <<"\n";//for debugging the input controller
 				}	
 		}
 		const Logical& GetLogical(void) const

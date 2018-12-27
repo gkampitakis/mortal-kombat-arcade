@@ -5,7 +5,6 @@
 Window::Window(const int width, const int height) {
 	this->width = width;
 	this->height = height;
-
 };
 
 Window::~Window() {};
@@ -64,7 +63,6 @@ bool Window::open(string w_name) {
 		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 		return  false;
 	}
-
 	return true;
 };
 
@@ -117,6 +115,9 @@ bool Window::loadMedia() {
 		return false;
 	}
 	try {
+		/*
+		*		FILMS LOADING HERE
+		*/
 		AnimationFilmHolder::Get()->Load("media/win.png", "win", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "disclaimer", gScreenSurface, true);
 		AnimationFilmHolder::Get()->Load("media/stage.png", "stage", gScreenSurface, false);
@@ -184,6 +185,7 @@ void drawDisclaimer(SDL_Surface& gScreenSurface) {
 	SDL_Surface* background = NULL;
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
 	tmp->DisplayFrame(gScreenSurface, fullscreen);
 };
 
@@ -196,7 +198,7 @@ void Window::drawWindow() {
 	else if (state == DISCLAIMER) {
 		static bool initiate;
 		drawDisclaimer(*gScreenSurface);
-		if (!initiate) {//Call this code only once :) 
+		if (!initiate) {
 			initiate = true;
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
 			tmp2->setOnTick([] {

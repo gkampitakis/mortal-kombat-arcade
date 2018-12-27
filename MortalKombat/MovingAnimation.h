@@ -4,9 +4,9 @@
 #include "Animation.h"
 
 class MovingAnimation :public Animation {
-	offset_t dx, dy;
-	delay_t delay;
-	bool continuous;
+	offset_t	dx, dy;
+	delay_t		delay;
+	bool		continuous;
 public:
 	offset_t GetDx(void) const;
 	offset_t GetDy(void) const;

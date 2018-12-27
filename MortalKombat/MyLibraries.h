@@ -47,12 +47,7 @@ enum Game_State {
 	INTRO,
 	DISCLAIMER, 
 	INGAME, 
-	FINISH, 
-	SCOREBOARD, 
-	OPTIONS 
+	FINISH
 };//This states might change or add new states
-
-//#define	FIGHTER_ACTION_DELAY_MSECS	150
-
 
 #endif

@@ -20,7 +20,7 @@ void FrameRangeAnimator::Progress(timestamp_t currTime) {
 		sprite->SetFrame(currFrame);
 
 		lastTime += anim->GetDelay();
-		if (currFrame == anim->GetEndFrame() && !anim->GetContinuous()) {//The lest rep is the 1
+		if (currFrame == anim->GetEndFrame() && !anim->GetContinuous()) {
 			state = ANIMATOR_FINISHED;
 			NotifyStopped();
 			return;

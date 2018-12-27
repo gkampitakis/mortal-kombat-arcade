@@ -16,6 +16,6 @@ public:
 
 	void CleanUp(void);
 private:
-	SDL_Surface* background = NULL;
-	TickTimerAnimator *timeAnimator;
+	SDL_Surface*			background = NULL;
+	TickTimerAnimator*		timeAnimator;
 };
