@@ -327,6 +327,29 @@ void Fighter::setStateMachine() {
 		/*
 		* COMBOS
 		*/
+
+		.SetTransition("DOWN", Input{ ".DOWN.FWD" }, [&](void) {
+		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipdown"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 30 : -30, 0, 70, false, 666),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
+	})
+		.SetTransition("DOWN", Input{ ".BCK.DOWN" }, [&](void) {
+		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipdown"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -25 : 25, 0, 70, false, 666),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
+	})
 		.SetTransition("UP", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
