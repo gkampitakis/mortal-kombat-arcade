@@ -28,7 +28,6 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 		return false;
 	}
 
-	//Fix here the color and size
 	Namefont = TTF_OpenFont("media/font.ttf", 45);
 	if (Namefont == NULL)
 	{
@@ -47,21 +46,15 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
-	if (!gameTimer.isStarted() && start) {//timer stops
-		Game::start = false;
-		//Here function that determines who wins and prints the correct messages but for now dumb
-		// subzero->getHealth() > scorpion->getHealth()//
-		rand() % 2 + 1 == 2 ? subzero->SetWin() : scorpion->SetWin();//Here the timer stops
-		matchWin(*scorpion, gScreenSurface);//here if and do for both
-	}
-	//HERE STILL DEVELOPING
+
+	timeExpiration(gScreenSurface);
 	cameraAdjustment();
 
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(movingBckg, 0, &gScreenSurface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(5), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(99), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		scorpion->SetState("READY");
@@ -80,14 +73,15 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	}
 
 	//x,y, height/width changed the orientation in function
-	RenderHpBarLeft(0.91f, gScreenSurface);//debuging normally subzero->getHealth();
-	RenderHpBarRight(0.01f, gScreenSurface);//debuging normally scorpion->getHealth();
+	RenderHpBarLeft(subzero->getHealth(), gScreenSurface);
+	RenderHpBarRight(scorpion->getHealth(), gScreenSurface);
 };
 
 void Game::CleanUp() {
 	//Fix this 
 	//Clean fonts surfaces and all
 	//call it at winow
+
 };
 
 void Game::HandleInput(SDL_Event& event) {
@@ -108,6 +102,7 @@ void Game::HandleInput(SDL_Event& event) {
 	else {
 		subzero->Handler();
 		scorpion->Handler();
+		collisionNhits();
 	}
 };
 
@@ -260,4 +255,36 @@ void Game::matchWin(Fighter& fighter, SDL_Surface& gScreenSurface) {
 
 int Game::GetRound(void) const {
 	return round;
+};
+
+void Game::timeExpiration(SDL_Surface& gScreenSurface) {
+	if (!gameTimer.isStarted() && start) {//timer stops
+
+		Game::start = false;
+		if (rand() % 2 + 1 == 2) {
+			if (subzero->getHealth() > scorpion->getHealth()) {
+				subzero->SetWin();
+				matchWin(*subzero, gScreenSurface);
+			}
+			else {
+				scorpion->SetWin();
+				matchWin(*scorpion, gScreenSurface);
+			}
+		}
+		else {
+			if (subzero->getHealth() > scorpion->getHealth()) {
+				subzero->SetWin();
+				matchWin(*subzero, gScreenSurface);
+			}
+			else {
+				scorpion->SetWin();
+				matchWin(*scorpion, gScreenSurface);
+			}
+		}
+	}
+};
+
+void Game::collisionNhits(void) {
+	subzero->collisionDetector(scorpion->GetSprite());
+	scorpion->collisionDetector(subzero->GetSprite());
 };

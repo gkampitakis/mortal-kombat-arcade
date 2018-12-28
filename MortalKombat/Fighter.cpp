@@ -179,7 +179,7 @@ void Fighter::setStateMachine() {
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -17 : 19, 0, 50, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -12 : 12, 0, 50, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -192,7 +192,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 19 : -17, 0, 50, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 12 : -12,0, 50, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 			}
@@ -466,4 +466,12 @@ int Fighter::GetWin(void) const {
 
 void Fighter::SetWin(void) {
 	win++;
-}
+};
+
+bool Fighter::collisionDetector(Sprite* enemy) {
+	return sprite->CollisionCheck(enemy);//Here also add the "missile" detection for combos
+};
+
+Sprite* Fighter::GetSprite(void)const {
+	return sprite;
+};

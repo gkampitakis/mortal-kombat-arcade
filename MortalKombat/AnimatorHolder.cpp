@@ -35,7 +35,7 @@ void AnimatorHolder::MarkAsSuspended(Animator* a) {
 
 void AnimatorHolder::CleanUp(void) {
 	for (auto&& it : running) {
-	//	delete it; BUG NEEDS FIX
+		delete it;
 	}
 	running.clear();
 

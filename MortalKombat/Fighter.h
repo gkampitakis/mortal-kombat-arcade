@@ -24,6 +24,7 @@ private:
 
 	void SetActionWithAnimator(const std::function<void()>& f);
 	const string Make_key(const Input& input) const;
+	
 public:
 	// TODO: 
 	Fighter(string Name, Point position);
@@ -42,4 +43,6 @@ public:
 	void WinAnimation();
 	void SetState(string state);
 	string GetState(void) const;
+	bool collisionDetector(Sprite* enemy);
+	Sprite* GetSprite(void)const;
 };

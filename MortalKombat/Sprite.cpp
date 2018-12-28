@@ -21,8 +21,9 @@ bool Sprite::IsVisible(void) const {
 };
 
 bool Sprite::CollisionCheck(Sprite* s) {
-	//For sure need fix :P
-	return true;
+	//here we need extra check when special combos are fixed 104 SAFE_DISTANCE
+	if (abs(position.x - s->GetPosition().x) > 124) return false;
+	else return true;
 };
 
 void Sprite::Move(Point x) {
@@ -35,7 +36,7 @@ void Sprite::Move(Point x) {
 				this->position.x = this->position.x - x.x;
 			}
 		}
-		if (enemyPos.x - position.x < 104) {
+		if (enemyPos.x - position.x < 80) {
 			this->position.x = this->position.x - x.x;
 		}
 		if (position.x - 50 < 0) {
@@ -48,7 +49,7 @@ void Sprite::Move(Point x) {
 				this->position.x = this->position.x - x.x;
 			}
 		}
-		if (position.x - enemyPos.x < 104) {
+		if (position.x - enemyPos.x < 80) {
 			this->position.x = this->position.x - x.x;
 		}
 		if (position.x + 180>STAGE_WIDTH) {
