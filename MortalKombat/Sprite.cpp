@@ -125,6 +125,10 @@ void Sprite::SetY(int y) {
 	position.y = y;
 };
 
+void Sprite::SetX(int x) {
+	position.x = x;
+};
+
 Point Sprite::GetPosition(void) const {
 	return position;
 }

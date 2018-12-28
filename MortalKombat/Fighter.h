@@ -46,4 +46,6 @@ public:
 	bool proximityDetector(Sprite* enemy);
 	Sprite* GetSprite(void)const;
 	string GetAction(void)const;
+	void ResetHealth(void);
+	void ResetPosition(int x);
 };

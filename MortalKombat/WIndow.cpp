@@ -172,6 +172,11 @@ bool Window::loadMedia() {
 		MusicPlayer::Get()->LoadEffect("media/transition.wav", "transition");
 		MusicPlayer::Get()->LoadEffect("media/subzerowins.wav", "subzero.wins");
 		MusicPlayer::Get()->LoadEffect("media/scorpionwins.wav", "scorpion.wins");
+		MusicPlayer::Get()->LoadEffect("media/kick1.wav", "kickWave");
+		MusicPlayer::Get()->LoadEffect("media/punch1.wav", "punchWave");
+		MusicPlayer::Get()->LoadEffect("media/block.wav", "block");
+		MusicPlayer::Get()->LoadEffect("media/singlehit.wav", "singlehit");
+
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();

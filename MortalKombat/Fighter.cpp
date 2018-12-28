@@ -2,6 +2,7 @@
 #include "AnimationFilmHolder.h"
 #include "AnimatorHolder.h"
 #include "SpriteHolder.h"
+#include "MusicPlayer.h"
 
 Fighter::Fighter(string Name, Point position) {
 	name = Name;
@@ -61,7 +62,7 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-				nextAction = "punch";
+				
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
@@ -69,6 +70,8 @@ void Fighter::setStateMachine() {
 					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
+				nextAction = "punch";
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("punchWave"), 0);
 			}
 		});
 	})
@@ -121,7 +124,6 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-				nextAction = "kick";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".kick1") : AnimationFilmHolder::Get()->GetFilm(name + ".kick2"));
@@ -129,6 +131,8 @@ void Fighter::setStateMachine() {
 					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
+				nextAction = "kick";
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("kickWave"), 0);
 			}
 		});
 	})
@@ -261,6 +265,7 @@ void Fighter::setStateMachine() {
 				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
+			stateTransitions.SetState("BLOCK");
 		}
 	})
 		.SetTransition("BLOCKDWN", Input{ ".BLOCK.DOWN" }, [&](void) {
@@ -485,4 +490,12 @@ Sprite* Fighter::GetSprite(void)const {
 
 string Fighter::GetAction(void)const {
 	return nextAction;
+};
+
+void Fighter::ResetHealth(void) {
+	health = 1.0;
+};
+
+void Fighter::ResetPosition(int x) {
+	sprite->SetX(x);
 };

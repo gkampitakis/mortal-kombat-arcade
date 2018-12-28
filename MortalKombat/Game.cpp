@@ -47,6 +47,9 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 
 void Game::DrawGame(SDL_Surface& gScreenSurface) {
 
+	collisionNhits(*subzero, *scorpion);
+	collisionNhits(*scorpion, *subzero);
+
 	timeExpiration(gScreenSurface);
 	cameraAdjustment();
 
@@ -59,6 +62,11 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		scorpion->SetState("READY");
 		subzero->SetState("READY");
+		scorpion->ResetHealth();
+		subzero->ResetHealth();
+		subzero->ResetPosition(580);
+		scorpion->ResetPosition(1280);
+
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 
@@ -86,8 +94,7 @@ void Game::CleanUp() {
 
 void Game::HandleInput(SDL_Event& event) {
 
-	collisionNhits(*subzero, *scorpion);
-	collisionNhits(*scorpion, *subzero);
+
 
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
@@ -289,16 +296,29 @@ void Game::timeExpiration(SDL_Surface& gScreenSurface) {
 
 void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {//do a check for special combos also
 	if (hitter.proximityDetector(hitted.GetSprite())) {
-		if (hitter.GetAction()._Equal("punch") || hitter.GetAction()._Equal("kick")) {//this will be written in function
+		//cout << hitter.GetAction() << "\n";
+		if (hitter.GetAction()._Equal("punch") || hitter.GetAction()._Equal("kick")) {
 			if (hitted.GetState()._Equal("BLOCK")) {
-				//here add sound of block maybe
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
+				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
 			}
 			else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN")) {
-
+				//Nothing happens
 			}
 			else {
-				cout << hitted.GetName() << " " << hitter.GetAction() << "ed \n";
-				hitted.removeHealth(0.001f);
+				//Here reduce health maybe depending on hit 
+				hitted.removeHealth(0.0002f);
+
+				//sound 
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
+				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
+				//blood and tears
+
+				//inflictions animations
 			}
 
 		}

@@ -33,6 +33,7 @@ public:
 	void SetNewFilm(AnimationFilm* film);
 	byte GetFrameNo(void) const;
 	void SetY(int y);
+	void SetX(int x);
 	Point GetPosition(void) const;
 	void DisplayCamera(SDL_Surface &dest, int width, int height, Rect &camera);
 };
