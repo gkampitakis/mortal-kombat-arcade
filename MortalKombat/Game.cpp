@@ -294,13 +294,15 @@ void Game::timeExpiration(SDL_Surface& gScreenSurface) {
 	}
 };
 
-void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {//do a check for special combos also
+void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 	if (hitter.proximityDetector(hitted.GetSprite())) {
-		//cout << hitter.GetAction() << "\n";
+		/*
+		 *NORMAL ATTACKS
+		 */
 		if (hitter.GetAction()._Equal("punch") || hitter.GetAction()._Equal("kick")) {
 			if (hitted.GetState()._Equal("BLOCK")) {
 				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);
+					AnimatorHolder::Remove(timeAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
 			}
@@ -320,7 +322,57 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {//do a check for sp
 
 				//inflictions animations
 			}
+		}/*
+		 *UP ATTACKS
+		 */
+		else if (hitter.GetAction()._Equal("uppunch") || hitter.GetAction()._Equal("upkick")) {
+			if (hitted.GetState()._Equal("BLOCK") || hitted.GetState()._Equal("BLOCKDWN")) {
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);//Hit blocked
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
+				}, hitter.GetAction()._Equal("uppunch") ? 350 : 850);//<-------------fix this 
+			}
+			else {
+				//Here reduce health maybe depending on hit 
+				hitted.removeHealth(0.0002f);
 
+				//sound 
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
+				}, hitter.GetAction()._Equal("uppunch") ? 350 : 850);//<-------------fix this 
+				//blood and tears
+
+				//inflictions animations
+			}
 		}
+		/*
+		 *DOWN ATTACKS
+		 */
+		else if (hitter.GetAction()._Equal("downpunch") || hitter.GetAction()._Equal("downkick")) {
+			if (hitted.GetState()._Equal("BLOCKDWN")) {
+				//Block hit 
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);//Hit blocked
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
+				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
+			}
+			else if (hitted.GetState()._Equal("UP")) {
+				//Nothing happens
+			}
+			else {
+				//Here reduce health maybe depending on hit 
+				hitted.removeHealth(0.0002f);
+
+				//sound 
+				DelayAction([&]() {
+					AnimatorHolder::Remove(timeAnimator);
+					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
+				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
+				//blood and tears
+
+				//inflictions animations
+			}
+		}//do a check for special combos also
 	}
 };

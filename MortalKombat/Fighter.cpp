@@ -62,7 +62,7 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-				
+
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
@@ -78,7 +78,6 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
-				nextAction = "downpunch";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowpunch"));
@@ -86,6 +85,8 @@ void Fighter::setStateMachine() {
 					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
+				nextAction = "downpunch";
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("punchWave"), 0);
 			}
 		});
 	})
@@ -106,7 +107,6 @@ void Fighter::setStateMachine() {
 
 		.SetTransition("UP", Input{ ".PUNCH" }, [&](void) {
 		if (animator->HasFinished()) {
-			nextAction = "uppunch";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highpunch"));
@@ -115,6 +115,8 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
+			nextAction = "uppunch";
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("punchWave"), 0);
 		}
 	})
 		/*
@@ -139,7 +141,6 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
-				nextAction = "downkick";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowkick"));
@@ -147,12 +148,13 @@ void Fighter::setStateMachine() {
 					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
+				nextAction = "downkick";
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("kickWave"), 0);
 			}
 		});
 	})
 		.SetTransition("UP", Input{ ".KICK" }, [&](void) {
 		if (animator->HasFinished()) {
-			nextAction = "upkick";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highkick1"));
@@ -161,6 +163,8 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
+			nextAction = "upkick";
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("kickWave"), 0);
 		}
 	})
 		/*
@@ -222,6 +226,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("DOWN", Input{ ".DOWN" }, [&](void) {
 		if (animator->HasFinished()) {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".duck"));
@@ -284,6 +289,7 @@ void Fighter::setStateMachine() {
 		*/
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
@@ -307,6 +313,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("BLOCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
@@ -314,6 +321,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("BLOCKDWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(tickAnimator);
 			cout << "Unblocking DOWN-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
@@ -366,6 +374,7 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("FlipFWD");
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("jump"), 0);
 		}
 	})
 		.SetTransition("UP", Input{ ".BCK" }, [&](void) {
@@ -378,6 +387,7 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("FlipBCK");
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("jump"), 0);
 		}
 	})
 		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
