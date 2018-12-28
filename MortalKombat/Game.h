@@ -37,5 +37,5 @@ private:
 	void DelayAction(const std::function<void()>& f, delay_t d);
 	void printMessage(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize);
 	void timeExpiration(SDL_Surface& gScreenSurface);
-	void collisionNhits(void);
+	void collisionNhits(Fighter& hitter, Fighter& hitted);
 };

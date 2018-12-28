@@ -85,6 +85,10 @@ void Game::CleanUp() {
 };
 
 void Game::HandleInput(SDL_Event& event) {
+
+	collisionNhits(*subzero, *scorpion);
+	collisionNhits(*scorpion, *subzero);
+
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_SPACE) {//&& timeAnimator->GetState() != ANIMATOR_RUNNING) {//Here check for tick animator
@@ -102,7 +106,6 @@ void Game::HandleInput(SDL_Event& event) {
 	else {
 		subzero->Handler();
 		scorpion->Handler();
-		collisionNhits();
 	}
 };
 
@@ -284,7 +287,20 @@ void Game::timeExpiration(SDL_Surface& gScreenSurface) {
 	}
 };
 
-void Game::collisionNhits(void) {
-	subzero->collisionDetector(scorpion->GetSprite());
-	scorpion->collisionDetector(subzero->GetSprite());
+void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {//do a check for special combos also
+	if (hitter.proximityDetector(hitted.GetSprite())) {
+		if (hitter.GetAction()._Equal("punch") || hitter.GetAction()._Equal("kick")) {//this will be written in function
+			if (hitted.GetState()._Equal("BLOCK")) {
+				//here add sound of block maybe
+			}
+			else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN")) {
+
+			}
+			else {
+				cout << hitted.GetName() << " " << hitter.GetAction() << "ed \n";
+				hitted.removeHealth(0.001f);
+			}
+
+		}
+	}
 };

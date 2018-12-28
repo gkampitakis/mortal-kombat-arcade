@@ -43,6 +43,7 @@ public:
 	void WinAnimation();
 	void SetState(string state);
 	string GetState(void) const;
-	bool collisionDetector(Sprite* enemy);
+	bool proximityDetector(Sprite* enemy);
 	Sprite* GetSprite(void)const;
+	string GetAction(void)const;
 };

@@ -61,6 +61,7 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				nextAction = "punch";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
@@ -74,6 +75,7 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{ ".DOWN.PUNCH" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+				nextAction = "downpunch";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowpunch"));
@@ -101,6 +103,7 @@ void Fighter::setStateMachine() {
 
 		.SetTransition("UP", Input{ ".PUNCH" }, [&](void) {
 		if (animator->HasFinished()) {
+			nextAction = "uppunch";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highpunch"));
@@ -118,6 +121,7 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {//This might is not needed ill check it at combos
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				nextAction = "kick";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".kick1") : AnimationFilmHolder::Get()->GetFilm(name + ".kick2"));
@@ -131,6 +135,7 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{ ".DOWN.KICK" }, [&](void) {
 		SetActionWithAnimator([&]() {
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".down")) {
+				nextAction = "downkick";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowkick"));
@@ -143,6 +148,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("UP", Input{ ".KICK" }, [&](void) {
 		if (animator->HasFinished()) {
+			nextAction = "upkick";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highkick1"));
@@ -192,7 +198,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 12 : -12,0, 50, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 12 : -12, 0, 50, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 			}
@@ -310,6 +316,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("READY", Input{}, [&](void) {
 		if (animator->HasFinished()) {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".stance"));
@@ -468,10 +475,14 @@ void Fighter::SetWin(void) {
 	win++;
 };
 
-bool Fighter::collisionDetector(Sprite* enemy) {
+bool Fighter::proximityDetector(Sprite* enemy) {
 	return sprite->CollisionCheck(enemy);//Here also add the "missile" detection for combos
 };
 
 Sprite* Fighter::GetSprite(void)const {
 	return sprite;
+};
+
+string Fighter::GetAction(void)const {
+	return nextAction;
 };
