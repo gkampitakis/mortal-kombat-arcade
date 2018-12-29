@@ -162,7 +162,11 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipdown", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.win", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.win", gScreenSurface, false);
-		
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.singlehit", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.singlehit", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.uppercuthit", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.uppercuthit", gScreenSurface, false);
+
 		/*
 		*		SOUND LOADING HERE
 		*/

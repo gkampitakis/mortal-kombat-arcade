@@ -35,6 +35,10 @@ typedef unsigned char frame_t;
 #define STAGE_WIDTH 2008
 #define STAGE_HEIGHT 920
 
+#define PUNCH_DMG 0.0002f
+#define KICK_DMG 0.0004f
+#define UPPERCUT_DMG 0.0006f
+
 enum SpriteTypes { INTRO_SPRITE,FIGHTER };//Here ill add more 
 
 enum animatorstate_t {

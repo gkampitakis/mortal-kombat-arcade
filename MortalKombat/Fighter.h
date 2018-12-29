@@ -24,28 +24,41 @@ private:
 
 	void SetActionWithAnimator(const std::function<void()>& f);
 	const string Make_key(const Input& input) const;
-	
+
+
 public:
+	struct fightstasts {
+		int received_kicks = 0;
+		int received_punches = 0;
+		int blocked = 0;
+		int received_signif_strikes = 0;
+	} fightstasts;
 	// TODO: 
 	Fighter(string Name, Point position);
 	~Fighter() {};
 
-	float getHealth(void) const;
-	string GetName(void);
-	void removeHealth(float h);
-	void setStateMachine();
 	void Handler();
 	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
 	bool initialize(const string& path);//give json as argument
-	Point GetPosition(void)const;
+
+	float getHealth(void) const;
+	void ResetHealth(void);
+	void removeHealth(float h);
+
 	int GetWin(void) const;;
 	void SetWin(void);
 	void WinAnimation();
+
+	string GetName(void);
+	void setStateMachine();
+	Point GetPosition(void)const;
+	
 	void SetState(string state);
 	string GetState(void) const;
+
 	bool proximityDetector(Sprite* enemy);
 	Sprite* GetSprite(void)const;
 	string GetAction(void)const;
-	void ResetHealth(void);
 	void ResetPosition(int x);
+	void InflictionAnimation(string Animation,int speed,string hit);
 };

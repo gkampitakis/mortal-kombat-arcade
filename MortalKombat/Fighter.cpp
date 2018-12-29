@@ -509,3 +509,14 @@ void Fighter::ResetHealth(void) {
 void Fighter::ResetPosition(int x) {
 	sprite->SetX(x);
 };
+
+void Fighter::InflictionAnimation(string Animation, int speed, string hit) {
+	if (hit._Equal("punch")) fightstasts.received_punches++;
+	else if (hit._Equal("kick")) fightstasts.received_kicks++;
+	//else if(hit._Equal("strike")) //for significal strikes
+	sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + "." + Animation));
+	animator->Start(sprite,
+		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, speed, false, 60), SDL_GetTicks());
+	//We ll add and movement later
+	cout << Fighter::fightstasts.received_kicks << "\n";
+};
