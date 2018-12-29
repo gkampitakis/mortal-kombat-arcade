@@ -166,6 +166,7 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.singlehit", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.uppercuthit", gScreenSurface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.uppercuthit", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/goro.png", "config/goro_boxes.json", "goro.flex", gScreenSurface, false);
 
 		/*
 		*		SOUND LOADING HERE
@@ -181,6 +182,7 @@ bool Window::loadMedia() {
 		MusicPlayer::Get()->LoadEffect("media/block.wav", "block");
 		MusicPlayer::Get()->LoadEffect("media/singlehit.wav", "singlehit");
 		MusicPlayer::Get()->LoadEffect("media/jump.wav", "jump");
+		MusicPlayer::Get()->LoadEffect("media/goro.wav", "goro");
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();
@@ -190,12 +192,13 @@ bool Window::loadMedia() {
 }
 
 
-void drawDisclaimer(SDL_Surface& gScreenSurface) {
+void Window::drawDisclaimer(SDL_Surface& gScreenSurface) {
 	SDL_Surface* background = NULL;
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 	tmp->DisplayFrame(gScreenSurface, fullscreen);
+	sprite->Display(gScreenSurface, 500, 700);
 };
 
 
@@ -206,31 +209,39 @@ void Window::drawWindow() {
 	}
 	else if (state == DISCLAIMER) {
 		static bool initiate;
-		drawDisclaimer(*gScreenSurface);
+
 		if (!initiate) {
 			initiate = true;
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
+			animator = new FrameRangeAnimator();
+			sprite = new Sprite({ 400,200 }, AnimationFilmHolder::Get()->GetFilm("goro.flex"), SpriteTypes::INTRO_SPRITE);
+
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("goro"), 0);
+
+			animator->Start(sprite,
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 400, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
 			tmp2->setOnTick([] {
 				//Nothing to do here
-			}).SetDelay(1000).SetReps(1);
-			//10000 set delay for not waiting left 100
+			}).SetDelay(7000).SetReps(1);
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
 				AnimatorHolder::Remove(timeAnimator);
+				AnimatorHolder::Remove(animator);
 				state = INGAME;
 			});
 			timeAnimator->Start(SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(timeAnimator);
 		}
+		drawDisclaimer(*gScreenSurface);
 	}
 	else if (state == INGAME) {
 		if (!game->EndOfGame) game->DrawGame(*gScreenSurface);
 		else state = FINISH;
 	}
 	else if (state == FINISH) {
-		//HERE Take the statistics and print them
-		//game->GetWinner()->WinAnimation();
-		cout << game->GetLoser()->fightstasts.blocked << "\n";
+		
 	};
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);

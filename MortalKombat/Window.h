@@ -15,6 +15,7 @@ public:
 	bool initialize();
 	void drawWindow();
 	bool loadMedia();
+	void drawDisclaimer(SDL_Surface& screen);
 
 private:
 	int				state = -1;
@@ -26,4 +27,6 @@ private:
 	TTF_Font*		font = NULL;
 	Intro*			intro = NULL;
 	Game*			game = NULL;
+	FrameRangeAnimator*		animator;
+	Sprite*					sprite;
 };
