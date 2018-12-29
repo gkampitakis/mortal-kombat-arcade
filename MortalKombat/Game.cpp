@@ -65,8 +65,8 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 		subzero->SetState("READY");
 		scorpion->ResetHealth();
 		subzero->ResetHealth();
-		subzero->ResetPosition(580);
-		scorpion->ResetPosition(1280);
+		subzero->ResetPosition({ 580,500 });
+		scorpion->ResetPosition({ 1280,500 });
 
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
