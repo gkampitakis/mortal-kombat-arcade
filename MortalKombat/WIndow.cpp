@@ -224,8 +224,14 @@ void Window::drawWindow() {
 		}
 	}
 	else if (state == INGAME) {
-		game->DrawGame(*gScreenSurface);
+		if (!game->EndOfGame) game->DrawGame(*gScreenSurface);
+		else state = FINISH;
 	}
+	else if (state == FINISH) {
+		//HERE Take the statistics and print them
+		//game->GetWinner()->WinAnimation();
+		cout << game->GetLoser()->fightstasts.blocked << "\n";
+	};
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);
 };

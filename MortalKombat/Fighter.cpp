@@ -174,6 +174,7 @@ void Fighter::setStateMachine() {
 		SetActionWithAnimator([&]() {
 			AnimatorHolder::Remove(tickAnimator);
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+				nextAction = "waiting";
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
@@ -506,8 +507,9 @@ void Fighter::ResetHealth(void) {
 	health = 1.0;
 };
 
-void Fighter::ResetPosition(int x) {
-	sprite->SetX(x);
+void Fighter::ResetPosition(Point x) {
+	sprite->SetY(x.y);
+	sprite->SetX(x.x);
 };
 
 void Fighter::InflictionAnimation(string Animation, int speed, string hit) {

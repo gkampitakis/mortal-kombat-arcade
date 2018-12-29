@@ -59,6 +59,6 @@ public:
 	bool proximityDetector(Sprite* enemy);
 	Sprite* GetSprite(void)const;
 	string GetAction(void)const;
-	void ResetPosition(int x);
+	void ResetPosition(Point x);
 	void InflictionAnimation(string Animation,int speed,string hit);
 };

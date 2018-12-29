@@ -3,6 +3,7 @@
 #include "MusicPlayer.h"
 
 bool Game::start = false;
+bool Game::EndOfGame = false;
 
 Game::Game() {
 	timeAnimator = new TickTimerAnimator(NULL);
@@ -50,14 +51,14 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	collisionNhits(*subzero, *scorpion);
 	collisionNhits(*scorpion, *subzero);
 
-	timeExpiration(gScreenSurface);
+	MatchEnd(gScreenSurface);
 	cameraAdjustment();
 
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_BlitScaled(movingBckg, 0, &gScreenSurface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(99), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(60), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		scorpion->SetState("READY");
@@ -93,12 +94,9 @@ void Game::CleanUp() {
 };
 
 void Game::HandleInput(SDL_Event& event) {
-
-
-
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == SDLK_SPACE) {//&& timeAnimator->GetState() != ANIMATOR_RUNNING) {//Here check for tick animator
+			if (event.key.keysym.sym == SDLK_SPACE && !EndOfGame) {//&& timeAnimator->GetState() != ANIMATOR_RUNNING) {//Here check for tick animator
 				DelayAction([&]() {
 					AnimatorHolder::Remove(timeAnimator);
 					Game::start = true;
@@ -257,40 +255,50 @@ void Game::cameraAdjustment() {
 };
 
 void Game::matchWin(Fighter& fighter, SDL_Surface& gScreenSurface) {
-
 	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(fighter.GetName() + ".wins"), 0);
 	fighter.WinAnimation();
-	round++;
+	if (fighter.GetWin() >= 2)
+		EndOfGame = true;
+	else round++;
 };
 
 int Game::GetRound(void) const {
 	return round;
 };
 
-void Game::timeExpiration(SDL_Surface& gScreenSurface) {
-	if (!gameTimer.isStarted() && start) {//timer stops
-
+void Game::MatchEnd(SDL_Surface& gScreenSurface) {
+	if (!gameTimer.isStarted() && start) {//timer stopped
 		Game::start = false;
-		if (rand() % 2 + 1 == 2) {
-			if (subzero->getHealth() > scorpion->getHealth()) {
-				subzero->SetWin();
-				matchWin(*subzero, gScreenSurface);
-			}
-			else {
-				scorpion->SetWin();
-				matchWin(*scorpion, gScreenSurface);
-			}
+		if (subzero->getHealth() > scorpion->getHealth()) {
+			subzero->SetWin();
+			matchWin(*subzero, gScreenSurface);
+		}
+		else if (subzero->getHealth() < scorpion->getHealth()) {
+			scorpion->SetWin();
+			matchWin(*scorpion, gScreenSurface);
 		}
 		else {
-			if (subzero->getHealth() > scorpion->getHealth()) {
-				subzero->SetWin();
-				matchWin(*subzero, gScreenSurface);
-			}
-			else {
+			if (rand() % 2) {
 				scorpion->SetWin();
 				matchWin(*scorpion, gScreenSurface);
 			}
+			else {
+				subzero->SetWin();
+				matchWin(*subzero, gScreenSurface);
+			}
 		}
+	}
+	else if (subzero->getHealth() == 0 && start) {
+		Game::start = false;
+		gameTimer.stop();
+		scorpion->SetWin();
+		matchWin(*scorpion, gScreenSurface);
+	}
+	else if (scorpion->getHealth() == 0 && start) {
+		Game::start = false;
+		gameTimer.stop();
+		subzero->SetWin();
+		matchWin(*subzero, gScreenSurface);
 	}
 };
 
@@ -394,3 +402,12 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 		}//do a check for special combos also
 	}
 };
+
+Fighter* Game::GetWinner(void) {
+	return subzero->GetWin() >= 2 ? subzero : scorpion;
+};
+
+Fighter* Game::GetLoser(void) {
+	return subzero->GetWin() >= 2 ? scorpion : subzero;
+};
+

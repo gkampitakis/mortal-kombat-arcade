@@ -13,7 +13,10 @@ public:
 	void CleanUp();
 	void HandleInput(SDL_Event& event);
 	static bool start;
+	static bool EndOfGame;
 	int GetRound(void)const;
+	Fighter* GetWinner(void);
+	Fighter* GetLoser(void);
 
 private:
 	Fighter*				subzero = NULL;
@@ -36,6 +39,6 @@ private:
 	void printTimer(const std::string& msg, Point position, SDL_Surface *screen, SDL_Color color);
 	void DelayAction(const std::function<void()>& f, delay_t d);
 	void printMessage(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize);
-	void timeExpiration(SDL_Surface& gScreenSurface);
+	void MatchEnd(SDL_Surface& gScreenSurface);
 	void collisionNhits(Fighter& hitter, Fighter& hitted);
 };
