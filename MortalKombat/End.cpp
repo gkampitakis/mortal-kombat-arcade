@@ -22,7 +22,7 @@ void End::Draw(SDL_Surface& surface) {
 
 bool End::HandleInput(SDL_Event& event) {
 	if (event.type == SDL_KEYDOWN) {
-		if (event.key.keysym.sym==SDL_SCANCODE_ESCAPE) {
+		if (event.key.keysym.sym== SDLK_ESCAPE) {
 			return true;
 			//Run all the cleanups here
 			//MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("transition"), 0);

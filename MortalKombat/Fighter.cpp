@@ -349,7 +349,7 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
-
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("jump"), 0);
 		}
 	})
 		.SetTransition("DOWN", Input{ ".BCK.DOWN" }, [&](void) {
@@ -362,6 +362,7 @@ void Fighter::setStateMachine() {
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
+			MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("jump"), 0);
 		}
 	})
 		.SetTransition("UP", Input{ ".FWD" }, [&](void) {
