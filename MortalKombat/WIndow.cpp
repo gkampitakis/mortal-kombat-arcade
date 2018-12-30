@@ -170,6 +170,8 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.uppercuthit", surface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.uppercuthit", surface, false);
 		AnimationFilmHolder::Get()->Load("media/goro.png", "config/goro_boxes.json", "goro.flex", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.dizzy", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.dizzy", surface, false);
 
 		/*
 		*		SOUND LOADING HERE
@@ -227,7 +229,7 @@ void Window::drawWindow() {
 			AnimatorHolder::MarkAsRunning(animator);
 			tmp2->setOnTick([] {
 				//Nothing to do here
-			}).SetDelay(7000).SetReps(1);
+			}).SetDelay(6000).SetReps(1);
 			TickTimerAnimator* timeAnimator = new TickTimerAnimator(tmp2);
 			timeAnimator->SetOnFinish([&]() {
 				AnimatorHolder::Remove(timeAnimator);
@@ -242,7 +244,7 @@ void Window::drawWindow() {
 	else if (state == INGAME) {
 		if (!game->EndOfGame) game->DrawGame(*surface);
 		else {
-			end = new End(game->GetWinner(), game->GetLoser());
+			end = new End(game->GetWinner(), game->GetLoser(),*surface);
 			state = FINISH;
 		}
 	}

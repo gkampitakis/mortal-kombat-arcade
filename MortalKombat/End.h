@@ -6,15 +6,16 @@
 class End {
 private:
 	TTF_Font*		font = NULL;
-	Sprite*			winner;
-	Sprite*			loser;
+	Sprite*			winnerSprite;
+	Sprite*			loserSprite;
 	FrameRangeAnimator*		animatorW;
 	FrameRangeAnimator*		animatorL;
 	SDL_Surface*			background = NULL;
-	//data
+	Fighter* loser;
+	Fighter* winner;
 
 public:
-	End(Fighter*, Fighter*);//Implement this
+	End(Fighter*, Fighter*, SDL_Surface& surface);//Implement this
 	~End();
 	void printMessage(const string& msg, Point position, SDL_Surface *surface, SDL_Color color, int fontsize);
 	void Draw(SDL_Surface& surface);

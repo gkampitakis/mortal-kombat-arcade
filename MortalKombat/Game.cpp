@@ -16,7 +16,7 @@ Game::~Game() {
 	CleanUp();
 };
 
-bool Game::initialize(SDL_Surface* gScreenSurface) {
+bool Game::initialize(SDL_Surface* surface) {
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("stage");
 	background = tmp->GetBitmap();
 	AnimationFilm* temp = AnimationFilmHolder::Get()->GetFilm("bckg");
@@ -46,38 +46,38 @@ bool Game::initialize(SDL_Surface* gScreenSurface) {
 };
 
 
-void Game::DrawGame(SDL_Surface& gScreenSurface) {
+void Game::DrawGame(SDL_Surface& surface) {
 
 	collisionNhits(*subzero, *scorpion);
 	collisionNhits(*scorpion, *subzero);
 
-	MatchEnd(gScreenSurface);
+	MatchEnd(surface);
 	cameraAdjustment();
 
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SDL_BlitScaled(movingBckg, 0, &gScreenSurface, &fullscreen);
-	SDL_BlitSurface(background, &camera, &gScreenSurface, &fullscreen);
+	SDL_BlitScaled(movingBckg, 0, &surface, &fullscreen);
+	SDL_BlitSurface(background, &camera, &surface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(60), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(3), { SCREEN_WIDTH / 2 - 35, 5 }, &surface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		ResetMatch();
-		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
+		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &surface, { 255, 255, 0, 255 }, 150);
 	}
 
 	//The camera might need moving or interaction with the playerres 
 	if (rand() % 2 + 1 == 2) {
-		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
-		subzero->Draw(gScreenSurface, scorpion->GetPosition(), camera);
+		scorpion->Draw(surface, subzero->GetPosition(), camera);
+		subzero->Draw(surface, scorpion->GetPosition(), camera);
 	}
 	else {//illusion of being at the same z-order they never must collapse
-		subzero->Draw(gScreenSurface, scorpion->GetPosition(), camera);
-		scorpion->Draw(gScreenSurface, subzero->GetPosition(), camera);
+		subzero->Draw(surface, scorpion->GetPosition(), camera);
+		scorpion->Draw(surface, subzero->GetPosition(), camera);
 	}
 
 	//x,y, height/width changed the orientation in function
-	RenderHpBarLeft(subzero->getHealth(), gScreenSurface);
-	RenderHpBarRight(scorpion->getHealth(), gScreenSurface);
+	RenderHpBarLeft(subzero->getHealth(), surface);
+	RenderHpBarRight(scorpion->getHealth(), surface);
 };
 
 void Game::CleanUp() {
@@ -109,12 +109,12 @@ void Game::HandleInput(SDL_Event& event) {
 };
 
 
-void Game::printTimer(const std::string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color) {
+void Game::printTimer(const std::string& msg, Point position, SDL_Surface *surface, SDL_Color color) {
 	SDL_Rect dest = { position.x,position.y,0,0 };
 	SDL_Surface *stext = TTF_RenderText_Blended(Timerfont, msg.c_str(), color);
 
 	if (stext) {
-		SDL_BlitSurface(stext, NULL, gScreenSurface, &dest);
+		SDL_BlitSurface(stext, NULL, surface, &dest);
 		SDL_FreeSurface(stext);
 	}
 	else {
@@ -123,13 +123,13 @@ void Game::printTimer(const std::string& msg, Point position, SDL_Surface *gScre
 	}
 };
 
-void Game::RenderHpBarRight(float healt, SDL_Surface& gScreenSurface) {
+void Game::RenderHpBarRight(float healt, SDL_Surface& surface) {
 	Rect bar = { 679, 65, 45, 580 };
 	healt = healt > 1.f ? 1.f : healt < 0.f ? 0.f : healt;
 
 	SDL_Surface* tmp = SDL_CreateRGBSurface(0, bar.h, bar.w, 32, 0, 0, 0, 0);
 	SDL_FillRect(tmp, NULL, SDL_MapRGB(tmp->format, 198, 0, 10));
-	SDL_BlitSurface(tmp, NULL, &gScreenSurface, &bar);
+	SDL_BlitSurface(tmp, NULL, &surface, &bar);
 	SDL_FreeSurface(tmp);
 
 	int pw = (int)((float)bar.w * healt);
@@ -137,14 +137,14 @@ void Game::RenderHpBarRight(float healt, SDL_Surface& gScreenSurface) {
 	tmp = SDL_CreateRGBSurface(0, pw, bar.h, 32, 0, 0, 0, 0);
 	SDL_FillRect(tmp, NULL, SDL_MapRGB(tmp->format, 0, 128, 0));
 	Rect tempRect = { bar.x + (bar.w - pw),bar.y,bar.w,bar.h };
-	SDL_BlitSurface(tmp, NULL, &gScreenSurface, &tempRect);
+	SDL_BlitSurface(tmp, NULL, &surface, &tempRect);
 	SDL_FreeSurface(tmp);
 
 	//NAME 
 	SDL_Rect dest = { 1055,65,0,0 };
 	SDL_Surface *stext = TTF_RenderText_Blended(Namefont, "SCORPION", { 255, 255, 0, 255 });
 	if (stext) {
-		SDL_BlitSurface(stext, NULL, &gScreenSurface, &dest);
+		SDL_BlitSurface(stext, NULL, &surface, &dest);
 		SDL_FreeSurface(stext);
 	}
 	else {
@@ -155,36 +155,36 @@ void Game::RenderHpBarRight(float healt, SDL_Surface& gScreenSurface) {
 
 	Rect displayWin = { 1210,110,50,50 };
 	if (scorpion->GetWin() == 1) {
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 	}
 	else if (scorpion->GetWin() == 2) {
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 		displayWin.x = displayWin.x - 50;
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 	}
 };
 
-void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
+void Game::RenderHpBarLeft(float healt, SDL_Surface& surface) {
 	Rect bar = { 24, 65, 45, 580 };
 	healt = healt > 1.f ? 1.f : healt < 0.f ? 0.f : healt;
 
 	SDL_Surface* tmp = SDL_CreateRGBSurface(0, bar.h, bar.w, 32, 0, 0, 0, 0);
 	SDL_FillRect(tmp, NULL, SDL_MapRGB(tmp->format, 198, 0, 10));
-	SDL_BlitSurface(tmp, NULL, &gScreenSurface, &bar);
+	SDL_BlitSurface(tmp, NULL, &surface, &bar);
 	SDL_FreeSurface(tmp);
 
 	int pw = (int)((float)bar.w * healt);
 
 	tmp = SDL_CreateRGBSurface(0, pw, bar.h, 32, 0, 0, 0, 0);
 	SDL_FillRect(tmp, NULL, SDL_MapRGB(tmp->format, 0, 128, 0));
-	SDL_BlitSurface(tmp, NULL, &gScreenSurface, &bar);
+	SDL_BlitSurface(tmp, NULL, &surface, &bar);
 	SDL_FreeSurface(tmp);
 
 	//Name
 	SDL_Rect dest = { 50,65,0,0 };
 	SDL_Surface *stext = TTF_RenderText_Blended(Namefont, "SUBZERO", { 255, 255, 0, 255 });
 	if (stext) {
-		SDL_BlitSurface(stext, NULL, &gScreenSurface, &dest);
+		SDL_BlitSurface(stext, NULL, &surface, &dest);
 		SDL_FreeSurface(stext);
 	}
 	else {
@@ -195,12 +195,12 @@ void Game::RenderHpBarLeft(float healt, SDL_Surface& gScreenSurface) {
 
 	Rect displayWin = { 555,110,50,50 };
 	if (subzero->GetWin() == 1) {
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 	}
 	else if (subzero->GetWin() == 2) {
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 		displayWin.x = displayWin.x - 50;
-		SDL_BlitScaled(tmp, NULL, &gScreenSurface, &displayWin);
+		SDL_BlitScaled(tmp, NULL, &surface, &displayWin);
 	}
 };
 
@@ -217,11 +217,11 @@ void Game::DelayAction(const std::function<void()>& f, delay_t d) {
 };
 
 
-void Game::printMessage(const string& msg, Point position, SDL_Surface *gScreenSurface, SDL_Color color, int fontsize) {
+void Game::printMessage(const string& msg, Point position, SDL_Surface *surface, SDL_Color color, int fontsize) {
 
 	SDL_Rect dest = { position.x,position.y,0,0 };
 	tmpFont = TTF_OpenFont("media/font.ttf", fontsize);
-	if (Namefont == NULL)
+	if (tmpFont == NULL)
 	{
 		throw
 			std::string("Failed to load lazy font! SDL_ttf Error");
@@ -229,7 +229,7 @@ void Game::printMessage(const string& msg, Point position, SDL_Surface *gScreenS
 	SDL_Surface *stext = TTF_RenderText_Blended(tmpFont, msg.c_str(), color);
 
 	if (stext) {
-		SDL_BlitSurface(stext, NULL, gScreenSurface, &dest);
+		SDL_BlitSurface(stext, NULL, surface, &dest);
 		SDL_FreeSurface(stext);
 		TTF_CloseFont(tmpFont);
 	}
@@ -248,7 +248,7 @@ void Game::cameraAdjustment() {
 	if (camera.x > STAGE_WIDTH - SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
 };
 
-void Game::matchWin(Fighter& fighter, SDL_Surface& gScreenSurface) {
+void Game::matchWin(Fighter& fighter, SDL_Surface& surface) {
 	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(fighter.GetName() + ".wins"), 0);
 	fighter.WinAnimation();
 	if (fighter.GetWin() >= 2)
@@ -260,25 +260,25 @@ int Game::GetRound(void) const {
 	return round;
 };
 
-void Game::MatchEnd(SDL_Surface& gScreenSurface) {
+void Game::MatchEnd(SDL_Surface& surface) {
 	if (!gameTimer.isStarted() && start) {//timer stopped
 		Game::start = false;
 		if (subzero->getHealth() > scorpion->getHealth()) {
 			subzero->SetWin();
-			matchWin(*subzero, gScreenSurface);
+			matchWin(*subzero, surface);
 		}
 		else if (subzero->getHealth() < scorpion->getHealth()) {
 			scorpion->SetWin();
-			matchWin(*scorpion, gScreenSurface);
+			matchWin(*scorpion, surface);
 		}
 		else {
 			if (rand() % 2) {
 				scorpion->SetWin();
-				matchWin(*scorpion, gScreenSurface);
+				matchWin(*scorpion, surface);
 			}
 			else {
 				subzero->SetWin();
-				matchWin(*subzero, gScreenSurface);
+				matchWin(*subzero, surface);
 			}
 		}
 	}
@@ -286,13 +286,13 @@ void Game::MatchEnd(SDL_Surface& gScreenSurface) {
 		Game::start = false;
 		gameTimer.stop();
 		scorpion->SetWin();
-		matchWin(*scorpion, gScreenSurface);
+		matchWin(*scorpion, surface);
 	}
 	else if (scorpion->getHealth() == 0 && start) {
 		Game::start = false;
 		gameTimer.stop();
 		subzero->SetWin();
-		matchWin(*subzero, gScreenSurface);
+		matchWin(*subzero, surface);
 	}
 };
 
