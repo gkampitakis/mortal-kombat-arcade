@@ -34,6 +34,7 @@ private:
 
 	void matchWin(Fighter& fighter, SDL_Surface& surface);
 	void cameraAdjustment(void);
+	void ResetMatch(void);
 	void RenderHpBarRight(float percent, SDL_Surface& screen);
 	void RenderHpBarLeft(float percent, SDL_Surface& screen);
 	void printTimer(const string& msg, Point position, SDL_Surface *screen, SDL_Color color);

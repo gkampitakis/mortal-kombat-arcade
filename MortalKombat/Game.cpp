@@ -61,13 +61,7 @@ void Game::DrawGame(SDL_Surface& gScreenSurface) {
 	printTimer(gameTimer.ReverseTimer(60), { SCREEN_WIDTH / 2 - 35, 5 }, &gScreenSurface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
-		scorpion->SetState("READY");
-		subzero->SetState("READY");
-		scorpion->ResetHealth();
-		subzero->ResetHealth();
-		subzero->ResetPosition({ 580,500 });
-		scorpion->ResetPosition({ 1280,500 });
-
+		ResetMatch();
 		printMessage("Round " + to_string(round), { SCREEN_WIDTH / 2 - 180,SCREEN_HEIGHT / 2 - 200 }, &gScreenSurface, { 255, 255, 0, 255 }, 150);
 	}
 
@@ -96,15 +90,15 @@ void Game::CleanUp() {
 void Game::HandleInput(SDL_Event& event) {
 	if (!Game::start) {
 		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == SDLK_SPACE && !EndOfGame) {//&& timeAnimator->GetState() != ANIMATOR_RUNNING) {//Here check for tick animator
+			if (event.key.keysym.sym == SDLK_SPACE && !EndOfGame) {
 				DelayAction([&]() {
+
 					AnimatorHolder::Remove(timeAnimator);
 					Game::start = true;
-					scorpion->SetState("READY");
-					subzero->SetState("READY");
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("fight"), 0);
 					gameTimer.start();
-				}, 1000);//A bit more time here but for debug purposes leave it fast
+
+				}, 1000);
 			}
 		}
 	}
@@ -411,3 +405,13 @@ Fighter* Game::GetLoser(void) {
 	return subzero->GetWin() >= 2 ? scorpion : subzero;
 };
 
+void Game::ResetMatch(void) {
+	scorpion->SetState("READY");
+	subzero->SetState("READY");
+	scorpion->ResetHealth();
+	subzero->ResetHealth();
+	subzero->ResetPosition({ 580,500 });
+	scorpion->ResetPosition({ 1280,500 });
+	//here call a center camera function
+	camera.x = 364;
+};
