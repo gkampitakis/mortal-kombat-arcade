@@ -1,3 +1,6 @@
+#ifndef Fighter_HEADER
+#define Fighter_HEADER
+
 #include "MyLibraries.h"
 #include "Sprite.h"
 #include "TickTimerAnimator.h"
@@ -62,3 +65,5 @@ public:
 	void ResetPosition(Point x);
 	void InflictionAnimation(string Animation,int speed,string hit);
 };
+
+#endif

@@ -67,7 +67,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 7 : -7, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "punch";
@@ -130,7 +130,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".kick1") : AnimationFilmHolder::Get()->GetFilm(name + ".kick2"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 17 : -17, 0, 100, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "kick";
