@@ -24,7 +24,10 @@ bool Window::HandleInput(SDL_Event& event) {
 			else if (state == INGAME) {
 				game->HandleInput(event);
 			}
-		}//Handle Input For Menu
+			else if (state == FINISH) {
+				return quit = end->HandleInput(event);
+			}
+		}
 	}
 	return quit;
 };
@@ -45,7 +48,7 @@ bool Window::open(string w_name) {
 		cout << "Window could not be created! SDL Error: %s\n", SDL_GetError();
 		return false;
 	}
-	gScreenSurface = SDL_GetWindowSurface(window);
+	surface = SDL_GetWindowSurface(window);
 	gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (gRenderer == NULL) {
 		cout << "Renderer could not be created! SDL Error: %s\n", SDL_GetError();
@@ -74,12 +77,12 @@ bool Window::initialize() {
 		return false;
 	}
 	intro = new Intro();
-	if (!intro->initialize(gScreenSurface)) return false;
+	if (!intro->initialize(surface)) return false;
 	//Initialize Menu
 	state = INTRO;
 
 	game = new Game();
-	if (!game->initialize(gScreenSurface)) return false;
+	if (!game->initialize(surface)) return false;
 	return true;
 };
 
@@ -91,7 +94,7 @@ void Window::close() {
 
 	window = NULL;
 	gRenderer = NULL;
-	gScreenSurface = NULL;
+	surface = NULL;
 
 	//Call the Holder's CleanUp Functions
 	SpriteHolder::Get()->CleanUp();
@@ -118,55 +121,55 @@ bool Window::loadMedia() {
 		/*
 		*		FILMS LOADING HERE
 		*/
-		AnimationFilmHolder::Get()->Load("media/win.png", "win", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "disclaimer", gScreenSurface, true);
-		AnimationFilmHolder::Get()->Load("media/stage.png", "stage", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/bckg.png", "bckg", gScreenSurface, true);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stance", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stance", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.move", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.move", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.up", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.up", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.down", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.down", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.duck", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.duck", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.block", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.block", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.punch1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.punch1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.punch2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.punch2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.kick1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.kick2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stillblock", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stillblock", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipup", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.lowkick", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.lowpunch", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highpunch", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highkick1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highkick2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.lowpunch", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.lowkick", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highpunch", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highkick1", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highkick2", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.flipdown", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.downblock", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.downblock", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.flipup", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipdown", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.win", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.win", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.singlehit", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.singlehit", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.uppercuthit", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.uppercuthit", gScreenSurface, false);
-		AnimationFilmHolder::Get()->Load("media/goro.png", "config/goro_boxes.json", "goro.flex", gScreenSurface, false);
+		AnimationFilmHolder::Get()->Load("media/win.png", "win", surface, false);
+		AnimationFilmHolder::Get()->Load("media/disclaimer.png", "disclaimer", surface, true);
+		AnimationFilmHolder::Get()->Load("media/stage.png", "stage", surface, false);
+		AnimationFilmHolder::Get()->Load("media/bckg.png", "bckg", surface, true);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stance", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stance", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.move", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.move", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.up", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.up", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.down", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.down", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.duck", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.duck", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.block", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.block", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.punch1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.punch1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.punch2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.punch2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.kick1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.kick2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.kick2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.stillblock", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.stillblock", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipup", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.lowkick", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.lowpunch", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highpunch", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highkick1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.highkick2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.lowpunch", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.lowkick", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highpunch", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highkick1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.highkick2", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.flipdown", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.downblock", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.downblock", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.flipup", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.flipdown", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.win", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.win", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.singlehit", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.singlehit", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.uppercuthit", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.uppercuthit", surface, false);
+		AnimationFilmHolder::Get()->Load("media/goro.png", "config/goro_boxes.json", "goro.flex", surface, false);
 
 		/*
 		*		SOUND LOADING HERE
@@ -192,20 +195,20 @@ bool Window::loadMedia() {
 }
 
 
-void Window::drawDisclaimer(SDL_Surface& gScreenSurface) {
+void Window::drawDisclaimer(SDL_Surface& surface) {
 	SDL_Surface* background = NULL;
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("disclaimer");
 	SDL_Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
-	tmp->DisplayFrame(gScreenSurface, fullscreen);
-	sprite->Display(gScreenSurface, 500, 700);
+	tmp->DisplayFrame(surface, fullscreen);
+	sprite->Display(surface, 500, 700);
 };
 
 
 void Window::drawWindow() {
 
 	if (state == INTRO) {
-		intro->DrawIntro(*gScreenSurface);
+		intro->DrawIntro(*surface);
 	}
 	else if (state == DISCLAIMER) {
 		static bool initiate;
@@ -234,14 +237,17 @@ void Window::drawWindow() {
 			timeAnimator->Start(SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(timeAnimator);
 		}
-		drawDisclaimer(*gScreenSurface);
+		drawDisclaimer(*surface);
 	}
 	else if (state == INGAME) {
-		if (!game->EndOfGame) game->DrawGame(*gScreenSurface);
-		else state = FINISH;
+		if (!game->EndOfGame) game->DrawGame(*surface);
+		else {
+			end = new End(game->GetWinner(), game->GetLoser());
+			state = FINISH;
+		}
 	}
 	else if (state == FINISH) {
-		
+		end->Draw(*surface);
 	};
 	AnimatorHolder::Progress(SDL_GetTicks());
 	SDL_UpdateWindowSurface(window);

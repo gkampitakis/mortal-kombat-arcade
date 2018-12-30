@@ -1,6 +1,7 @@
 #include "MyLibraries.h"
 #include "Intro.h"
 #include "Game.h"
+#include "End.h"
 
 using namespace std;
 
@@ -23,10 +24,11 @@ private:
 	int				height;
 	SDL_Window*		window = NULL;
 	SDL_Renderer*	gRenderer = NULL;
-	SDL_Surface*	gScreenSurface = NULL;
+	SDL_Surface*	surface = NULL;
 	TTF_Font*		font = NULL;
 	Intro*			intro = NULL;
 	Game*			game = NULL;
+	End*			end = NULL;
 	FrameRangeAnimator*		animator;
 	Sprite*					sprite;
 };

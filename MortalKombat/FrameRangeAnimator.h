@@ -1,3 +1,6 @@
+#ifndef FrameRangeAnimator_HEADER
+#define FrameRangeAnimator_HEADER
+
 #include "MyLibraries.h"
 #include "Animator.h"
 #include "Sprite.h"
@@ -17,3 +20,5 @@ public:
 
 	~FrameRangeAnimator() {}
 };
+
+#endif
