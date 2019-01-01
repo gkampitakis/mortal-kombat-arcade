@@ -61,7 +61,7 @@ void Game::DrawGame(SDL_Surface& surface) {
 	SDL_BlitScaled(movingBckg, 0, &surface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &surface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(68), { SCREEN_WIDTH / 2 - 35, 5 }, &surface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(GAME_TIMER), { SCREEN_WIDTH / 2 - 35, 5 }, &surface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		ResetMatch();
@@ -318,7 +318,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					AnimatorHolder::Remove(HitAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 					hitter.fightstasts.blocked++;
-				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
+				}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
 
 			}
 			else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN")) {
@@ -338,8 +338,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				DelayHitAction([&]() {
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
-				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
+				}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
 				//blood and tears			
 			}
 		}/*
@@ -365,7 +365,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				//sound && inflictions animations
 				DelayHitAction([&]() {
 					AnimatorHolder::Remove(HitAnimator);
-					hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 				}, 750);
 				//blood and tears	
@@ -381,7 +381,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					AnimatorHolder::Remove(HitAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 					hitter.fightstasts.blocked++;
-				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
+				}, hitter.GetAction()._Equal("downpunch") ? HIT_LOW_PUNCH_DELAY : HIT_LOW_KICK_DELAY);
 
 			}
 			else if (hitted.GetState()._Equal("UP")) {
@@ -400,8 +400,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				DelayHitAction([&]() {
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					rand() % 3 + 1 == 2 ? hitted.InflictionAnimation("uppercuthit", 100, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick") : hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick");
-				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
+					rand() % 3 + 1 == 2 ? hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick") : hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick");
+				}, hitter.GetAction()._Equal("downpunch") ? HIT_LOW_PUNCH_DELAY : HIT_LOW_KICK_DELAY);
 				//blood and tears
 			}
 		}//do a check for special combos also

@@ -66,7 +66,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".punch1") : AnimationFilmHolder::Get()->GetFilm(name + ".punch2"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 7 : -7, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? PUNCH_DIST : -PUNCH_DIST, 0, PUNCH_DELAY, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "punch";
@@ -82,7 +82,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowpunch"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, LOW_PUNCH_DELAY, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "downpunch";
@@ -109,7 +109,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highpunch"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 25 : -25, 0, 60, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? HIGH_PUNCH_DIST : -HIGH_PUNCH_DIST, 0, HIGH_PUNCH_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
@@ -127,7 +127,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(rand() % 2 + 1 == 2 ? AnimationFilmHolder::Get()->GetFilm(name + ".kick1") : AnimationFilmHolder::Get()->GetFilm(name + ".kick2"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 17 : -17, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? KICK_DIST : -KICK_DIST, 0, KICK_DELAY, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "kick";
@@ -143,7 +143,7 @@ void Fighter::setStateMachine() {
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".lowkick"));
 				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, LOW_KICK_DELAY, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "downkick";
@@ -157,7 +157,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".highkick1"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 40 : -40, 0, 100, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? HIGH_KICK_DIST : -HIGH_KICK_DIST, 0, HIGH_KICK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
@@ -175,7 +175,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -120, 180, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -JUMP_DIST, JUMP_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
@@ -188,7 +188,7 @@ void Fighter::setStateMachine() {
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -12 : 12, 0, 50, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -MOVE_DIST : MOVE_DIST, 0, MOVE_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
@@ -200,7 +200,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 12 : -12, 0, 50, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? MOVE_DIST : -MOVE_DIST, 0, MOVE_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
@@ -212,7 +212,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".down"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, DUCK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("DOWN");
@@ -225,7 +225,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".duck"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, DUCK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -240,7 +240,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".block"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 100, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, BLOCK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("BLOCK");
@@ -258,7 +258,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".stillblock"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, STILL_BLOCK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("BLOCK");
@@ -271,7 +271,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".downblock"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, LOW_BLOCK_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -291,7 +291,7 @@ void Fighter::setStateMachine() {
 		if (tickAnimator&&tickAnimator->GetState() != ANIMATOR_RUNNING) {
 			TickTimerAnimation* tmp2 = new TickTimerAnimation(10);
 			tmp2->setOnTick([&] {
-				if (sprite->GetPosition().y + 120 < 500) sprite->Move({ 0,120 });
+				if (sprite->GetPosition().y + JUMP_DIST < 500) sprite->Move({ 0,JUMP_DIST });
 			}).SetDelay(400).SetReps(3);
 			tickAnimator = new TickTimerAnimator(tmp2);
 			tickAnimator->SetOnFinish([&]() {
@@ -323,7 +323,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".stance"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, Fighter::name._Equal("subzero") ? 75 : 100, false, 666),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, Fighter::name._Equal("subzero") ? SUBZERO_STANCE_DELAY : SCORPION_STANCE_DELAY, false, 666),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -338,7 +338,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipdown"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 30 : -30, 0, 70, false, 666),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? DOWN_FLIP_DIST : -DOWN_FLIP_DIST, 0, DOWNFLIP_DELAY, false, 666),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
@@ -351,7 +351,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipdown"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -25 : 25, 0, 70, false, 666),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -DOWN_FLIP_DIST : DOWN_FLIP_DIST, 0, DOWNFLIP_DELAY, false, 666),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("READY");
@@ -364,7 +364,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipup"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 30 : -30, 0, 70, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? UP_FLIP_DIST : -UP_FLIP_DIST, 0, UPFLIP_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
@@ -377,7 +377,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".flipup"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -30 : 30, 0, 70, false, 150),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? -UP_FLIP_DIST : UP_FLIP_DIST, 0, UPFLIP_DELAY, false, 150),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 			stateTransitions.SetState("UP");
@@ -416,7 +416,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".win"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 666),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, WIN_DELAY, false, 666),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
@@ -429,7 +429,7 @@ void Fighter::setStateMachine() {
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".dizzy"));
 			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 250, false, 666),
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, LOSE_DELAY, false, 666),
 				SDL_GetTicks());
 			AnimatorHolder::MarkAsRunning(animator);
 		}
