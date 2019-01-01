@@ -72,6 +72,7 @@ void Fighter::setStateMachine() {
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "punch";
 				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("punchWave"), 0);
+				stateTransitions.SetState("READY");
 			}
 		});
 	})
@@ -135,6 +136,7 @@ void Fighter::setStateMachine() {
 				AnimatorHolder::MarkAsRunning(animator);
 				nextAction = "kick";
 				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("kickWave"), 0);
+				stateTransitions.SetState("READY");
 			}
 		});
 	})
@@ -172,21 +174,21 @@ void Fighter::setStateMachine() {
 		*/
 		.SetTransition("READY", Input{ ".UP" }, [&](void) {
 		//	AnimatorHolder::Remove(tickAnimator);
-			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-				nextAction = "waiting";
-				AnimatorHolder::Remove(animator);
-				animator = new FrameRangeAnimator();
-				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
-				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -120, 180, false, 150),
-					SDL_GetTicks());
-				AnimatorHolder::MarkAsRunning(animator);
-				stateTransitions.SetState("UP");
-			}
+		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+			nextAction = "waiting";
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".up"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, -120, 180, false, 150),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+			stateTransitions.SetState("UP");
+		}
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
-		//	AnimatorHolder::Remove(tickAnimator);
+			//	AnimatorHolder::Remove(tickAnimator);
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
@@ -289,7 +291,7 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {//<-----------------this might need deletion
 			nextAction = "waiting";
-		//	AnimatorHolder::Remove(tickAnimator);
+			//	AnimatorHolder::Remove(tickAnimator);
 			cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
@@ -313,7 +315,7 @@ void Fighter::setStateMachine() {
 		.SetTransition("BLOCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			nextAction = "waiting";
-	//		AnimatorHolder::Remove(tickAnimator);
+			//		AnimatorHolder::Remove(tickAnimator);
 			cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
@@ -396,7 +398,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
-		//	AnimatorHolder::Remove(tickAnimator);
+			//	AnimatorHolder::Remove(tickAnimator);
 			cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
@@ -410,21 +412,43 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("FlipBCK", Input{ ".FWD.BCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
-		//	AnimatorHolder::Remove(tickAnimator);
+			//	AnimatorHolder::Remove(tickAnimator);
 			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipBCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
-		//	AnimatorHolder::Remove(tickAnimator);
+			//	AnimatorHolder::Remove(tickAnimator);
 			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
-		.SetTransition("WIN", Input{ "" }, [&](void) {
+		.SetTransition("WIN", Input{ "." }, [&](void) {
 	})
 		.SetTransition("WIN", Input{}, [&](void) {
+		if (animator->HasFinished() || !sprite->getFilm()->GetId()._Equal(name + ".win")) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".win"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 666),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
+	})
+		.SetTransition("LOSE", Input{ "." }, [&](void) {
+	})
+		.SetTransition("LOSE", Input{}, [&](void) {
+		if (animator->HasFinished() || !sprite->getFilm()->GetId()._Equal(name + ".dizzy")) {//the second migth need delete
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".dizzy"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 250, false, 666),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
 	});
 };
 
@@ -454,13 +478,6 @@ const string Fighter::Make_key(const Input& input) const {
 
 Point Fighter::GetPosition(void) const {
 	return sprite->GetPosition();
-};
-
-void Fighter::WinAnimation() {
-	sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".win"));
-	animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
-		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 100), SDL_GetTicks());
-	stateTransitions.SetState("WIN");
 };
 
 void Fighter::SetState(string state) {

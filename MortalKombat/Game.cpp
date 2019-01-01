@@ -7,6 +7,7 @@ bool Game::EndOfGame = false;
 
 Game::Game() {
 	timeAnimator = new TickTimerAnimator(NULL);
+	HitAnimator = new TickTimerAnimator(NULL);
 	timeAnimation = new TickTimerAnimation(111);
 	round = 1;
 	camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -48,8 +49,10 @@ bool Game::initialize(SDL_Surface* surface) {
 
 void Game::DrawGame(SDL_Surface& surface) {
 
-	collisionNhits(*subzero, *scorpion);
-	collisionNhits(*scorpion, *subzero);
+	if (start) {
+		collisionNhits(*subzero, *scorpion);
+		collisionNhits(*scorpion, *subzero);
+	}
 
 	MatchEnd(surface);
 	cameraAdjustment();
@@ -58,7 +61,7 @@ void Game::DrawGame(SDL_Surface& surface) {
 	SDL_BlitScaled(movingBckg, 0, &surface, &fullscreen);
 	SDL_BlitSurface(background, &camera, &surface, &fullscreen);
 	//For debugging purposes the timer is big 
-	printTimer(gameTimer.ReverseTimer(3), { SCREEN_WIDTH / 2 - 35, 5 }, &surface, { 198, 0, 10, 255 });
+	printTimer(gameTimer.ReverseTimer(68), { SCREEN_WIDTH / 2 - 35, 5 }, &surface, { 198, 0, 10, 255 });
 
 	if (!start&&timeAnimator->GetState() == ANIMATOR_RUNNING) {
 		ResetMatch();
@@ -92,12 +95,10 @@ void Game::HandleInput(SDL_Event& event) {
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_SPACE && !EndOfGame) {
 				DelayAction([&]() {
-
 					AnimatorHolder::Remove(timeAnimator);
 					Game::start = true;
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("fight"), 0);
 					gameTimer.start();
-
 				}, 1000);
 			}
 		}
@@ -216,6 +217,18 @@ void Game::DelayAction(const std::function<void()>& f, delay_t d) {
 	}
 };
 
+void Game::DelayHitAction(const std::function<void()>& f, delay_t d) {
+	if (HitAnimator&&HitAnimator->GetState() != ANIMATOR_RUNNING) {
+		timeAnimation->setOnTick([] {
+			//Nothing to do here
+		}).SetDelay(d).SetReps(1);
+		HitAnimator = new TickTimerAnimator(timeAnimation);
+		HitAnimator->SetOnFinish(f);
+		HitAnimator->Start(SDL_GetTicks());
+		AnimatorHolder::MarkAsRunning(HitAnimator);
+	}
+};
+
 
 void Game::printMessage(const string& msg, Point position, SDL_Surface *surface, SDL_Color color, int fontsize) {
 
@@ -248,10 +261,11 @@ void Game::cameraAdjustment() {
 	if (camera.x > STAGE_WIDTH - SCREEN_WIDTH) camera.x = STAGE_WIDTH - SCREEN_WIDTH;
 };
 
-void Game::matchWin(Fighter& fighter, SDL_Surface& surface) {
-	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(fighter.GetName() + ".wins"), 0);
-	fighter.WinAnimation();
-	if (fighter.GetWin() >= 2)
+void Game::matchWin(Fighter& winner, Fighter& loser, SDL_Surface& surface) {
+	MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect(winner.GetName() + ".wins"), 0);
+	loser.SetState("LOSE");
+	winner.SetState("WIN");
+	if (winner.GetWin() >= 2)
 		EndOfGame = true;
 	else round++;
 };
@@ -265,20 +279,20 @@ void Game::MatchEnd(SDL_Surface& surface) {
 		Game::start = false;
 		if (subzero->getHealth() > scorpion->getHealth()) {
 			subzero->SetWin();
-			matchWin(*subzero, surface);
+			matchWin(*subzero, *scorpion, surface);
 		}
 		else if (subzero->getHealth() < scorpion->getHealth()) {
 			scorpion->SetWin();
-			matchWin(*scorpion, surface);
+			matchWin(*scorpion, *subzero, surface);
 		}
 		else {
 			if (rand() % 2) {
 				scorpion->SetWin();
-				matchWin(*scorpion, surface);
+				matchWin(*scorpion, *subzero, surface);
 			}
 			else {
 				subzero->SetWin();
-				matchWin(*subzero, surface);
+				matchWin(*subzero, *scorpion, surface);
 			}
 		}
 	}
@@ -286,13 +300,13 @@ void Game::MatchEnd(SDL_Surface& surface) {
 		Game::start = false;
 		gameTimer.stop();
 		scorpion->SetWin();
-		matchWin(*scorpion, surface);
+		matchWin(*scorpion, *subzero, surface);
 	}
 	else if (scorpion->getHealth() == 0 && start) {
 		Game::start = false;
 		gameTimer.stop();
 		subzero->SetWin();
-		matchWin(*subzero, surface);
+		matchWin(*subzero, *scorpion, surface);
 	}
 };
 
@@ -303,8 +317,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 		 */
 		if (hitter.GetAction()._Equal("punch") || hitter.GetAction()._Equal("kick")) {
 			if (hitted.GetState()._Equal("BLOCK")) {
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);//Hit blocked
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 					hitter.fightstasts.blocked++;
 				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
@@ -324,8 +338,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				}
 
 				//sound && inflictions animations
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 					hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
 				}, hitter.GetAction()._Equal("punch") ? 350 : 850);
@@ -336,8 +350,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 		 */
 		else if (hitter.GetAction()._Equal("uppunch") || hitter.GetAction()._Equal("upkick")) {
 			if (hitted.GetState()._Equal("BLOCK") || hitted.GetState()._Equal("BLOCKDWN")) {
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);//Hit blocked
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 					hitter.fightstasts.blocked++;
 				}, 750);
@@ -352,8 +366,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				}
 
 				//sound && inflictions animations
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);
 					hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 				}, 750);
@@ -366,8 +380,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 		else if (hitter.GetAction()._Equal("downpunch") || hitter.GetAction()._Equal("downkick")) {
 			if (hitted.GetState()._Equal("BLOCKDWN")) {
 				//Block hit 
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);//Hit blocked
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);//Hit blocked
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
 					hitter.fightstasts.blocked++;
 				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
@@ -386,8 +400,8 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				}
 
 				//sound && inflictions animations
-				DelayAction([&]() {
-					AnimatorHolder::Remove(timeAnimator);
+				DelayHitAction([&]() {
+					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 					rand() % 3 + 1 == 2 ? hitted.InflictionAnimation("uppercuthit", 100, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick") : hitted.InflictionAnimation("singlehit", 50, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick");
 				}, hitter.GetAction()._Equal("downpunch") ? 650 : 250);
@@ -412,6 +426,7 @@ void Game::ResetMatch(void) {
 	subzero->ResetHealth();
 	subzero->ResetPosition({ 580,500 });
 	scorpion->ResetPosition({ 1280,500 });
+
 	//here call a center camera function
 	camera.x = 364;
 };

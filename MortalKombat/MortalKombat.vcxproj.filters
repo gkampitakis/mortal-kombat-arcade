@@ -72,16 +72,16 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MovingAnimation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameRangeAnimator.cpp">
+    <ClCompile Include="End.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FrameRangeAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="End.cpp">
+    <ClCompile Include="FrameRangeAnimator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,16 +140,16 @@
     <ClInclude Include="StateTransitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MovingAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameRangeAnimator.h">
+    <ClInclude Include="End.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FrameRangeAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="End.h">
+    <ClInclude Include="FrameRangeAnimator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -162,6 +162,5 @@
     </None>
     <None Include="config\subzero_boxes.json" />
     <None Include="config\scorpion_boxes.json" />
-    <None Include="config\goro_boxes.json" />
   </ItemGroup>
 </Project>

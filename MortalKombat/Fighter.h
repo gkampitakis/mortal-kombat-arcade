@@ -50,7 +50,6 @@ public:
 
 	int GetWin(void) const;;
 	void SetWin(void);
-	void WinAnimation();
 
 	string GetName(void);
 	void setStateMachine();

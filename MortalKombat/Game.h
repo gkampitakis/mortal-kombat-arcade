@@ -22,6 +22,7 @@ private:
 	Fighter*				subzero = NULL;
 	Fighter*				scorpion = NULL;
 	TickTimerAnimator*		timeAnimator;
+	TickTimerAnimator*		HitAnimator;
 	TickTimerAnimation*		timeAnimation;
 	Timer					gameTimer;
 	SDL_Surface*			background = NULL;
@@ -32,13 +33,14 @@ private:
 	TTF_Font*				tmpFont = NULL;
 	int						round;
 
-	void matchWin(Fighter& fighter, SDL_Surface& surface);
+	void matchWin(Fighter& winner, Fighter& loser, SDL_Surface& surface);
 	void cameraAdjustment(void);
 	void ResetMatch(void);
 	void RenderHpBarRight(float percent, SDL_Surface& screen);
 	void RenderHpBarLeft(float percent, SDL_Surface& screen);
 	void printTimer(const string& msg, Point position, SDL_Surface *screen, SDL_Color color);
 	void DelayAction(const function<void()>& f, delay_t d);
+	void DelayHitAction(const function<void()>& f, delay_t d);
 	void printMessage(const string& msg, Point position, SDL_Surface *surface, SDL_Color color, int fontsize);
 	void MatchEnd(SDL_Surface& gScreenSurface);
 	void collisionNhits(Fighter& hitter, Fighter& hitted);
