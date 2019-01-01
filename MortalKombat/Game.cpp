@@ -84,10 +84,7 @@ void Game::DrawGame(SDL_Surface& surface) {
 };
 
 void Game::CleanUp() {
-	//Fix this 
-	//Clean fonts surfaces and all
-	//call it at winow
-
+	AnimatorHolder::CleanUp();
 };
 
 void Game::HandleInput(SDL_Event& event) {

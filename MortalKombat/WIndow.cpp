@@ -244,6 +244,7 @@ void Window::drawWindow() {
 	else if (state == INGAME) {
 		if (!game->EndOfGame) game->DrawGame(*surface);
 		else {
+			game->CleanUp();
 			end = new End(game->GetWinner(), game->GetLoser(),*surface);
 			state = FINISH;
 		}

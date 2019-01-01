@@ -41,7 +41,7 @@ public:
 	~Fighter() {};
 
 	void Handler();
-	void Draw(SDL_Surface& gScreenSurface, Point enemy, Rect& camera);
+	void Draw(SDL_Surface& surface, Point enemy, Rect& camera);
 	bool initialize(const string& path);//give json as argument
 
 	float getHealth(void) const;

@@ -8,11 +8,11 @@ class Intro {
 public:
 	Intro();
 	~Intro() {};
-	bool initialize(SDL_Surface* gScreenSurface);
+	bool initialize(SDL_Surface* surface);
 	SDL_Surface* getBackground();
-	void DrawIntro(SDL_Surface& gScreenSurface);
+	void DrawIntro(SDL_Surface& surface);
 	int HandleInput(SDL_Event& event);
-	void StartButton(SDL_Surface& gScreenSurface);
+	void StartButton(SDL_Surface& surface);
 
 	void CleanUp(void);
 private:

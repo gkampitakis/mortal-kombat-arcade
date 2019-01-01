@@ -42,6 +42,6 @@ private:
 	void DelayAction(const function<void()>& f, delay_t d);
 	void DelayHitAction(const function<void()>& f, delay_t d);
 	void printMessage(const string& msg, Point position, SDL_Surface *surface, SDL_Color color, int fontsize);
-	void MatchEnd(SDL_Surface& gScreenSurface);
+	void MatchEnd(SDL_Surface& surface);
 	void collisionNhits(Fighter& hitter, Fighter& hitted);
 };

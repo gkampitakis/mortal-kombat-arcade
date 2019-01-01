@@ -6,16 +6,16 @@
 
 Intro::Intro() {}
 
-bool Intro::initialize(SDL_Surface* gScreenSurface) {
-	AnimationFilmHolder::Get()->Load("media/menu.png", "background", gScreenSurface, true);
-	AnimationFilmHolder::Get()->Load("media/pressstart.png", "presssstart", gScreenSurface, false);
+bool Intro::initialize(SDL_Surface* surface) {
+	AnimationFilmHolder::Get()->Load("media/menu.png", "background", surface, true);
+	AnimationFilmHolder::Get()->Load("media/pressstart.png", "presssstart", surface, false);
 	AnimationFilm* tmp = AnimationFilmHolder::Get()->GetFilm("background");
 	background = tmp->GetBitmap();
 
 	tmp = AnimationFilmHolder::Get()->GetFilm("presssstart");
 	SpriteHolder::Get()->Add(new Sprite({ (SCREEN_WIDTH / 2) - 70,SCREEN_HEIGHT - 120 }, tmp, SpriteTypes::INTRO_SPRITE));
 
-	StartButton(*gScreenSurface);
+	StartButton(*surface);
 
 	return true;
 }
@@ -24,15 +24,15 @@ SDL_Surface* Intro::getBackground() {
 	return background;
 };
 
-void Intro::DrawIntro(SDL_Surface& gScreenSurface) {
+void Intro::DrawIntro(SDL_Surface& surface) {
 
 	Rect fullscreen = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	SDL_BlitScaled(background, NULL, &gScreenSurface, &fullscreen);
+	SDL_BlitScaled(background, NULL, &surface, &fullscreen);
 
 	SpriteList menuSpriteList = SpriteHolder::Get()->GetSprites(SpriteTypes::INTRO_SPRITE);
 	list<Sprite*>::iterator it;
 	for (it = menuSpriteList.begin(); it != menuSpriteList.end(); ++it) {
-		(*it)->DisplayUnique(gScreenSurface, 140, 50);
+		(*it)->DisplayUnique(surface, 140, 50);
 	};
 };
 
@@ -48,7 +48,7 @@ int Intro::HandleInput(SDL_Event& event) {//Handle input for menu
 	return state;
 }
 
-void Intro::StartButton(SDL_Surface& gScreenSurface) {
+void Intro::StartButton(SDL_Surface& surface) {
 
 	TickTimerAnimation* tmp2 = new TickTimerAnimation(1);
 	tmp2->setOnTick([&](void) {
