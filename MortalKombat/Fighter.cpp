@@ -98,6 +98,7 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{ ".BCK.DOWN.SPECIAL" }, [&](void) {
 		SetActionWithAnimator([&]() {//HINT: Hit them all at once
 			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".duck")) {
+				Fighter::name._Equal("subzero") ? MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("subzerocombowave"), 0) : MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("scorpioncombowave"), 0);
 				AnimatorHolder::Remove(animator);
 				animator = new FrameRangeAnimator();
 				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".combo1"));
@@ -115,7 +116,7 @@ void Fighter::setStateMachine() {
 				projectile->SetEnemy(sprite->GetEnemy());
 				projectile->SetVisibility(true);
 
-				projectileAnimator->Start(projectile, new FrameRangeAnimation(0, projectile->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 270 : -330, 0, 400, false, 150), 
+				projectileAnimator->Start(projectile, new FrameRangeAnimation(0, projectile->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 270 : -330, 0, 400, false, 150),
 					SDL_GetTicks());
 				AnimatorHolder::MarkAsRunning(projectileAnimator);
 				nextAction = "combo1";
@@ -125,7 +126,6 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("READY", Input{ ".DOWN.KICK.SPECIAL" }, [&](void) {
 		SetActionWithAnimator([&]() {//HINT: Hit them all at once
-			cout << "SPECIAL MOVE 2" << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
 		});
 	})
@@ -275,7 +275,6 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("DOWN", Input{ ".BLOCK.DOWN" }, [&](void) {
 		SetActionWithAnimator([&]() {
-			cout << "Block Down -> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("BLOCKDWN");
 		});
 	})
@@ -309,8 +308,6 @@ void Fighter::setStateMachine() {
 		.SetTransition("DOWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			nextAction = "waiting";
-			//	AnimatorHolder::Remove(tickAnimator);
-			cout << "Getting Up-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
@@ -332,14 +329,12 @@ void Fighter::setStateMachine() {
 		.SetTransition("BLOCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			nextAction = "waiting";
-			cout << "Unblocking-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("BLOCKDWN", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
 			nextAction = "waiting";
-			cout << "Unblocking DOWN-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("DOWN");
 		});
 	})
@@ -413,25 +408,21 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("FlipFWD", Input{ ".FWD.UP" }, [&](void) {
 		SetActionWithAnimator([&]() {
-			cout << "Falling from FlipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipFWD", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
-			cout << "Falling from flipFWD-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipBCK", Input{ ".FWD.BCK" }, [&](void) {
 		SetActionWithAnimator([&]() {
-			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
 		.SetTransition("FlipBCK", Input{}, [&](void) {
 		SetActionWithAnimator([&]() {
-			cout << "Falling from FlipBCK-> State " << stateTransitions.GetState() << "\n";
 			stateTransitions.SetState("READY");
 		});
 	})
@@ -546,7 +537,8 @@ void Fighter::ResetPosition(Point x) {
 void Fighter::InflictionAnimation(string Animation, int speed, string hit) {
 	if (hit._Equal("punch")) fightstasts.received_punches++;
 	else if (hit._Equal("kick")) fightstasts.received_kicks++;
-	//else if(hit._Equal("strike")) //for significal strikes
+	else if (hit._Equal("downhit") || hit._Equal("combo"))  fightstasts.received_signif_strikes++;
+
 	sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + "." + Animation));
 	animator->Start(sprite,
 		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, speed, false, 60), SDL_GetTicks());

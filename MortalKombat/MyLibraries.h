@@ -35,9 +35,10 @@ typedef unsigned char frame_t;
 #define STAGE_WIDTH 2008
 #define STAGE_HEIGHT 920
 
-#define PUNCH_DMG 0.0002f
-#define KICK_DMG 0.0004f
-#define UPPERCUT_DMG 0.0006f
+#define PUNCH_DMG 0.05f
+#define KICK_DMG 0.07f
+#define UPPERCUT_DMG 0.09f
+#define COMBO_DMG 0.03f
 
 enum SpriteTypes { INTRO_SPRITE,FIGHTER, PROJECTILE};//Here ill add more 
 

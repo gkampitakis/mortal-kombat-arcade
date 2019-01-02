@@ -192,6 +192,11 @@ bool Window::loadMedia() {
 		MusicPlayer::Get()->LoadEffect("media/singlehit.wav", "singlehit");
 		MusicPlayer::Get()->LoadEffect("media/jump.wav", "jump");
 		MusicPlayer::Get()->LoadEffect("media/goro.wav", "goro");
+		MusicPlayer::Get()->LoadEffect("media/subzerocombowave.wav", "subzerocombowave");
+		MusicPlayer::Get()->LoadEffect("media/scorpioncombowave.wav", "scorpioncombowave");
+		MusicPlayer::Get()->LoadEffect("media/scorpioncombohit.wav", "scorpioncombohit");
+		MusicPlayer::Get()->LoadEffect("media/subzerocombohit.wav", "subzerocombohit");
+
 	}
 	catch (const std::exception& e) {
 		cerr << e.what();
@@ -248,8 +253,7 @@ void Window::drawWindow() {
 	else if (state == INGAME) {
 		if (!game->EndOfGame) game->DrawGame(*surface);
 		else {
-			game->CleanUp();
-			end = new End(game->GetWinner(), game->GetLoser(),*surface);
+			end = new End(game->GetWinner(), game->GetLoser(), *surface);
 			state = FINISH;
 		}
 	}
