@@ -14,8 +14,8 @@ public:
 	Animation* Clone(animid_t newId)const;
 	FrameRangeAnimation(
 		frame_t s, frame_t e,
-		offset_t dx, offset_t dy, delay_t d, bool c, animid_t id
-	) : start(s), end(e), MovingAnimation(dx, dy, d, c, id) {}
+		int dx, int dy, delay_t d, bool c, animid_t id
+   	) : start(s), end(e), MovingAnimation(dx, dy, d, c, id) {}
 };
 
 #endif

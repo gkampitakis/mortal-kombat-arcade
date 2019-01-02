@@ -1,11 +1,11 @@
 #include "MovingAnimation.h"
 
-offset_t MovingAnimation::GetDx(void) const {
+int MovingAnimation::GetDx(void) const {
 	return dx;
 };
 
 
-offset_t MovingAnimation::GetDy(void) const {
+int MovingAnimation::GetDy(void) const {
 	return dy;
 };
 

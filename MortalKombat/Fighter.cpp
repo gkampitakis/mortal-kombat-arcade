@@ -10,6 +10,9 @@ Fighter::Fighter(string Name, Point position) {
 	win = 0;
 	sprite = new Sprite(position, AnimationFilmHolder::Get()->GetFilm(Name + ".stance"), SpriteTypes::FIGHTER, Fighter::name._Equal("subzero") ? true : false);
 	animator = new FrameRangeAnimator();
+	projectileAnimator = new FrameRangeAnimator();
+	projectile = new Sprite({ 0,0 }, AnimationFilmHolder::Get()->GetFilm(name + ".projectile"), SpriteTypes::PROJECTILE);
+	projectile->SetVisibility(false);
 	tickAnimator = new TickTimerAnimator(NULL);
 };
 
@@ -45,7 +48,9 @@ void Fighter::Draw(SDL_Surface& surface, Point enemy, Rect& camera) {
 	int width = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).w * 2) / 6;
 	int height = (SCREEN_WIDTH - sprite->getFilm()->GetFrameBox(sprite->GetFrameNo()).h * 2) / 3;
 	using Input = logic::StateTransitions::Input;
+
 	sprite->DisplayCamera(surface, width, height, camera);
+	projectile->DisplayCamera(surface, projectile->getFilm()->GetFrameBox(projectile->GetFrame()).w * 3, projectile->getFilm()->GetFrameBox(projectile->GetFrame()).h * 3, camera);
 
 	Input tmpInput;
 	tmpInput.insert(Make_key(inputController.GetLogical()));
@@ -91,9 +96,31 @@ void Fighter::setStateMachine() {
 		});
 	})
 		.SetTransition("DOWN", Input{ ".BCK.DOWN.SPECIAL" }, [&](void) {
-		SetActionWithAnimator([&]() {//HINT: to hit it u must hold down and hit simultaneously the back and special key
-			cout << "SPECIAL MOVE 1" << stateTransitions.GetState() << "\n";
-			stateTransitions.SetState("READY");
+		SetActionWithAnimator([&]() {//HINT: Hit them all at once
+			if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".duck")) {
+				AnimatorHolder::Remove(animator);
+				animator = new FrameRangeAnimator();
+				sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".combo1"));
+				animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+					new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, 180, false, 150),
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(animator);
+
+				if (Fighter::name._Equal("subzero"))
+					projectile->SetX(sprite->GetPosition().x + 40);
+				else
+					projectile->SetX(sprite->GetPosition().x - 190);
+
+				projectile->SetY(sprite->GetPosition().y + 40);
+				projectile->SetEnemy(sprite->GetEnemy());
+				projectile->SetVisibility(true);
+
+				projectileAnimator->Start(projectile, new FrameRangeAnimation(0, projectile->getFilm()->GetTotalFrames(), Fighter::name._Equal("subzero") ? 270 : -330, 0, 400, false, 150), 
+					SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(projectileAnimator);
+				nextAction = "combo1";
+				stateTransitions.SetState("DOWN");
+			}
 		});
 	})
 		.SetTransition("READY", Input{ ".DOWN.KICK.SPECIAL" }, [&](void) {
@@ -524,4 +551,9 @@ void Fighter::InflictionAnimation(string Animation, int speed, string hit) {
 	animator->Start(sprite,
 		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, speed, false, 60), SDL_GetTicks());
 	//We ll add and movement later
+};
+
+void Fighter::HideProjectile(void) {
+	nextAction = "waiting";
+	projectile->SetVisibility(false);
 };

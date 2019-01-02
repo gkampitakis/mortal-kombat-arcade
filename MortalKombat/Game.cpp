@@ -308,6 +308,7 @@ void Game::MatchEnd(SDL_Surface& surface) {
 };
 
 void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
+
 	if (hitter.proximityDetector(hitted.GetSprite())) {
 		/*
 		 *NORMAL ATTACKS
@@ -327,15 +328,16 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 			else {
 
 				//Here reduce health maybe depending on hit 
-				if (hitter.GetAction()._Equal("punch")) {
-					hitted.removeHealth(PUNCH_DMG);
-				}
-				else {
-					hitted.removeHealth(KICK_DMG);
-				}
+
 
 				//sound && inflictions animations
 				DelayHitAction([&]() {
+					if (hitter.GetAction()._Equal("punch")) {
+						hitted.removeHealth(PUNCH_DMG);
+					}
+					else {
+						hitted.removeHealth(KICK_DMG);
+					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
@@ -355,15 +357,16 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 			}
 			else {
 				//Here reduce health maybe depending on hit 
-				if (hitter.GetAction()._Equal("uppunch")) {
-					hitted.removeHealth(UPPERCUT_DMG);
-				}
-				else {
-					hitted.removeHealth(KICK_DMG);
-				}
+
 
 				//sound && inflictions animations
 				DelayHitAction([&]() {
+					if (hitter.GetAction()._Equal("uppunch")) {
+						hitted.removeHealth(UPPERCUT_DMG);
+					}
+					else {
+						hitted.removeHealth(KICK_DMG);
+					}
 					AnimatorHolder::Remove(HitAnimator);
 					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
@@ -389,22 +392,63 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 			}
 			else {
 				//Here reduce health maybe depending on hit 
-				if (hitter.GetAction()._Equal("downpunch")) {
-					hitted.removeHealth(PUNCH_DMG);
-				}
-				else {
-					hitted.removeHealth(KICK_DMG);
-				}
+
 
 				//sound && inflictions animations
 				DelayHitAction([&]() {
+					if (hitter.GetAction()._Equal("downpunch")) {
+						hitted.removeHealth(PUNCH_DMG);
+					}
+					else {
+						hitted.removeHealth(KICK_DMG);
+					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 					rand() % 3 + 1 == 2 ? hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick") : hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("downpunch") ? "punch" : "kick");
 				}, hitter.GetAction()._Equal("downpunch") ? HIT_LOW_PUNCH_DELAY : HIT_LOW_KICK_DELAY);
 				//blood and tears
 			}
-		}//do a check for special combos also
+		}
+
+	}/*
+	 * COMBOS
+	 */
+	else if (hitter.GetAction()._Equal("combo1")) {
+		if (hitted.GetState()._Equal("BLOCK")) {
+			DelayHitAction([&]() {
+				AnimatorHolder::Remove(HitAnimator);//Hit blocked
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("block"), 0);
+				hitter.fightstasts.blocked++;
+				hitter.HideProjectile();
+			}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
+			//fix here the delay
+		}
+		else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN")) {
+			//Nothing happens
+			DelayHitAction([&]() {
+				hitter.HideProjectile();
+			}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
+		}
+		else {
+			//Here reduce health maybe depending on hit 
+
+
+			//sound && inflictions animations
+			DelayHitAction([&]() {
+				hitter.HideProjectile();
+
+				if (hitter.GetAction()._Equal("punch")) {
+					hitted.removeHealth(PUNCH_DMG);
+				}
+				else {
+					hitted.removeHealth(KICK_DMG);
+				}
+				AnimatorHolder::Remove(HitAnimator);
+				MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
+				hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
+			}, 450);
+			//blood and tears			
+		}
 	}
 };
 

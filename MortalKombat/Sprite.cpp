@@ -30,6 +30,17 @@ void Sprite::Move(Point x) {
 	this->position.x = this->position.x + x.x;
 	this->position.y = this->position.y + x.y;
 
+
+	std::stringstream ss(currFilm->GetId());
+	const char delim = '.';
+	std::vector<std::string> token;
+	std::string s;
+	while (std::getline(ss, s, delim)) {
+		token.push_back(s);
+	}
+
+	string field = token[1];
+
 	if (side) {
 		if (x.x < 0) {//1100 define max dist
 			if (enemyPos.x - position.x > 1090) {
@@ -37,7 +48,11 @@ void Sprite::Move(Point x) {
 			}
 		}
 		if (enemyPos.x - position.x < 80) {
-			this->position.x = this->position.x - x.x;
+			if (field._Equal("projectile")) {
+				this->position.x = enemyPos.x;
+			}
+			else
+				this->position.x = this->position.x - x.x;
 		}
 		if (position.x - 50 < 0) {
 			this->position.x = this->position.x - x.x;
@@ -46,16 +61,21 @@ void Sprite::Move(Point x) {
 	else {
 		if (x.x > 0) {
 			if (position.x - enemyPos.x > 1090) {
+
 				this->position.x = this->position.x - x.x;
 			}
 		}
 		if (position.x - enemyPos.x < 80) {
+			if (field._Equal("projectile")) {
+				this->position.x = enemyPos.x;
+			}
+			else
+				this->position.x = this->position.x - x.x;
+		}
+		if (position.x + 180 > STAGE_WIDTH) {
 			this->position.x = this->position.x - x.x;
 		}
-		if (position.x + 180>STAGE_WIDTH) {
-			this->position.x = this->position.x - x.x;
-		}
-	}
+	} 
 };
 
 void Sprite::Display(SDL_Surface &dest, int width, int height) {
@@ -64,7 +84,7 @@ void Sprite::Display(SDL_Surface &dest, int width, int height) {
 	}
 };
 
-void Sprite::DisplayCamera(SDL_Surface &dest, int width, int height,Rect &camera) {
+void Sprite::DisplayCamera(SDL_Surface &dest, int width, int height, Rect &camera) {
 	if (visible) {
 		Point temp = { position.x - camera.x,position.y - camera.y };
 		currFilm->DisplayFrame(dest, temp, frameNo, width, height);
@@ -131,4 +151,8 @@ void Sprite::SetX(int x) {
 
 Point Sprite::GetPosition(void) const {
 	return position;
-}
+};
+
+Point  Sprite::GetEnemy(void) const {
+	return enemyPos;
+};

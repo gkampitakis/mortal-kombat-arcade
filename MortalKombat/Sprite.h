@@ -19,6 +19,7 @@ public:
 	Sprite(Point position, AnimationFilm* film, unsigned type);
 	~Sprite();
 
+	Point GetEnemy(void) const;
 	void SetEnemy(Point enemy);
 	void SetFrame(byte i);
 	byte GetFrame(void) const;

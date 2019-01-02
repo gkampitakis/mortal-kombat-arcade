@@ -172,6 +172,10 @@ bool Window::loadMedia() {
 		AnimationFilmHolder::Get()->Load("media/goro.png", "config/goro_boxes.json", "goro.flex", surface, false);
 		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.dizzy", surface, false);
 		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.dizzy", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.combo1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.combo1", surface, false);
+		AnimationFilmHolder::Get()->Load("media/subzero.png", "config/subzero_boxes.json", "subzero.projectile", surface, false);
+		AnimationFilmHolder::Get()->Load("media/scorpion.png", "config/scorpion_boxes.json", "scorpion.projectile", surface, false);
 
 		/*
 		*		SOUND LOADING HERE

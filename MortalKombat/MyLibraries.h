@@ -39,7 +39,7 @@ typedef unsigned char frame_t;
 #define KICK_DMG 0.0004f
 #define UPPERCUT_DMG 0.0006f
 
-enum SpriteTypes { INTRO_SPRITE,FIGHTER };//Here ill add more 
+enum SpriteTypes { INTRO_SPRITE,FIGHTER, PROJECTILE};//Here ill add more 
 
 enum animatorstate_t {
 	ANIMATOR_FINISHED = 0,

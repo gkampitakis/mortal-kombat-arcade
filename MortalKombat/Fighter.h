@@ -15,9 +15,11 @@ class Fighter final {
 	using Input = std::set<std::string>;
 private:
 	Sprite*					sprite;
+	Sprite*					projectile;
 	string					nextAction;
 	TickTimerAnimator*		tickAnimator;	// deferred firing actions; always dynamic
 	TickTimerAnimation		tickAnim;
+	FrameRangeAnimator*		projectileAnimator;
 	FrameRangeAnimator*		animator;
 	string					name;
 	float					health;
@@ -63,6 +65,7 @@ public:
 	string GetAction(void)const;
 	void ResetPosition(Point x);
 	void InflictionAnimation(string Animation,int speed,string hit);
+	void HideProjectile(void);
 };
 
 #endif
