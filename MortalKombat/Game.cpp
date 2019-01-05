@@ -337,7 +337,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick",0);
 				}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
 				//blood and tears			
 			}
@@ -363,7 +363,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 						hitted.removeHealth(KICK_DMG*r);
 					}
 					AnimatorHolder::Remove(HitAnimator);
-					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick");
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick",0);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 				}, 750);
 				//blood and tears	
@@ -400,7 +400,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, "downhit");
+					hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, "downhit",0);
 
 				}, hitter.GetAction()._Equal("downpunch") ? HIT_LOW_PUNCH_DELAY : HIT_LOW_KICK_DELAY);
 				//blood and tears
@@ -438,7 +438,11 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				AnimatorHolder::Remove(HitAnimator);
 				MusicPlayer::Get()->PlayEffect(hitter.GetName()._Equal("subzero") ? MusicPlayer::Get()->RetrieveEffect("subzerocombohit") : MusicPlayer::Get()->RetrieveEffect("scorpioncombohit"), 0);
 
-				hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, "combo");//change
+				hitted.InflictionAnimation("disabled", 250, "combo", hitter.GetName()._Equal("subzero")?0:70);
+				hitted.SetState("DISABLED");
+				DelayHitAction([&]() {
+					hitted.SetState("READY");
+				}, DISABLED_DELAY);
 			}, 450);
 			//blood and tears			
 		}

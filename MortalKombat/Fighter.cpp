@@ -439,6 +439,19 @@ void Fighter::setStateMachine() {
 			AnimatorHolder::MarkAsRunning(animator);
 		}
 	})
+		.SetTransition("DISABLED", Input{ "." }, [&](void) {
+	})
+		.SetTransition("DISABLED", Input{}, [&](void) {
+		if (animator->HasFinished()) {
+			AnimatorHolder::Remove(animator);
+			animator = new FrameRangeAnimator();
+			Fighter::name._Equal("scorpion") ? sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".disabled")) : sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".dizzy"));
+			animator->Start(sprite,//start from zero to end zero move x,y 75 speed and continous 
+				new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, WIN_DELAY, false, 666),
+				SDL_GetTicks());
+			AnimatorHolder::MarkAsRunning(animator);
+		}
+	})
 		.SetTransition("LOSE", Input{ "." }, [&](void) {
 	})
 		.SetTransition("LOSE", Input{}, [&](void) {
@@ -514,7 +527,7 @@ void Fighter::SetWin(void) {
 };
 
 bool Fighter::proximityDetector(Sprite* enemy) {
-	return sprite->CollisionCheck(enemy);//Here also add the "missile" detection for combos
+	return sprite->CollisionCheck(enemy);
 };
 
 Sprite* Fighter::GetSprite(void)const {
@@ -534,14 +547,14 @@ void Fighter::ResetPosition(Point x) {
 	sprite->SetX(x.x);
 };
 
-void Fighter::InflictionAnimation(string Animation, int speed, string hit) {
+void Fighter::InflictionAnimation(string Animation, int speed, string hit, int x) {
 	if (hit._Equal("punch")) fightstasts.received_punches++;
 	else if (hit._Equal("kick")) fightstasts.received_kicks++;
 	else if (hit._Equal("downhit") || hit._Equal("combo"))  fightstasts.received_signif_strikes++;
 
 	sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + "." + Animation));
 	animator->Start(sprite,
-		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), 0, 0, speed, false, 60), SDL_GetTicks());
+		new FrameRangeAnimation(0, sprite->getFilm()->GetTotalFrames(), x, 0, speed, false, 60), SDL_GetTicks());
 	//We ll add and movement later
 };
 

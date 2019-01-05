@@ -64,7 +64,7 @@ public:
 	Sprite* GetSprite(void)const;
 	string GetAction(void)const;
 	void ResetPosition(Point x);
-	void InflictionAnimation(string Animation,int speed,string hit);
+	void InflictionAnimation(string Animation,int speed,string hit,int x);
 	void HideProjectile(void);
 };
 

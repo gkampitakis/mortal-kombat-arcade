@@ -86,6 +86,7 @@ enum Game_State {
 
 #define SINGLE_HIT_DELAY 50
 #define DOWN_HIT_DELAY 100
+#define DISABLED_DELAY 2000
 
 /*
 * DELAY TIMERS
