@@ -156,3 +156,7 @@ Point Sprite::GetPosition(void) const {
 Point  Sprite::GetEnemy(void) const {
 	return enemyPos;
 };
+
+bool Sprite::GetSide(void) const {
+	return side;
+};
