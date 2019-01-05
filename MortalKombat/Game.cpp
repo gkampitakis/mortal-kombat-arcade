@@ -8,7 +8,9 @@ bool Game::EndOfGame = false;
 Game::Game() {
 	timeAnimator = new TickTimerAnimator(NULL);
 	HitAnimator = new TickTimerAnimator(NULL);
+	Animator = new TickTimerAnimator(NULL);
 	timeAnimation = new TickTimerAnimation(111);
+	ProjectileAnimation = new TickTimerAnimation(120);
 	round = 1;
 	camera = { STAGE_WIDTH / 2 - SCREEN_WIDTH / 2, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 };
@@ -337,7 +339,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick",0);
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick", 0);
 				}, hitter.GetAction()._Equal("punch") ? HIT_PUNCH_DELAY : HIT_KICK_DELAY);
 				//blood and tears			
 			}
@@ -363,7 +365,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 						hitted.removeHealth(KICK_DMG*r);
 					}
 					AnimatorHolder::Remove(HitAnimator);
-					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick",0);
+					hitted.InflictionAnimation("singlehit", SINGLE_HIT_DELAY, hitter.GetAction()._Equal("punch") ? "punch" : "kick", 0);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
 				}, 750);
 				//blood and tears	
@@ -400,7 +402,7 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 					}
 					AnimatorHolder::Remove(HitAnimator);
 					MusicPlayer::Get()->PlayEffect(MusicPlayer::Get()->RetrieveEffect("singlehit"), 0);
-					hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, "downhit",0);
+					hitted.InflictionAnimation("uppercuthit", DOWN_HIT_DELAY, "downhit", 0);
 
 				}, hitter.GetAction()._Equal("downpunch") ? HIT_LOW_PUNCH_DELAY : HIT_LOW_KICK_DELAY);
 				//blood and tears
@@ -419,34 +421,48 @@ void Game::collisionNhits(Fighter& hitter, Fighter& hitted) {
 				hitter.fightstasts.blocked++;
 
 			}, 600);
-			//fix here the delay
 		}
-		else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN")) {
-			//Nothing happens
-			DelayHitAction([&]() {
-				hitter.HideProjectile();
-			}, 1000);
+		else if (hitted.GetState()._Equal("BLOCKDWN") || hitted.GetState()._Equal("UP") || hitted.GetState()._Equal("DOWN") || hitted.GetState()._Equal("DISABLED")) {
+			if (Animator&&Animator->GetState() != ANIMATOR_RUNNING) {
+				ProjectileAnimation->setOnTick([] {
+					//Nothing to do here
+				}).SetDelay(1000).SetReps(1);
+				Animator = new TickTimerAnimator(ProjectileAnimation);
+				Animator->SetOnFinish([&] {
+					AnimatorHolder::Remove(Animator);
+					hitter.HideProjectile();
+				});
+				Animator->Start(SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(Animator);
+			}
 		}
 		else {
-
 			//sound && inflictions animations
-			DelayHitAction([&]() {
+			DelayAction([&]() {
 				float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 				hitter.HideProjectile();
 				hitted.removeHealth(COMBO_DMG*r);
 
-				AnimatorHolder::Remove(HitAnimator);
+				AnimatorHolder::Remove(timeAnimator);
 				MusicPlayer::Get()->PlayEffect(hitter.GetName()._Equal("subzero") ? MusicPlayer::Get()->RetrieveEffect("subzerocombohit") : MusicPlayer::Get()->RetrieveEffect("scorpioncombohit"), 0);
 
-				hitted.InflictionAnimation("disabled", 250, "combo", hitter.GetName()._Equal("subzero")?0:70);
+				hitted.InflictionAnimation("disabled", 250, "combo", hitter.GetName()._Equal("subzero") ? 0 : 70);
 				hitted.SetState("DISABLED");
-				DelayHitAction([&]() {
+				TickTimerAnimator* temp = new TickTimerAnimator(NULL);
+				TickTimerAnimation* tempAnimation = new TickTimerAnimation(20);
+				tempAnimation->setOnTick([] {
+					//Nothing to do here
+				}).SetDelay(DISABLED_DELAY).SetReps(1);
+				temp = new TickTimerAnimator(tempAnimation);
+				temp->SetOnFinish([&] {
+					AnimatorHolder::Remove(temp);
 					hitted.SetState("READY");
-				}, DISABLED_DELAY);
-			}, 450);
-			//blood and tears			
-		}
+				});
+				temp->Start(SDL_GetTicks());
+				AnimatorHolder::MarkAsRunning(temp);
+		}, 450);			
 	}
+}
 };
 
 Fighter* Game::GetWinner(void) {

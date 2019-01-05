@@ -209,6 +209,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("READY", Input{ ".BCK" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));
@@ -222,6 +223,7 @@ void Fighter::setStateMachine() {
 	})
 		.SetTransition("READY", Input{ ".FWD" }, [&](void) {
 		if (animator->HasFinished() || sprite->getFilm()->GetId()._Equal(name + ".stance")) {
+			nextAction = "waiting";
 			AnimatorHolder::Remove(animator);
 			animator = new FrameRangeAnimator();
 			sprite->SetNewFilm(AnimationFilmHolder::Get()->GetFilm(name + ".move"));

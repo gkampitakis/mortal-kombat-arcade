@@ -23,7 +23,9 @@ private:
 	Fighter*				scorpion = NULL;
 	TickTimerAnimator*		timeAnimator;
 	TickTimerAnimator*		HitAnimator;
+	TickTimerAnimator*		Animator;
 	TickTimerAnimation*		timeAnimation;
+	TickTimerAnimation*		ProjectileAnimation;
 	Timer					gameTimer;
 	SDL_Surface*			background = NULL;
 	SDL_Surface*			movingBckg = NULL;

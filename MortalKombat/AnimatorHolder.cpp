@@ -34,13 +34,10 @@ void AnimatorHolder::MarkAsSuspended(Animator* a) {
 };
 
 void AnimatorHolder::CleanUp(void) {
-	for (auto&& it : running) {
-		delete it;
-	}
 	running.clear();
 
 	for (auto&& it : suspended) {
-		delete it;//Something here crashes
+		delete it;
 	}
 	suspended.clear();
 };
