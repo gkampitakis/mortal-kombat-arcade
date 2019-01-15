@@ -1,9 +1,3 @@
 .vs
 Debug
 MortalKombat/Debug/
-MortalKombat/*.bmp
-TMortalKombat/*.wav
-MortalKombat/*.png
-MortalKombat/*.dll
-MortalKombat/media/
-MortalKombat/*.vcxproj
