@@ -8,9 +8,9 @@ Project Presentation ( In Greek ) [Link to Project](https://drive.google.com/ope
 
 ## Screenshots
 
-![Starting Screen"](https://lh3.googleusercontent.com/CfhSBBvfE75q862z_wm4C7enJSunkFVzve3OtsGglHfCM0nF9wJAIDfr0RWI5nnVJi-1o3HV_Z3vP7UznWyEjsYHIHLEYEci5YI5jMzaP70xRpEFIhDyeGLIGcEqrYmrKR7RPiFK=w2400 )
-![In Game"](https://lh3.googleusercontent.com/hlb-BhncY7BEh68B0RW70QhsgY_2diUWTwupljfky8IyKWK76AsdrMYvDqm0do__md6C4tfniEqanjfSQA4-rqx9tF0mU2DWwIeBmqJQ-3-VDrAsj7_F99u1sNvHwfvTYECQOx-g=w2400 )
-![In Game"](https://lh3.googleusercontent.com/RSMPDVwljTIGYSgD9I4KMWpouizrowVawxizW250ng9ggNb8EzcWNV6-WVMn2unFWKh-S1bwep8ncqiHfzr9YvRKDcZzFOHWQuGhXEgMulYeTYxKbXI5igHocODCbbm3jrCpxtSE=w2400 )
+![](start.png)
+![](freeze.png)
+![](win.png)
 
 ## Dependencies
 
